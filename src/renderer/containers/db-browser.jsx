@@ -13,9 +13,9 @@ import * as ConnActions from '../actions/connections.js';
 import * as DbAction from '../actions/databases';
 import { fetchTablesIfNeeded, selectTablesForDiagram } from '../actions/tables';
 import { fetchSchemasIfNeeded } from '../actions/schemas';
-// import { fetchTableColumnsIfNeeded } from '../actions/columns';
-// import { fetchTableTriggersIfNeeded } from '../actions/triggers';
-// import { fetchTableIndexesIfNeeded } from '../actions/indexes';
+import { fetchTableColumnsIfNeeded } from '../actions/columns';
+import { fetchTableTriggersIfNeeded } from '../actions/triggers';
+import { fetchTableIndexesIfNeeded } from '../actions/indexes';
 import { fetchViewsIfNeeded } from '../actions/views';
 import { fetchRoutinesIfNeeded } from '../actions/routines';
 // import { getSQLScriptIfNeeded } from '../actions/sqlscripts';
@@ -29,6 +29,7 @@ import Footer from '../components/footer.jsx';
 import Loader from '../components/loader.jsx';
 import PromptModal from '../components/prompt-modal.jsx';
 import MenuHandler from '../menu-handler';
+import SchemaPanel from '../components/test-schema-panel.jsx';
 import { requireLogos } from '../components/require-context';
 
 require('./db-browser.css');
@@ -92,6 +93,8 @@ class DbBrowserContainer extends Component {
     super(props, context);
     this.state = {
       navBarPosition: 1,
+      columnsFetched: false,
+      schemaInfo: null,
     };
     this.menuHandler = new MenuHandler();
   }
@@ -128,6 +131,22 @@ class DbBrowserContainer extends Component {
     dispatch(fetchTablesIfNeeded(lastConnectedDB, filter));
     dispatch(fetchViewsIfNeeded(lastConnectedDB, filter));
     dispatch(fetchRoutinesIfNeeded(lastConnectedDB, filter));
+    if (
+      this.getCurrentQuery() &&
+      this.props.tables.itemsByDatabase[this.getCurrentQuery().database] &&
+      this.state.columnsFetched === false
+    ) {
+      this.setState({ columnsFetched: true });
+      const dbName = this.getCurrentQuery().database;
+      const systemSchemas = ['pg_catalog', 'information_schema'];
+      const userTables = this.props.tables.itemsByDatabase[dbName].filter(
+        table => !systemSchemas.includes(table.schema)
+      );
+      //   console.log(dbName);
+      //   console.log(userTables);
+      userTables.forEach(table => this.onSelectTable(dbName, table));
+      //   console.log(this.props.columns);
+    }
 
     this.setMenus();
   }
@@ -174,6 +193,13 @@ class DbBrowserContainer extends Component {
     dispatch(ConnActions.connect(params.id, null, false, password));
   }
 
+  onSelectTable(dbName, table) {
+    const schema = table.schema || this.props.connections.server.schema;
+    this.props.dispatch(fetchTableColumnsIfNeeded(dbName, table.name, schema));
+    this.props.dispatch(fetchTableTriggersIfNeeded(dbName, table.name, schema));
+    this.props.dispatch(fetchTableIndexesIfNeeded(dbName, table.name, schema));
+  }
+
   getCurrentQuery() {
     return this.props.queries.queriesById[this.props.queries.currentQueryId];
   }
@@ -197,6 +223,11 @@ class DbBrowserContainer extends Component {
 
   changeNavBarPosition(pos) {
     this.setState({ navBarPosition: pos });
+  }
+
+  print() {
+    console.log(this.props.databases);
+    console.log(this.props.columns);
   }
 
   render() {
@@ -231,6 +262,31 @@ class DbBrowserContainer extends Component {
     if (isLoading && (!connections.server || !this.getCurrentQuery())) {
       return <Loader message={status} type="page" />;
     }
+
+    // NEW STUFF
+
+    const tableInfo = columns.columnsByTable[this.getCurrentQuery().database];
+    const schemaInfo = null;
+    if (tableInfo) {
+      schemaInfo = Object.entries(
+        this.props.columns.columnsByTable[this.getCurrentQuery().database]
+      ).map(([key, value]) => [
+        key,
+        value.map(field =>
+          Object.assign(field, {
+            index: false,
+            pk: false,
+            unique: false,
+            fk: null,
+            nullable: false,
+          })
+        ),
+      ]);
+      console.log(schemaInfo);
+    }
+
+    // END NEW
+
     let MainDisplay = null;
     if (this.state.navBarPosition === 0) {
       MainDisplay = (
@@ -259,14 +315,26 @@ class DbBrowserContainer extends Component {
     } else {
       MainDisplay = (
         <Tabs id="TabsExample" selectedTabId={this.testTabPosition}>
-          <Tab id="0" title="Schema" panel={<div className="bordered-area">Schema </div>} />
+          <Tab
+            id="0"
+            title="Schema"
+            panel={
+              <div className="bordered-area">
+                <SchemaPanel
+                  tables={tables}
+                  columns={columns}
+                  dbName={this.getCurrentQuery().database}
+                />
+              </div>
+            }
+          />
           <Tab id="1" title="Fields" panel={<div className="bordered-area">Fields </div>} />
           <Tab id="2" title="Queries" panel={<div className="bordered-area">Queries </div>} />
           <Tabs.Expander />
           <button
             className="pt-button pt-large pt-intent-primary"
             title="Run"
-            onClick={() => changeNavBarPosition(1)}
+            onClick={() => this.print()}
           >
             Run
           </button>
@@ -288,7 +356,7 @@ class DbBrowserContainer extends Component {
             onReConnectionClick={::this.onReConnectionClick}
           />
         </div>
-        <div style={{ margin: '100px' }}>{MainDisplay}</div>
+        <div style={{ padding: '100px' }}>{MainDisplay}</div>
         <div style={STYLES.footer}>
           <Footer status={status} />
         </div>

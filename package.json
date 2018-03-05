@@ -85,7 +85,8 @@
     "lodash.defaultsdeep": "^4.6.0",
     "npm": "^5.7.1",
     "react-addons-css-transition-group": "^15.6.2",
-    "sqlectron-core": "^8.0.0"
+    "sqlectron-core": "^8.0.0",
+    "vis": "^4.21.0"
   },
   "devDependencies": {
     "autoprefixer-loader": "^3.2.0",

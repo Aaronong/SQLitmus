@@ -1,0 +1,14 @@
+.schema-panel-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.schema-table-slider {
+  height: calc(100vh - 270px);
+  width: 50%;
+  overflow-y: scroll;
+}
+
+.card-header {
+  text-align: center;
+}
