@@ -31,6 +31,7 @@ import PromptModal from '../components/prompt-modal.jsx';
 import MenuHandler from '../menu-handler';
 import SchemaPanel from '../components/test-schema-panel.jsx';
 import { requireLogos } from '../components/require-context';
+import Loading from '../components/loader.jsx';
 
 require('./db-browser.css');
 
@@ -109,7 +110,7 @@ class DbBrowserContainer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch, router, connections } = nextProps;
+    const { dispatch, router, connections, columns } = nextProps;
 
     if (
       connections.error ||
@@ -142,10 +143,33 @@ class DbBrowserContainer extends Component {
       const userTables = this.props.tables.itemsByDatabase[dbName].filter(
         table => !systemSchemas.includes(table.schema)
       );
-      //   console.log(dbName);
-      //   console.log(userTables);
       userTables.forEach(table => this.onSelectTable(dbName, table));
-      //   console.log(this.props.columns);
+    }
+
+    // Generating schema information based on data retrieved
+    if (
+      (columns.columnsByTable && (!connections.waitingPrivateKeyPassphrase && !Loading)) ||
+      (connections.server && this.getCurrentQuery())
+    ) {
+      const tableInfo = columns.columnsByTable[this.getCurrentQuery().database];
+      let schemaInfo = null;
+      if (tableInfo) {
+        schemaInfo = Object.entries(columns.columnsByTable[this.getCurrentQuery().database]).map(
+          ([key, value]) => [
+            key,
+            value.map(field =>
+              Object.assign({}, field, {
+                index: false,
+                pk: false,
+                unique: false,
+                fk: null,
+                nullable: false,
+              })
+            ),
+          ]
+        );
+      }
+      this.setState({ schemaInfo });
     }
 
     this.setMenus();
@@ -225,13 +249,29 @@ class DbBrowserContainer extends Component {
     this.setState({ navBarPosition: pos });
   }
 
+  // Functions for modifying schemaInfo
+  onSetField(tableName, fieldName, attribute, value) {
+    let schemaInfo = JSON.parse(JSON.stringify(this.state.schemaInfo));
+    if (schemaInfo && schemaInfo.find(table => table[0] === tableName)) {
+      console.log('table found');
+      const targetTableIndex = schemaInfo.findIndex(table => table[0] === tableName);
+      const targetFieldList = schemaInfo[targetTableIndex][1];
+      if (targetFieldList.find(field => field.name === fieldName)) {
+        console.log('field found');
+        const targetFieldIndex = targetFieldList.findIndex(field => field.name === fieldName);
+        schemaInfo[targetTableIndex][1][targetFieldIndex][attribute] = value;
+        this.setState({ schemaInfo });
+        console.log(schemaInfo);
+      }
+    }
+  }
+
   print() {
-    console.log(this.props.databases);
-    console.log(this.props.columns);
+    console.log(this.state.schemaInfo);
   }
 
   render() {
-    const { filter } = this.state;
+    const { filter, schemaInfo } = this.state;
     const {
       status,
       connections,
@@ -262,30 +302,6 @@ class DbBrowserContainer extends Component {
     if (isLoading && (!connections.server || !this.getCurrentQuery())) {
       return <Loader message={status} type="page" />;
     }
-
-    // NEW STUFF
-
-    const tableInfo = columns.columnsByTable[this.getCurrentQuery().database];
-    const schemaInfo = null;
-    if (tableInfo) {
-      schemaInfo = Object.entries(
-        this.props.columns.columnsByTable[this.getCurrentQuery().database]
-      ).map(([key, value]) => [
-        key,
-        value.map(field =>
-          Object.assign(field, {
-            index: false,
-            pk: false,
-            unique: false,
-            fk: null,
-            nullable: false,
-          })
-        ),
-      ]);
-      console.log(schemaInfo);
-    }
-
-    // END NEW
 
     let MainDisplay = null;
     if (this.state.navBarPosition === 0) {
@@ -320,11 +336,7 @@ class DbBrowserContainer extends Component {
             title="Schema"
             panel={
               <div className="bordered-area">
-                <SchemaPanel
-                  tables={tables}
-                  columns={columns}
-                  dbName={this.getCurrentQuery().database}
-                />
+                <SchemaPanel schemaInfo={schemaInfo} onSetField={::this.onSetField} />
               </div>
             }
           />
