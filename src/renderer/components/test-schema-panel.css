@@ -1,12 +1,62 @@
 .schema-panel-container {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
 }
 
 .schema-table-slider {
   height: calc(100vh - 270px);
   width: 50%;
   overflow-y: scroll;
+}
+
+.schema-table-config {
+  height: calc(100vh - 270px);
+  width: 50%;
+  overflow: hidden;
+  padding: 50px;
+}
+
+.schema-field-button {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 3px;
+}
+
+.schema-field-button:hover {
+  background-color: #f8f8f8;
+}
+
+.schema-field-button-active {
+  background-color: #eeeeee;
+}
+
+.field-name {
+  font-weight: 600;
+  font-size: 14px;
+  padding-right: 10px;
+  padding-left: 10px;
+}
+.field-dataType {
+  font-size: 10px;
+  padding-right: 10px;
+}
+
+.field-tag {
+  margin-left: 10px;
+  height: 20px;
+}
+
+.pair-label-switch-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.float-label-up {
+  position: relative;
+  top: -7px;
+  margin-right: 9px;
 }
 
 .card-header {

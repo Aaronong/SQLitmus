@@ -30,6 +30,7 @@ import Loader from '../components/loader.jsx';
 import PromptModal from '../components/prompt-modal.jsx';
 import MenuHandler from '../menu-handler';
 import SchemaPanel from '../components/test-schema-panel.jsx';
+import DataPanel from '../components/test-data-panel.jsx';
 import { requireLogos } from '../components/require-context';
 import Loading from '../components/loader.jsx';
 
@@ -164,6 +165,8 @@ class DbBrowserContainer extends Component {
                 unique: false,
                 fk: null,
                 nullable: false,
+                manyToOne: false,
+                foreignTarget: null,
               })
             ),
           ]
@@ -224,8 +227,30 @@ class DbBrowserContainer extends Component {
     this.props.dispatch(fetchTableIndexesIfNeeded(dbName, table.name, schema));
   }
 
-  getCurrentQuery() {
-    return this.props.queries.queriesById[this.props.queries.currentQueryId];
+  // Functions for modifying schemaInfo
+  onSetField(tableIndex, fieldIndex, attribute, value) {
+    // console.log(value);
+    const schemaInfo = JSON.parse(JSON.stringify(this.state.schemaInfo));
+    if (schemaInfo && schemaInfo[tableIndex] && schemaInfo[tableIndex][1][fieldIndex]) {
+      schemaInfo[tableIndex][1][fieldIndex][attribute] = value;
+      if (attribute === 'fk' && value === false) {
+        schemaInfo[tableIndex][1][fieldIndex].foreignTarget = null;
+      }
+      this.setState({ schemaInfo });
+    }
+  }
+
+  onSelectField(tableIndex, fieldIndex, attribute, value) {
+    const schemaInfo = JSON.parse(JSON.stringify(this.state.schemaInfo));
+    if (schemaInfo && schemaInfo[tableIndex] && schemaInfo[tableIndex][1][fieldIndex]) {
+      if (value === 'null') {
+        value = null;
+      } else {
+        value = JSON.parse(value);
+      }
+      schemaInfo[tableIndex][1][fieldIndex][attribute] = value;
+      this.setState({ schemaInfo });
+    }
   }
 
   setMenus() {
@@ -245,25 +270,12 @@ class DbBrowserContainer extends Component {
     });
   }
 
-  changeNavBarPosition(pos) {
-    this.setState({ navBarPosition: pos });
+  getCurrentQuery() {
+    return this.props.queries.queriesById[this.props.queries.currentQueryId];
   }
 
-  // Functions for modifying schemaInfo
-  onSetField(tableName, fieldName, attribute, value) {
-    let schemaInfo = JSON.parse(JSON.stringify(this.state.schemaInfo));
-    if (schemaInfo && schemaInfo.find(table => table[0] === tableName)) {
-      console.log('table found');
-      const targetTableIndex = schemaInfo.findIndex(table => table[0] === tableName);
-      const targetFieldList = schemaInfo[targetTableIndex][1];
-      if (targetFieldList.find(field => field.name === fieldName)) {
-        console.log('field found');
-        const targetFieldIndex = targetFieldList.findIndex(field => field.name === fieldName);
-        schemaInfo[targetTableIndex][1][targetFieldIndex][attribute] = value;
-        this.setState({ schemaInfo });
-        console.log(schemaInfo);
-      }
-    }
+  changeNavBarPosition(pos) {
+    this.setState({ navBarPosition: pos });
   }
 
   print() {
@@ -336,11 +348,28 @@ class DbBrowserContainer extends Component {
             title="Schema"
             panel={
               <div className="bordered-area">
-                <SchemaPanel schemaInfo={schemaInfo} onSetField={::this.onSetField} />
+                <SchemaPanel
+                  schemaInfo={schemaInfo}
+                  onSetField={::this.onSetField}
+                  onSelectField={::this.onSelectField}
+                />
               </div>
             }
           />
-          <Tab id="1" title="Fields" panel={<div className="bordered-area">Fields </div>} />
+          <Tab
+            id="1"
+            title="Data"
+            panel={
+              <div className="bordered-area">
+                {' '}
+                <DataPanel
+                  schemaInfo={schemaInfo}
+                  onSetField={::this.onSetField}
+                  onSelectField={::this.onSelectField}
+                />{' '}
+              </div>
+            }
+          />
           <Tab id="2" title="Queries" panel={<div className="bordered-area">Queries </div>} />
           <Tabs.Expander />
           <button
