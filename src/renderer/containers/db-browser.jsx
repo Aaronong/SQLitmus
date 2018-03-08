@@ -163,10 +163,12 @@ class DbBrowserContainer extends Component {
                 index: false,
                 pk: false,
                 unique: false,
-                fk: null,
+                fk: false,
                 nullable: false,
                 manyToOne: false,
                 foreignTarget: null,
+                configuredType: 'null',
+                generator: { name: '', func: null, inputs: [] },
               })
             ),
           ]

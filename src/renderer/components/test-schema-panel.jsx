@@ -40,7 +40,7 @@ function schemaConfig(schemaInfo, onSetField, onSelectField, tableIndex, fieldIn
   const currentTarget =
     configuredField.foreignTarget === null ? 'null' : JSON.stringify(configuredField.foreignTarget);
   return (
-    <div>
+    <div key={JSON.stringify([tableIndex, fieldIndex])}>
       <h2>{`${schemaInfo[tableIndex][0]}.${configuredField.name}`}</h2>
 
       {configuredField.dataType !== 'integer' ? (
