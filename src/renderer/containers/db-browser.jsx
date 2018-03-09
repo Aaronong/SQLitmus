@@ -70,6 +70,8 @@ const CLIENTS = sqlectron.db.CLIENTS.reduce((clients, dbClient) => {
   return clients;
 }, {});
 
+const DEFAULT_GENERATOR = { name: '', func: null, inputs: [], testResults: [] };
+
 class DbBrowserContainer extends Component {
   static propTypes = {
     connections: PropTypes.object.isRequired,
@@ -167,8 +169,8 @@ class DbBrowserContainer extends Component {
                 nullable: false,
                 manyToOne: false,
                 foreignTarget: null,
-                configuredType: 'null',
-                generator: { name: '', func: null, inputs: [] },
+                configuredType: '',
+                generator: DEFAULT_GENERATOR,
               })
             ),
           ]
@@ -235,8 +237,13 @@ class DbBrowserContainer extends Component {
     const schemaInfo = JSON.parse(JSON.stringify(this.state.schemaInfo));
     if (schemaInfo && schemaInfo[tableIndex] && schemaInfo[tableIndex][1][fieldIndex]) {
       schemaInfo[tableIndex][1][fieldIndex][attribute] = value;
+      // if we unToggle fk, foreign target must be reset to null
       if (attribute === 'fk' && value === false) {
         schemaInfo[tableIndex][1][fieldIndex].foreignTarget = null;
+      }
+      // if we change configuredType, generator must be reset to default
+      if (attribute === 'configuredType') {
+        schemaInfo[tableIndex][1][fieldIndex].generator = DEFAULT_GENERATOR;
       }
       this.setState({ schemaInfo });
     }

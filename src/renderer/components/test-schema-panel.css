@@ -62,3 +62,18 @@
 .card-header {
   text-align: center;
 }
+
+.pt-numeric-input::-webkit-inner-spin-button,
+.pt-numeric-input::-webkit-outer-spin-button {
+  padding-top: 25px;
+  padding-bottom: 25px;
+  padding-left: 15px;
+  position: relative;
+  left: 20px;
+}
+
+.modal-subheader {
+  margin-right: 130px;
+  font-size: 16px;
+  font-weight: 300;
+}

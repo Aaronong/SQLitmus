@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react';
-import { Switch } from '@blueprintjs/core';
 import { tablesToCards, tableRelations } from './test-tables-to-cards.jsx';
+import NumericConfig, { numericOptions } from './numeric/index.jsx';
 require('./test-schema-panel.css');
+
+const DEFAULT_GENERATOR = { name: '', func: null, inputs: [], testResults: [] };
 
 function typesToOptions(typeList) {
   return typeList.map(typ => (
@@ -11,17 +13,28 @@ function typesToOptions(typeList) {
   ));
 }
 
+function testGenerator(generator) {
+  const results = [];
+  for (let i = 0; i < 10; i++) {
+    results.push(generator.func(Math.random(), generator.inputs));
+  }
+  return { ...generator, testResults: results };
+}
+
 function dataConfig(schemaInfo, onSetField, tableIndex, fieldIndex) {
   if (!schemaInfo) {
     return <div />;
   }
   const configuredField = schemaInfo[tableIndex][1][fieldIndex];
   const supportedTypes = ['integer', 'character', 'timestamp', 'numeric', 'json', 'boolean'];
-  const relations = tableRelations(schemaInfo);
-  const currentTarget =
-    configuredField.foreignTarget === null ? 'null' : JSON.stringify(configuredField.foreignTarget);
+  let currentType = supportedTypes.find(typ => configuredField.dataType.includes(typ))
+    ? configuredField.dataType
+    : configuredField.configuredType;
+  //   const relations = tableRelations(schemaInfo);
+  //   const currentTarget =
+  //     configuredField.foreignTarget === null ? 'null' : JSON.stringify(configuredField.foreignTarget);
   return (
-    <div>
+    <div key={JSON.stringify([tableIndex, fieldIndex])}>
       <h2>{`${schemaInfo[tableIndex][0]}.${configuredField.name}`}</h2>
 
       {supportedTypes.find(typ => configuredField.dataType.includes(typ)) ? (
@@ -29,12 +42,66 @@ function dataConfig(schemaInfo, onSetField, tableIndex, fieldIndex) {
       ) : (
         <div className="pt-select" style={{ marginBottom: '5px' }}>
           <select
-            //   defaultValue={currentTarget}
-            onChange={e => console.log(e.target.value)}
+            defaultValue={currentType}
+            onChange={e => onSetField(tableIndex, fieldIndex, 'configuredType', e.target.value)}
           >
-            <option value="null">Select Data Type...</option>
+            <option value="">Select Data Type...</option>
             {typesToOptions(supportedTypes)}
           </select>
+        </div>
+      )}
+
+      <div />
+
+      {currentType === '' ? (
+        <div />
+      ) : (
+        <div key={currentType} className="pt-select" style={{ marginBottom: '5px' }}>
+          <select
+            defaultValue={configuredField.generator.name}
+            onChange={e =>
+              onSetField(tableIndex, fieldIndex, 'generator', {
+                ...DEFAULT_GENERATOR,
+                name: e.target.value,
+              })
+            }
+          >
+            <option value="">Select Data Generator...</option>
+            {typesToOptions(numericOptions)}
+          </select>
+        </div>
+      )}
+      {configuredField.generator.name === '' ? (
+        <div />
+      ) : (
+        <div>
+          <NumericConfig
+            schemaInfo={schemaInfo}
+            onSetField={onSetField}
+            generatorName={configuredField.generator.name}
+            tableIndex={tableIndex}
+            fieldIndex={fieldIndex}
+            isInteger={currentType.includes('integer')}
+          />
+          {!configuredField.generator.func ? (
+            <div />
+          ) : (
+            <button
+              type="button"
+              className="pt-button pt-icon-add"
+              onClick={() =>
+                onSetField(
+                  tableIndex,
+                  fieldIndex,
+                  'generator',
+                  testGenerator(configuredField.generator)
+                )
+              }
+            >
+              Test Generator
+            </button>
+          )}
+          <div>{JSON.stringify(configuredField.generator.testResults)}</div>
         </div>
       )}
     </div>
