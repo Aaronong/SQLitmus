@@ -19,15 +19,15 @@ function runGenerator(randNum, input) {
   return result;
 }
 
-const CUSTOM_NUMERIC = 'Custom Numeric';
+const CUSTOM_CHARACTER = 'Custom Character';
 
-function inputsToNumericInput(inputs, setValueAtRow, setWeightAtRow, deleteInputRow) {
+function inputsToCharacterInput(inputs, setValueAtRow, setWeightAtRow, deleteInputRow) {
   return inputs.map((input, index) => (
     <div key={index} className="schema-panel-container">
       <input
-        type="number"
+        type="text"
         style={{ marginRight: '13px' }}
-        className="pt-input pt-numeric-input"
+        className="pt-input"
         onChange={e => setValueAtRow(index, e.target.value)}
         value={input[0]}
       />
@@ -50,14 +50,13 @@ function inputsToNumericInput(inputs, setValueAtRow, setWeightAtRow, deleteInput
   ));
 }
 
-class CustomNumeric extends Component {
+class CustomCharacter extends Component {
   static propTypes = {
     schemaInfo: PropTypes.array.isRequired,
     onSetField: PropTypes.func.isRequired,
     tableIndex: PropTypes.number.isRequired,
     fieldIndex: PropTypes.number.isRequired,
     handleClose: PropTypes.func.isRequired,
-    isInteger: PropTypes.bool.isRequired,
   };
 
   constructor(props, context) {
@@ -71,7 +70,7 @@ class CustomNumeric extends Component {
 
   setValueAtRow(rowIndex, value) {
     const inputs = [...this.state.inputs];
-    inputs[rowIndex][0] = this.props.isInteger ? parseInt(value, 10) : parseFloat(value);
+    inputs[rowIndex][0] = value;
     this.setState({ inputs });
   }
 
@@ -101,7 +100,7 @@ class CustomNumeric extends Component {
             <span className="modal-subheader">Value</span>
             <span className="modal-subheader">Weight</span>
           </div>
-          {inputsToNumericInput(
+          {inputsToCharacterInput(
             inputs,
             ::this.setValueAtRow,
             ::this.setWeightAtRow,
@@ -119,7 +118,7 @@ class CustomNumeric extends Component {
               onSetField(tableIndex, fieldIndex, 'generator', {
                 func: runGenerator,
                 inputs,
-                name: CUSTOM_NUMERIC,
+                name: CUSTOM_CHARACTER,
               });
               handleClose();
             }}
@@ -135,5 +134,5 @@ class CustomNumeric extends Component {
   }
 }
 
-export default CustomNumeric;
-export { CUSTOM_NUMERIC };
+export default CustomCharacter;
+export { CUSTOM_CHARACTER };

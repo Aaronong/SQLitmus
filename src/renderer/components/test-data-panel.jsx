@@ -2,6 +2,8 @@ import React, { Component, PropTypes } from 'react';
 import { tablesToCards } from './test-tables-to-cards.jsx';
 import NumericConfig, { numericOptions } from './numeric/index.jsx';
 import BooleanConfig, { booleanOptions } from './boolean/index.jsx';
+import CharacterConfig, { characterOptions } from './character/index.jsx';
+import JsonConfig, { jsonOptions } from './json/index.jsx';
 import { Slider } from '@blueprintjs/core';
 require('./test-schema-panel.css');
 
@@ -59,6 +61,28 @@ function dataConfig(schemaInfo, onSetField, tableIndex, fieldIndex) {
     dataGenOptions = booleanOptions;
     dataGenConfigs = (
       <BooleanConfig
+        schemaInfo={schemaInfo}
+        onSetField={onSetField}
+        generatorName={configuredField.generator.name}
+        tableIndex={tableIndex}
+        fieldIndex={fieldIndex}
+      />
+    );
+  } else if (currentType.includes('character')) {
+    dataGenOptions = characterOptions;
+    dataGenConfigs = (
+      <CharacterConfig
+        schemaInfo={schemaInfo}
+        onSetField={onSetField}
+        generatorName={configuredField.generator.name}
+        tableIndex={tableIndex}
+        fieldIndex={fieldIndex}
+      />
+    );
+  } else if (currentType.includes('json')) {
+    dataGenOptions = jsonOptions;
+    dataGenConfigs = (
+      <JsonConfig
         schemaInfo={schemaInfo}
         onSetField={onSetField}
         generatorName={configuredField.generator.name}

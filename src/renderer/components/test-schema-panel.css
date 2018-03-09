@@ -77,3 +77,8 @@
   font-size: 16px;
   font-weight: 300;
 }
+
+.jsonEditorContainer {
+  height: 300px;
+  overflow-y: scroll;
+}
