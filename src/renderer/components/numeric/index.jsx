@@ -4,8 +4,9 @@ import { Modal } from 'react-bootstrap';
 import { tableRelations } from '../test-tables-to-cards.jsx';
 import CustomNumeric, { CUSTOM_NUMERIC } from './custom-numeric.jsx';
 import NormalDistribution, { NORMAL_DISTRIBUTION } from './normal-distribution.jsx';
+import UniformDistribution, { UNIFORM_DISTRIBUTION } from './uniform-distribution.jsx';
 
-const numericOptions = [NORMAL_DISTRIBUTION, CUSTOM_NUMERIC];
+const numericOptions = [NORMAL_DISTRIBUTION, UNIFORM_DISTRIBUTION, CUSTOM_NUMERIC];
 
 class Numeric extends Component {
   static propTypes = {
@@ -38,6 +39,17 @@ class Numeric extends Component {
       case NORMAL_DISTRIBUTION:
         return (
           <NormalDistribution
+            schemaInfo={schemaInfo}
+            onSetField={onSetField}
+            tableIndex={tableIndex}
+            fieldIndex={fieldIndex}
+            handleClose={::this.handleClose}
+            isInteger={isInteger}
+          />
+        );
+      case UNIFORM_DISTRIBUTION:
+        return (
+          <UniformDistribution
             schemaInfo={schemaInfo}
             onSetField={onSetField}
             tableIndex={tableIndex}
