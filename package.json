@@ -69,10 +69,12 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^2.0.0-rc.2",
+    "@blueprintjs/datetime": "^2.0.0-rc.2",
     "axios": "^0.7.0",
     "babel-core": "^6.22.1",
     "babel-polyfill": "^6.22.0",
     "bunyan": "^1.8.5",
+    "faker": "^4.1.0",
     "jstat": "^1.7.1",
     "lodash.defaultsdeep": "^4.6.0",
     "npm": "^5.7.1",
