@@ -71,19 +71,19 @@ class CustomNumeric extends Component {
   }
 
   setValueAtRow(rowIndex, value) {
-    const inputs = JSON.parse(JSON.stringify(this.state.inputs));
+    const inputs = [...this.state.inputs];
     inputs[rowIndex][0] = this.props.isInteger ? parseInt(value, 10) : parseFloat(value);
     this.setState({ inputs });
   }
 
   setWeightAtRow(rowIndex, weight) {
-    const inputs = JSON.parse(JSON.stringify(this.state.inputs));
+    const inputs = [...this.state.inputs];
     inputs[rowIndex][1] = weight;
     this.setState({ inputs });
   }
 
   addInputRow() {
-    const inputs = JSON.parse(JSON.stringify(this.state.inputs));
+    const inputs = [...this.state.inputs];
     inputs.push([0, 1]);
     this.setState({ inputs });
   }

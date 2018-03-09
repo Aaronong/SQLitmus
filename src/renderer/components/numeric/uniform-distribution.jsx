@@ -32,13 +32,13 @@ class UniformDistribution extends Component {
   }
 
   setStart(start) {
-    const inputs = JSON.parse(JSON.stringify(this.state.inputs));
+    const inputs = [...this.state.inputs];
     inputs[0] = Number(start);
     this.setState({ inputs });
   }
 
   setEnd(end) {
-    const inputs = JSON.parse(JSON.stringify(this.state.inputs));
+    const inputs = [...this.state.inputs];
     inputs[1] = Number(end);
     this.setState({ inputs });
   }

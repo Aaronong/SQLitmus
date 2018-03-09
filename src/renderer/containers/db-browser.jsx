@@ -167,6 +167,7 @@ class DbBrowserContainer extends Component {
                 unique: false,
                 fk: false,
                 nullable: false,
+                nullRate: 0,
                 manyToOne: false,
                 foreignTarget: null,
                 configuredType: '',
@@ -233,8 +234,7 @@ class DbBrowserContainer extends Component {
 
   // Functions for modifying schemaInfo
   onSetField(tableIndex, fieldIndex, attribute, value) {
-    // console.log(value);
-    const schemaInfo = JSON.parse(JSON.stringify(this.state.schemaInfo));
+    const schemaInfo = [...this.state.schemaInfo];
     if (schemaInfo && schemaInfo[tableIndex] && schemaInfo[tableIndex][1][fieldIndex]) {
       schemaInfo[tableIndex][1][fieldIndex][attribute] = value;
       // if we unToggle fk, foreign target must be reset to null
@@ -250,7 +250,7 @@ class DbBrowserContainer extends Component {
   }
 
   onSelectField(tableIndex, fieldIndex, attribute, value) {
-    const schemaInfo = JSON.parse(JSON.stringify(this.state.schemaInfo));
+    const schemaInfo = [...this.state.schemaInfo];
     if (schemaInfo && schemaInfo[tableIndex] && schemaInfo[tableIndex][1][fieldIndex]) {
       if (value === 'null') {
         value = null;

@@ -32,13 +32,13 @@ class NormalDistribution extends Component {
   }
 
   setMiu(miu) {
-    const inputs = JSON.parse(JSON.stringify(this.state.inputs));
+    const inputs = [...this.state.inputs];
     inputs[0] = Number(miu);
     this.setState({ inputs });
   }
 
   setSigma(sigma) {
-    const inputs = JSON.parse(JSON.stringify(this.state.inputs));
+    const inputs = [...this.state.inputs];
     inputs[1] = Number(sigma);
     this.setState({ inputs });
   }
