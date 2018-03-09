@@ -5,6 +5,14 @@ import vis from 'vis';
 require('./test-schema-panel.css');
 // require('../../../node_modules/vis/dist/vis');
 
+function typesToOptions(typeList) {
+  return typeList.map(typ => (
+    <option key={typ} value={typ}>
+      {typ}
+    </option>
+  ));
+}
+
 function targetsToOptions(schemaInfo, targets) {
   return targets.map(indexes => (
     <option key={JSON.stringify(indexes)} value={JSON.stringify(indexes)}>
@@ -18,6 +26,10 @@ function schemaConfig(schemaInfo, onSetField, onSelectField, tableIndex, fieldIn
     return <div />;
   }
   const configuredField = schemaInfo[tableIndex][1][fieldIndex];
+  const supportedTypes = ['integer', 'character', 'timestamp', 'numeric', 'json', 'boolean'];
+  let currentType = supportedTypes.find(typ => configuredField.dataType.includes(typ))
+    ? configuredField.dataType
+    : configuredField.configuredType;
   const relations = tableRelations(schemaInfo);
   // TODO
   const foreignKeyTargets = [];
@@ -39,11 +51,29 @@ function schemaConfig(schemaInfo, onSetField, onSelectField, tableIndex, fieldIn
   );
   const currentTarget =
     configuredField.foreignTarget === null ? 'null' : JSON.stringify(configuredField.foreignTarget);
+  const isKeyWorthy =
+    currentType.includes('integer') ||
+    currentType.includes('numeric') ||
+    currentType.includes('character');
   return (
     <div key={JSON.stringify([tableIndex, fieldIndex])}>
       <h2>{`${schemaInfo[tableIndex][0]}.${configuredField.name}`}</h2>
 
-      {configuredField.dataType !== 'integer' ? (
+      {supportedTypes.find(typ => configuredField.dataType.includes(typ)) ? (
+        <div />
+      ) : (
+        <div className="pt-select" style={{ marginBottom: '5px' }}>
+          <select
+            defaultValue={currentType}
+            onChange={e => onSetField(tableIndex, fieldIndex, 'configuredType', e.target.value)}
+          >
+            <option value="">Select Data Type...</option>
+            {typesToOptions(supportedTypes)}
+          </select>
+        </div>
+      )}
+
+      {!currentType.includes('integer') ? (
         <div />
       ) : (
         <Switch
@@ -53,11 +83,15 @@ function schemaConfig(schemaInfo, onSetField, onSelectField, tableIndex, fieldIn
         />
       )}
 
-      <Switch
-        checked={configuredField.pk}
-        label="is Primary Key"
-        onChange={() => onSetField(tableIndex, fieldIndex, 'pk', !configuredField.pk)}
-      />
+      {!isKeyWorthy ? (
+        <div />
+      ) : (
+        <Switch
+          checked={configuredField.pk}
+          label="is Primary Key"
+          onChange={() => onSetField(tableIndex, fieldIndex, 'pk', !configuredField.pk)}
+        />
+      )}
 
       {configuredField.index || configuredField.pk ? (
         <div />
@@ -69,7 +103,7 @@ function schemaConfig(schemaInfo, onSetField, onSelectField, tableIndex, fieldIn
         />
       )}
 
-      {configuredField.index ? (
+      {configuredField.index || !isKeyWorthy ? (
         <div />
       ) : (
         <Switch
@@ -103,7 +137,7 @@ function schemaConfig(schemaInfo, onSetField, onSelectField, tableIndex, fieldIn
           </div>
         </div>
       )}
-      {configuredField.index || configuredField.pk || configuredField.fk ? (
+      {configuredField.pk || configuredField.fk || !currentType.includes('character') ? (
         <div />
       ) : (
         <Switch
