@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
-import { tablesToCards, tableRelations } from './test-tables-to-cards.jsx';
+import { tablesToCards } from './test-tables-to-cards.jsx';
 import NumericConfig, { numericOptions } from './numeric/index.jsx';
+import BooleanConfig, { booleanOptions } from './boolean/index.jsx';
 import { Slider } from '@blueprintjs/core';
 require('./test-schema-panel.css');
 
@@ -40,6 +41,32 @@ function dataConfig(schemaInfo, onSetField, tableIndex, fieldIndex) {
   //   const relations = tableRelations(schemaInfo);
   //   const currentTarget =
   //     configuredField.foreignTarget === null ? 'null' : JSON.stringify(configuredField.foreignTarget);
+  let dataGenOptions = [];
+  let dataGenConfigs = <div />;
+  if (currentType.includes('integer') || currentType.includes('numeric')) {
+    dataGenOptions = numericOptions;
+    dataGenConfigs = (
+      <NumericConfig
+        schemaInfo={schemaInfo}
+        onSetField={onSetField}
+        generatorName={configuredField.generator.name}
+        tableIndex={tableIndex}
+        fieldIndex={fieldIndex}
+        isInteger={currentType.includes('integer')}
+      />
+    );
+  } else if (currentType.includes('boolean')) {
+    dataGenOptions = booleanOptions;
+    dataGenConfigs = (
+      <BooleanConfig
+        schemaInfo={schemaInfo}
+        onSetField={onSetField}
+        generatorName={configuredField.generator.name}
+        tableIndex={tableIndex}
+        fieldIndex={fieldIndex}
+      />
+    );
+  }
   return (
     <div key={JSON.stringify([tableIndex, fieldIndex])}>
       <h2>{`${schemaInfo[tableIndex][0]}.${configuredField.name}`}</h2>
@@ -69,7 +96,6 @@ function dataConfig(schemaInfo, onSetField, tableIndex, fieldIndex) {
               labelStepSize={0.2}
               onChange={e => onSetField(tableIndex, fieldIndex, 'nullRate', e)}
               value={configuredField.nullRate}
-              defaultValue={configuredField.nullRate}
               vertical={false}
             />
           </div>
@@ -79,39 +105,36 @@ function dataConfig(schemaInfo, onSetField, tableIndex, fieldIndex) {
       {notConfigurable || currentType === '' ? (
         <div />
       ) : (
-        <div key={currentType} className="pt-select" style={{ marginBottom: '5px' }}>
-          <select
-            defaultValue={configuredField.generator.name}
-            onChange={e =>
-              onSetField(tableIndex, fieldIndex, 'generator', {
-                ...DEFAULT_GENERATOR,
-                name: e.target.value,
-              })
-            }
-          >
-            <option value="">Select Data Generator...</option>
-            {typesToOptions(numericOptions)}
-          </select>
+        <div>
+          <div key={currentType} className="pt-select" style={{ marginBottom: '5px' }}>
+            <select
+              defaultValue={configuredField.generator.name}
+              onChange={e =>
+                onSetField(tableIndex, fieldIndex, 'generator', {
+                  ...DEFAULT_GENERATOR,
+                  name: e.target.value,
+                })
+              }
+            >
+              <option value="">Select Data Generator...</option>
+              {typesToOptions(dataGenOptions)}
+            </select>
+          </div>
+          <span style={{ position: 'relative', top: '-2px', left: '5px' }}>
+            {configuredField.generator.name === '' ? <div /> : dataGenConfigs}
+          </span>
         </div>
       )}
       {notConfigurable || configuredField.generator.name === '' ? (
         <div />
       ) : (
         <div>
-          <NumericConfig
-            schemaInfo={schemaInfo}
-            onSetField={onSetField}
-            generatorName={configuredField.generator.name}
-            tableIndex={tableIndex}
-            fieldIndex={fieldIndex}
-            isInteger={currentType.includes('integer')}
-          />
           {!configuredField.generator.func ? (
             <div />
           ) : (
             <button
               type="button"
-              className="pt-button pt-icon-add"
+              className="pt-button pt-icon-play"
               onClick={() =>
                 onSetField(
                   tableIndex,
@@ -125,7 +148,7 @@ function dataConfig(schemaInfo, onSetField, tableIndex, fieldIndex) {
                 )
               }
             >
-              Test Generator
+              Generate Sample
             </button>
           )}
           <div>{JSON.stringify(configuredField.generator.testResults)}</div>

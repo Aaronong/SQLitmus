@@ -81,7 +81,7 @@ class Numeric extends Component {
 
     return (
       <div style={{ display: 'inline' }}>
-        <button type="button" className="pt-button pt-icon-add" onClick={::this.handleShow}>
+        <button type="button" className="pt-button pt-icon-cog" onClick={::this.handleShow}>
           Configure
         </button>
 
