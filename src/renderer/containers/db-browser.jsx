@@ -1,15 +1,15 @@
-// import debounce from 'lodash.debounce';
+import debounce from 'lodash.debounce';
 // import union from 'lodash.union';
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux';
 // import { ResizableBox } from 'react-resizable';
-// import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { Tab, Tabs } from '@blueprintjs/core';
+import { Tab as Tab2, Tabs as Tabs2 } from '@blueprintjs/core';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { sqlectron } from '../../browser/remote';
 import * as ConnActions from '../actions/connections.js';
-// import * as QueryActions from '../actions/queries';
+import * as QueryActions from '../actions/queries';
 import * as DbAction from '../actions/databases';
 import { fetchTablesIfNeeded, selectTablesForDiagram } from '../actions/tables';
 import { fetchSchemasIfNeeded } from '../actions/schemas';
@@ -25,16 +25,17 @@ import { fetchRoutinesIfNeeded } from '../actions/routines';
 // import DatabaseDiagramModal from '../components/database-diagram-modal.jsx';
 import Header from '../components/db-header.jsx';
 import Footer from '../components/footer.jsx';
-// import Query from '../components/query.jsx';
+import Query from '../components/query.jsx';
 import Loader from '../components/loader.jsx';
 import PromptModal from '../components/prompt-modal.jsx';
 import MenuHandler from '../menu-handler';
 import SchemaPanel from '../components/test-schema-panel.jsx';
 import DataPanel from '../components/test-data-panel.jsx';
 import { requireLogos } from '../components/require-context';
-import Loading from '../components/loader.jsx';
+// import Loading from '../components/loader.jsx';
 
 require('./db-browser.css');
+require('react-tabs/style/react-tabs.css');
 
 const STYLES = {
   wrapper: {},
@@ -96,6 +97,7 @@ class DbBrowserContainer extends Component {
   constructor(props, context) {
     super(props, context);
     this.state = {
+      tabNavPosition: 0,
       navBarPosition: 1,
       columnsFetched: false,
       schemaInfo: null,
@@ -151,7 +153,7 @@ class DbBrowserContainer extends Component {
 
     // Generating schema information based on data retrieved
     if (
-      (columns.columnsByTable && (!connections.waitingPrivateKeyPassphrase && !Loading)) ||
+      (columns.columnsByTable && (!connections.waitingPrivateKeyPassphrase && !Loader)) ||
       (connections.server && this.getCurrentQuery())
     ) {
       const tableInfo = columns.columnsByTable[this.getCurrentQuery().database];
@@ -291,6 +293,213 @@ class DbBrowserContainer extends Component {
     console.log(this.state.schemaInfo);
   }
 
+  // Stuff for queries
+  onSQLChange(sqlQuery) {
+    this.props.dispatch(QueryActions.updateQueryIfNeeded(sqlQuery));
+  }
+
+  onQuerySelectionChange(sqlQuery, selectedQuery) {
+    this.props.dispatch(QueryActions.updateQueryIfNeeded(sqlQuery, selectedQuery));
+  }
+
+  copyToClipboard(rows, type) {
+    this.props.dispatch(QueryActions.copyToClipboard(rows, type));
+  }
+
+  saveToFile(rows, type) {
+    this.props.dispatch(QueryActions.saveToFile(rows, type));
+  }
+
+  handleExecuteQuery(sqlQuery) {
+    const currentQuery = this.getCurrentQuery();
+    if (!currentQuery) {
+      return;
+    }
+
+    this.props.dispatch(QueryActions.executeQueryIfNeeded(sqlQuery, currentQuery.id));
+  }
+
+  handleCancelQuery() {
+    const currentQuery = this.getCurrentQuery();
+    if (!currentQuery) {
+      return;
+    }
+
+    this.props.dispatch(QueryActions.cancelQuery(currentQuery.id));
+  }
+
+  handleSelectTab(index) {
+    const queryId = this.props.queries.queryIds[index];
+    this.props.dispatch(QueryActions.selectQuery(queryId));
+  }
+
+  newTab() {
+    this.props.dispatch(QueryActions.newQuery(this.getCurrentQuery().database));
+  }
+
+  closeTab() {
+    this.removeQuery(this.props.queries.currentQueryId);
+  }
+
+  removeQuery(queryId) {
+    this.props.dispatch(QueryActions.removeQuery(queryId));
+  }
+
+  onTabDoubleClick(queryId) {
+    this.setState({ renamingTabQueryId: queryId });
+  }
+
+  renderTabQueries() {
+    const {
+      dispatch,
+      connections,
+      queries,
+      databases,
+      schemas,
+      tables,
+      columns,
+      triggers,
+      indexes,
+      views,
+      routines,
+    } = this.props;
+
+    const currentDB = this.getCurrentQuery().database;
+
+    const menu = queries.queryIds.map(queryId => {
+      const isCurrentQuery = queryId === queries.currentQueryId;
+      const buildContent = () => {
+        const isRenaming = this.state.renamingTabQueryId === queryId;
+        if (isRenaming) {
+          return (
+            <div className="ui input">
+              <input
+                className="pt-input pt-intent-primary"
+                autoFocus
+                type="text"
+                ref={comp => {
+                  this.tabInput = comp;
+                }}
+                onBlur={() => {
+                  dispatch(QueryActions.renameQuery(this.tabInput.value));
+                  this.setState({ renamingTabQueryId: null });
+                }}
+                onKeyDown={event => {
+                  if (event.key !== 'Escape' && event.key !== 'Enter') {
+                    return;
+                  }
+
+                  if (event.key === 'Enter') {
+                    dispatch(QueryActions.renameQuery(this.tabInput.value));
+                  }
+
+                  this.setState({ renamingTabQueryId: null });
+                }}
+                defaultValue={queries.queriesById[queryId].name}
+              />
+            </div>
+          );
+        }
+
+        return (
+          <div>
+            {queries.queriesById[queryId].name}
+            <button
+              className="pt-button pt-small pt-icon-cross pt-minimal"
+              onClick={debounce(() => {
+                this.removeQuery(queryId);
+                const position = this.state.tabNavPosition + 200;
+                this.setState({ tabNavPosition: position > 0 ? 0 : position });
+              }, 200)}
+            />
+          </div>
+        );
+      };
+
+      return (
+        <Tab
+          key={queryId}
+          onDoubleClick={() => this.onTabDoubleClick(queryId)}
+          className="pt-tab"
+          aria-selected={
+            isCurrentQuery && this.state.renamingTabQueryId === null ? 'true' : 'false'
+          }
+          style={{ position: 'relative', top: '2px', margin: '0px 5px' }}
+        >
+          {buildContent()}
+        </Tab>
+      );
+    });
+
+    const { disabledFeatures } = sqlectron.db.CLIENTS.find(
+      dbClient => dbClient.key === connections.server.client
+    );
+
+    const allowCancel = !disabledFeatures || !~disabledFeatures.indexOf('cancelQuery');
+
+    const panels = queries.queryIds.map(queryId => {
+      const query = queries.queriesById[queryId];
+
+      return (
+        <TabPanel key={queryId}>
+          <Query
+            ref={`queryBox_${queryId}`}
+            editorName={`querybox${queryId}`}
+            client={connections.server.client}
+            allowCancel={allowCancel}
+            query={query}
+            enabledAutoComplete={queries.enabledAutoComplete}
+            enabledLiveAutoComplete={queries.enabledLiveAutoComplete}
+            database={currentDB}
+            databases={databases.items}
+            schemas={schemas.itemsByDatabase[query.database]}
+            tables={tables.itemsByDatabase[query.database]}
+            columnsByTable={columns.columnsByTable[query.database]}
+            triggersByTable={triggers.triggersByTable[query.database]}
+            indexesByTable={indexes.indexesByTable[query.database]}
+            views={views.viewsByDatabase[query.database]}
+            functions={routines.functionsByDatabase[query.database]}
+            procedures={routines.proceduresByDatabase[query.database]}
+            widthOffset={0}
+            onExecQueryClick={::this.handleExecuteQuery}
+            onCancelQueryClick={::this.handleCancelQuery}
+            onCopyToClipboardClick={::this.copyToClipboard}
+            onSaveToFileClick={::this.saveToFile}
+            onSQLChange={::this.onSQLChange}
+            onSelectionChange={::this.onQuerySelectionChange}
+          />
+        </TabPanel>
+      );
+    });
+
+    // const isOnMaxPosition =
+    //   this.tabListTotalWidthChildren - Math.abs(this.state.tabNavPosition) <=
+    //   this.tabListTotalWidth;
+    const selectedIndex = queries.queryIds.indexOf(queries.currentQueryId);
+    // const isTabsFitOnScreen = this.tabListTotalWidthChildren >= this.tabListTotalWidth;
+    return (
+      <Tabs onSelect={::this.handleSelectTab} selectedIndex={selectedIndex} forceRenderTabPanel>
+        <div id="tabs-nav-wrapper" className="ui pointing secondary menu">
+          <div style={{ overflowX: 'auto' }}>
+            <TabList
+              ref="tabList"
+              style={{
+                border: 'none',
+              }}
+            >
+              <div className="pair-label-switch-container">{menu}</div>
+            </TabList>
+          </div>
+          <button
+            className="pt-button pt-minimal pt-icon-plus pt-intent-primary"
+            onClick={() => this.newTab()}
+          />
+        </div>
+        {panels}
+      </Tabs>
+    );
+  }
+
   render() {
     const { filter, schemaInfo } = this.state;
     const {
@@ -351,8 +560,8 @@ class DbBrowserContainer extends Component {
       );
     } else {
       MainDisplay = (
-        <Tabs id="TabsExample" selectedTabId={this.testTabPosition}>
-          <Tab
+        <Tabs2 id="TabsExample" selectedTabId={this.testTabPosition}>
+          <Tab2
             id="0"
             title="Schema"
             panel={
@@ -365,7 +574,7 @@ class DbBrowserContainer extends Component {
               </div>
             }
           />
-          <Tab
+          <Tab2
             id="1"
             title="Data"
             panel={
@@ -379,8 +588,14 @@ class DbBrowserContainer extends Component {
               </div>
             }
           />
-          <Tab id="2" title="Queries" panel={<div className="bordered-area">Queries </div>} />
-          <Tabs.Expander />
+          <Tab2
+            id="2"
+            title="Queries"
+            panel={
+              <div style={{ overflowX: 'hidden', padding: '5px' }}>{this.renderTabQueries()} </div>
+            }
+          />
+          <Tabs2.Expander />
           <button
             className="pt-button pt-large pt-intent-primary"
             title="Run"
@@ -388,7 +603,7 @@ class DbBrowserContainer extends Component {
           >
             Run
           </button>
-        </Tabs>
+        </Tabs2>
       );
     }
 
