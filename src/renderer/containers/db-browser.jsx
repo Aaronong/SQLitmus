@@ -1,4 +1,5 @@
 import debounce from 'lodash.debounce';
+import cloneDeep from 'lodash.clonedeep';
 // import union from 'lodash.union';
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
@@ -33,6 +34,8 @@ import SchemaPanel from '../components/test-schema-panel.jsx';
 import DataPanel from '../components/test-data-panel.jsx';
 import { requireLogos } from '../components/require-context';
 // import Loading from '../components/loader.jsx';
+import rehydrateSchemaInfo from '../components/generic/rehydrate-schema-info.js';
+import parseQuery from '../components/generic/parse-query.js';
 
 require('./db-browser.css');
 require('react-tabs/style/react-tabs.css');
@@ -179,7 +182,9 @@ class DbBrowserContainer extends Component {
           ]
         );
       }
-      this.setState({ schemaInfo });
+      this.setState({
+        schemaInfo: rehydrateSchemaInfo(cloneDeep(this.state.schemaInfo), schemaInfo),
+      });
     }
 
     this.setMenus();
@@ -200,6 +205,12 @@ class DbBrowserContainer extends Component {
 
   componentWillUnmount() {
     this.menuHandler.removeAllMenus();
+    // const serverName = this.props.connections.serverName;
+    // const dbName = this.getCurrentQuery().database;
+    // localStorage.setItem(
+    //   `${serverName}.${dbName}.schemaInfo`,
+    //   JSON.stringify(this.state.schemaInfo)
+    // );
   }
 
   onCloseConnectionClick() {
@@ -290,7 +301,8 @@ class DbBrowserContainer extends Component {
   }
 
   print() {
-    console.log(this.state.schemaInfo);
+    // console.log(this.state.schemaInfo);
+    console.log(this.props.queries);
   }
 
   // Stuff for queries
@@ -310,13 +322,13 @@ class DbBrowserContainer extends Component {
     this.props.dispatch(QueryActions.saveToFile(rows, type));
   }
 
-  handleExecuteQuery(sqlQuery) {
+  handleExecuteQuery(sqlQuery, schemaInfo) {
     const currentQuery = this.getCurrentQuery();
     if (!currentQuery) {
       return;
     }
-
-    this.props.dispatch(QueryActions.executeQueryIfNeeded(sqlQuery, currentQuery.id));
+    const parsedQuery = parseQuery(sqlQuery, schemaInfo);
+    this.props.dispatch(QueryActions.executeQueryIfNeeded(parsedQuery, currentQuery.id));
   }
 
   handleCancelQuery() {
@@ -437,13 +449,43 @@ class DbBrowserContainer extends Component {
 
     const allowCancel = !disabledFeatures || !~disabledFeatures.indexOf('cancelQuery');
 
+    // const query = queries.queriesById[queries.currentQueryId];
+    // const queryPanel = (<div key='only'><Query
+    //   // ref={`queryBox_${queryId}`}
+    //   editorName={'querybox'}
+    //   client={connections.server.client}
+    //   allowCancel={allowCancel}
+    //   query={query}
+    //   enabledAutoComplete={queries.enabledAutoComplete}
+    //   enabledLiveAutoComplete={queries.enabledLiveAutoComplete}
+    //   database={currentDB}
+    //   databases={databases.items}
+    //   schemas={schemas.itemsByDatabase[query.database]}
+    //   tables={tables.itemsByDatabase[query.database]}
+    //   columnsByTable={columns.columnsByTable[query.database]}
+    //   triggersByTable={triggers.triggersByTable[query.database]}
+    //   indexesByTable={indexes.indexesByTable[query.database]}
+    //   views={views.viewsByDatabase[query.database]}
+    //   functions={routines.functionsByDatabase[query.database]}
+    //   procedures={routines.proceduresByDatabase[query.database]}
+    //   widthOffset={0}
+    //   onExecQueryClick={currQuery =>
+    //     ::this.handleExecuteQuery(currQuery, this.state.schemaInfo)
+    //   }
+    //   onCancelQueryClick={::this.handleCancelQuery}
+    //   onCopyToClipboardClick={::this.copyToClipboard}
+    //   onSaveToFileClick={::this.saveToFile}
+    //   onSQLChange={::this.onSQLChange}
+    //   onSelectionChange={::this.onQuerySelectionChange}
+    // /></div>);
     const panels = queries.queryIds.map(queryId => {
       const query = queries.queriesById[queryId];
 
       return (
         <TabPanel key={queryId}>
           <Query
-            ref={`queryBox_${queryId}`}
+            key={queryId}
+            // ref={`queryBox_${queryId}`}
             editorName={`querybox${queryId}`}
             client={connections.server.client}
             allowCancel={allowCancel}
@@ -461,7 +503,9 @@ class DbBrowserContainer extends Component {
             functions={routines.functionsByDatabase[query.database]}
             procedures={routines.proceduresByDatabase[query.database]}
             widthOffset={0}
-            onExecQueryClick={::this.handleExecuteQuery}
+            onExecQueryClick={currQuery =>
+              ::this.handleExecuteQuery(currQuery, this.state.schemaInfo)
+            }
             onCancelQueryClick={::this.handleCancelQuery}
             onCopyToClipboardClick={::this.copyToClipboard}
             onSaveToFileClick={::this.saveToFile}
@@ -591,9 +635,7 @@ class DbBrowserContainer extends Component {
           <Tab2
             id="2"
             title="Queries"
-            panel={
-              <div style={{ overflowX: 'hidden', padding: '5px' }}>{this.renderTabQueries()} </div>
-            }
+            panel={<div className="query-container">{this.renderTabQueries()} </div>}
           />
           <Tabs2.Expander />
           <button

@@ -110,6 +110,7 @@ class CustomJson extends Component {
           style={{ height: '100px', width: '100px' }}
           onChange={e => (activeIndex === -1 ? console.log(e) : this.setValueAtRow(activeIndex, e))}
           fontSize={14}
+          editorProps={{ $blockScrolling: Infinity }}
           showPrintMargin
           showGutter
           highlightActiveLine

@@ -6,6 +6,7 @@ import CharacterConfig, { characterOptions } from './character/index.jsx';
 import JsonConfig, { jsonOptions } from './json/index.jsx';
 import TimestampConfig, { timestampOptions } from './timestamp/index.jsx';
 import { Slider } from '@blueprintjs/core';
+import { testGenerator } from './generic/test-generator.js';
 require('./test-schema-panel.css');
 
 const DEFAULT_GENERATOR = { name: '', func: null, inputs: [], testResults: [] };
@@ -16,19 +17,6 @@ function typesToOptions(typeList) {
       {typ}
     </option>
   ));
-}
-
-function testGenerator(generator, nullable, nullRate) {
-  const results = [];
-  for (let i = 0; i < 10; i++) {
-    const output = generator.func(Math.random(), generator.inputs);
-    if (nullable) {
-      results.push(Math.random() < nullRate ? null : output);
-    } else {
-      results.push(output);
-    }
-  }
-  return { ...generator, testResults: results };
 }
 
 function dataConfig(schemaInfo, onSetField, tableIndex, fieldIndex) {

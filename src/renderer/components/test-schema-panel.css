@@ -86,3 +86,13 @@
 .grid-query-wrapper {
   overflow-x: hidden;
 }
+
+.query-container {
+  height: calc(100vh - 270px);
+  padding: 5px;
+  overflow-y: auto;
+}
+
+.wide-modal {
+  width: 70vw;
+}
