@@ -112,6 +112,10 @@ export default class ServerModalForm extends Component {
     }
 
     const dbClient = CLIENTS.find(dbc => dbc.value === this.state.client);
+
+    if (!dbClient) {
+      return false;
+    }
     return !!(dbClient.disabledFeatures && ~dbClient.disabledFeatures.indexOf(feature));
   }
 
@@ -264,7 +268,7 @@ export default class ServerModalForm extends Component {
             <div className="pt-select" style={{ width: '100%' }}>
               <select
                 name="client"
-                onChange={::this.handleOnClientChange}
+                onChange={e => ::this.handleOnClientChange(e.target.value)}
                 value={this.state.client}
               >
                 <option value="">Select</option>
