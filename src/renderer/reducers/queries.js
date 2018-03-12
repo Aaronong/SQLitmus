@@ -1,7 +1,6 @@
 import * as connTypes from '../actions/connections';
 import * as types from '../actions/queries';
 
-
 const INITIAL_STATE = {
   lastCreatedId: 0,
   currentQueryId: null,
@@ -12,8 +11,7 @@ const INITIAL_STATE = {
   enabledLiveAutoComplete: true,
 };
 
-
-export default function (state = INITIAL_STATE, action) {
+export default function(state = INITIAL_STATE, action) {
   switch (action.type) {
     case connTypes.CLOSE_CONNECTION: {
       return INITIAL_STATE;
@@ -57,10 +55,7 @@ export default function (state = INITIAL_STATE, action) {
         isExecuting: true,
         isDefaultSelect: action.isDefaultSelect,
         didInvalidate: false,
-        queryHistory: [
-          ...state.queriesById[state.currentQueryId].queryHistory,
-          action.query,
-        ],
+        queryHistory: [...state.queriesById[state.currentQueryId].queryHistory, action.query],
       });
     }
     case types.EXECUTE_QUERY_SUCCESS: {
@@ -97,11 +92,15 @@ export default function (state = INITIAL_STATE, action) {
       });
     }
     case types.UPDATE_QUERY: {
-      return changeStateByCurrentQuery(state, {
-        query: action.query,
-        selectedQuery: action.selectedQuery,
-        copied: false,
-      }, { table: action.table });
+      return changeStateByCurrentQuery(
+        state,
+        {
+          query: action.query,
+          selectedQuery: action.selectedQuery,
+          copied: false,
+        },
+        { table: action.table }
+      );
     }
     case types.COPY_QUERY_RESULT_TO_CLIPBOARD_REQUEST: {
       return changeStateByCurrentQuery(state, {
@@ -147,10 +146,10 @@ export default function (state = INITIAL_STATE, action) {
         error: action.error,
       });
     }
-    default : return state;
+    default:
+      return state;
   }
 }
-
 
 function addNewQuery(state, action) {
   if (action.reconnecting) {
@@ -158,11 +157,8 @@ function addNewQuery(state, action) {
   }
 
   const configItemsPerPage = action.config && action.config.resultItemsPerPage;
-  const itemsPerPage = (
-    configItemsPerPage
-    || state.resultItemsPerPage
-    || INITIAL_STATE.resultItemsPerPage
-  );
+  const itemsPerPage =
+    configItemsPerPage || state.resultItemsPerPage || INITIAL_STATE.resultItemsPerPage;
 
   let enabledAutoComplete = INITIAL_STATE.enabledAutoComplete;
   if (action.config && action.config.enabledAutoComplete !== undefined) {
@@ -207,7 +203,6 @@ function addNewQuery(state, action) {
   };
 }
 
-
 function changeStateByCurrentQuery(oldFullState, newCurrentQueryState, options = {}) {
   const oldQueryState = oldFullState.queriesById[oldFullState.currentQueryId];
 
@@ -232,10 +227,6 @@ function changeStateByCurrentQuery(oldFullState, newCurrentQueryState, options =
   };
 }
 
-function createQueryName (id, database, table) {
-  return (
-    table
-    ? `${database} / ${table} #${id}`
-    : `${database} #${id}`
-  );
+function createQueryName(id, database, table) {
+  return table ? `${database} / ${table} #${id}` : `${database} #${id}`;
 }
