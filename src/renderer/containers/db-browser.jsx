@@ -32,6 +32,7 @@ import PromptModal from '../components/prompt-modal.jsx';
 import MenuHandler from '../menu-handler';
 import SchemaPanel from '../components/test-schema-panel.jsx';
 import DataPanel from '../components/test-data-panel.jsx';
+import rowPanel from '../components/test-row-panel.jsx';
 import { requireLogos } from '../components/require-context';
 // import Loading from '../components/loader.jsx';
 import rehydrateSchemaInfo from '../components/generic/rehydrate-schema-info.js';
@@ -104,6 +105,7 @@ class DbBrowserContainer extends Component {
       navBarPosition: 1,
       columnsFetched: false,
       schemaInfo: null,
+      rowInfo: null,
     };
     this.menuHandler = new MenuHandler();
   }
@@ -154,13 +156,14 @@ class DbBrowserContainer extends Component {
       userTables.forEach(table => this.onSelectTable(dbName, table));
     }
 
-    // Generating schema information based on data retrieved
+    // Generating schema and config information based on data retrieved
     if (
       (columns.columnsByTable && (!connections.waitingPrivateKeyPassphrase && !Loader)) ||
       (connections.server && this.getCurrentQuery())
     ) {
       const tableInfo = columns.columnsByTable[this.getCurrentQuery().database];
       let schemaInfo = null;
+      let rowInfo = null;
       if (tableInfo) {
         schemaInfo = Object.entries(columns.columnsByTable[this.getCurrentQuery().database]).map(
           ([key, value]) => [
@@ -181,9 +184,13 @@ class DbBrowserContainer extends Component {
             ),
           ]
         );
+        rowInfo = Object.entries(columns.columnsByTable[this.getCurrentQuery().database]).map(
+          key => [key[0], [1]]
+        );
       }
       this.setState({
         schemaInfo: rehydrateSchemaInfo(cloneDeep(this.state.schemaInfo), schemaInfo),
+        rowInfo: rehydrateSchemaInfo(cloneDeep(this.state.rowInfo), rowInfo),
       });
     }
 
@@ -273,6 +280,25 @@ class DbBrowserContainer extends Component {
       schemaInfo[tableIndex][1][fieldIndex][attribute] = value;
       this.setState({ schemaInfo });
     }
+  }
+
+  // Modifying rowInfo
+  onSetRowItem(tableIndex, testIndex, value) {
+    const rowInfo = cloneDeep(this.state.rowInfo);
+    rowInfo[tableIndex][1][testIndex] = value;
+    this.setState({ rowInfo });
+  }
+
+  onAddRow() {
+    let rowInfo = cloneDeep(this.state.rowInfo);
+    rowInfo = rowInfo.map(([key, value]) => [key, [...value, value[value.length - 1]]]);
+    this.setState({ rowInfo });
+  }
+
+  onRemoveRow(rowIndex) {
+    const rowInfo = cloneDeep(this.state.rowInfo);
+    rowInfo.forEach(([key, value]) => value.splice(rowIndex, 1));
+    this.setState({ rowInfo });
   }
 
   setMenus() {
@@ -545,7 +571,7 @@ class DbBrowserContainer extends Component {
   }
 
   render() {
-    const { filter, schemaInfo } = this.state;
+    const { schemaInfo, rowInfo } = this.state;
     const {
       status,
       connections,
@@ -623,19 +649,38 @@ class DbBrowserContainer extends Component {
             title="Data"
             panel={
               <div className="bordered-area">
-                {' '}
                 <DataPanel
                   schemaInfo={schemaInfo}
                   onSetField={::this.onSetField}
                   onSelectField={::this.onSelectField}
-                />{' '}
+                />
               </div>
             }
           />
           <Tab2
             id="2"
+            title="Rows"
+            panel={
+              <div className="bordered-area">
+                {rowPanel(
+                  schemaInfo,
+                  rowInfo,
+                  ::this.onSetRowItem,
+                  ::this.onAddRow,
+                  ::this.onRemoveRow
+                )}
+              </div>
+            }
+          />
+          <Tab2
+            id="3"
             title="Queries"
             panel={<div className="query-container">{this.renderTabQueries()} </div>}
+          />
+          <Tab2
+            id="4"
+            title="Connections"
+            panel={<div className="bordered-area">Conns CONFIGS </div>}
           />
           <Tabs2.Expander />
           <button
