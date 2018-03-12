@@ -4,7 +4,7 @@ import { DatePicker } from '@blueprintjs/datetime';
 import faker from 'faker';
 require('@blueprintjs/datetime/src/blueprint-datetime.scss');
 
-function runGenerator(randNum, [from, to]) {
+function timestampBetweenGenerator(randNum, [from, to]) {
   const ans = faker.date.between(new Date(from), new Date(to));
   return Math.round(ans);
 }
@@ -71,7 +71,7 @@ class TimestampBetween extends Component {
             className="pt-button pt-intent-primary"
             onClick={() => {
               onSetField(tableIndex, fieldIndex, 'generator', {
-                func: runGenerator,
+                func: timestampBetweenGenerator,
                 inputs,
                 name: TIMESTAMP_BETWEEN,
               });
@@ -90,4 +90,4 @@ class TimestampBetween extends Component {
 }
 
 export default TimestampBetween;
-export { TIMESTAMP_BETWEEN };
+export { TIMESTAMP_BETWEEN, timestampBetweenGenerator };

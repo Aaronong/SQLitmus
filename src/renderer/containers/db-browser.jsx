@@ -33,10 +33,16 @@ import MenuHandler from '../menu-handler';
 import SchemaPanel from '../components/test-schema-panel.jsx';
 import DataPanel from '../components/test-data-panel.jsx';
 import rowPanel from '../components/test-row-panel.jsx';
+import connPoolPanel from '../components/test-conn-panel.jsx';
 import { requireLogos } from '../components/require-context';
 // import Loading from '../components/loader.jsx';
 import rehydrateSchemaInfo from '../components/generic/rehydrate-schema-info.js';
 import parseQuery from '../components/generic/parse-query.js';
+import {
+  localStoragePrefix,
+  storeSchemaInfo,
+  fillSchemaInfo,
+} from '../components/generic/local-storage.js';
 
 require('./db-browser.css');
 require('react-tabs/style/react-tabs.css');
@@ -106,6 +112,7 @@ class DbBrowserContainer extends Component {
       columnsFetched: false,
       schemaInfo: null,
       rowInfo: null,
+      connPoolInfo: [5],
     };
     this.menuHandler = new MenuHandler();
   }
@@ -136,19 +143,15 @@ class DbBrowserContainer extends Component {
 
     const lastConnectedDB = connections.databases[connections.databases.length - 1];
     const filter = connections.server.filter;
+    const dbName = connections.server.database;
 
     dispatch(DbAction.fetchDatabasesIfNeeded(filter));
     dispatch(fetchSchemasIfNeeded(lastConnectedDB));
     dispatch(fetchTablesIfNeeded(lastConnectedDB, filter));
     dispatch(fetchViewsIfNeeded(lastConnectedDB, filter));
     dispatch(fetchRoutinesIfNeeded(lastConnectedDB, filter));
-    if (
-      this.getCurrentQuery() &&
-      this.props.tables.itemsByDatabase[this.getCurrentQuery().database] &&
-      this.state.columnsFetched === false
-    ) {
+    if (this.props.tables.itemsByDatabase[dbName] && this.state.columnsFetched === false) {
       this.setState({ columnsFetched: true });
-      const dbName = this.getCurrentQuery().database;
       const systemSchemas = ['pg_catalog', 'information_schema'];
       const userTables = this.props.tables.itemsByDatabase[dbName].filter(
         table => !systemSchemas.includes(table.schema)
@@ -157,41 +160,38 @@ class DbBrowserContainer extends Component {
     }
 
     // Generating schema and config information based on data retrieved
-    if (
-      (columns.columnsByTable && (!connections.waitingPrivateKeyPassphrase && !Loader)) ||
-      (connections.server && this.getCurrentQuery())
-    ) {
-      const tableInfo = columns.columnsByTable[this.getCurrentQuery().database];
+    if (columns !== this.props.columns) {
+      console.log('REFRESH SCHEMAINFO');
+      if (this.state.schemaInfo) {
+        storeSchemaInfo(this.state.schemaInfo, this.props.connections.server);
+      }
+      const tableInfo = columns.columnsByTable[dbName];
       let schemaInfo = null;
       let rowInfo = null;
       if (tableInfo) {
-        schemaInfo = Object.entries(columns.columnsByTable[this.getCurrentQuery().database]).map(
-          ([key, value]) => [
-            key,
-            value.map(field =>
-              Object.assign({}, field, {
-                index: false,
-                pk: false,
-                unique: false,
-                fk: false,
-                nullable: false,
-                nullRate: 0,
-                manyToOne: false,
-                foreignTarget: null,
-                configuredType: '',
-                generator: DEFAULT_GENERATOR,
-              })
-            ),
-          ]
-        );
-        rowInfo = Object.entries(columns.columnsByTable[this.getCurrentQuery().database]).map(
-          key => [key[0], [1]]
-        );
+        schemaInfo = Object.entries(columns.columnsByTable[dbName]).map(([key, value]) => [
+          key,
+          value.map(field =>
+            Object.assign({}, field, {
+              index: false,
+              pk: false,
+              unique: false,
+              fk: false,
+              nullable: false,
+              nullRate: 0,
+              manyToOne: false,
+              foreignTarget: null,
+              configuredType: '',
+              generator: DEFAULT_GENERATOR,
+            })
+          ),
+        ]);
+        rowInfo = Object.entries(columns.columnsByTable[dbName]).map(key => [key[0], [1]]);
+        this.setState({
+          schemaInfo: fillSchemaInfo(schemaInfo, connections.server),
+          rowInfo: rehydrateSchemaInfo(cloneDeep(this.state.rowInfo), rowInfo),
+        });
       }
-      this.setState({
-        schemaInfo: rehydrateSchemaInfo(cloneDeep(this.state.schemaInfo), schemaInfo),
-        rowInfo: rehydrateSchemaInfo(cloneDeep(this.state.rowInfo), rowInfo),
-      });
     }
 
     this.setMenus();
@@ -212,16 +212,13 @@ class DbBrowserContainer extends Component {
 
   componentWillUnmount() {
     this.menuHandler.removeAllMenus();
-    // const serverName = this.props.connections.serverName;
-    // const dbName = this.getCurrentQuery().database;
-    // localStorage.setItem(
-    //   `${serverName}.${dbName}.schemaInfo`,
-    //   JSON.stringify(this.state.schemaInfo)
-    // );
   }
 
   onCloseConnectionClick() {
-    const { dispatch } = this.props;
+    const { dispatch, connections } = this.props;
+    if (this.state.schemaInfo) {
+      storeSchemaInfo(this.state.schemaInfo, connections.server);
+    }
     dispatch(ConnActions.disconnect());
   }
 
@@ -255,6 +252,7 @@ class DbBrowserContainer extends Component {
   // Functions for modifying schemaInfo
   onSetField(tableIndex, fieldIndex, attribute, value) {
     const schemaInfo = [...this.state.schemaInfo];
+    // const prefix = localStoragePrefix(this.props.connections.server);
     if (schemaInfo && schemaInfo[tableIndex] && schemaInfo[tableIndex][1][fieldIndex]) {
       schemaInfo[tableIndex][1][fieldIndex][attribute] = value;
       // if we unToggle fk, foreign target must be reset to null
@@ -265,6 +263,7 @@ class DbBrowserContainer extends Component {
       if (attribute === 'configuredType') {
         schemaInfo[tableIndex][1][fieldIndex].generator = DEFAULT_GENERATOR;
       }
+      storeSchemaInfo(schemaInfo, this.props.connections.server);
       this.setState({ schemaInfo });
     }
   }
@@ -278,6 +277,7 @@ class DbBrowserContainer extends Component {
         value = JSON.parse(value);
       }
       schemaInfo[tableIndex][1][fieldIndex][attribute] = value;
+      storeSchemaInfo(schemaInfo, this.props.connections.server);
       this.setState({ schemaInfo });
     }
   }
@@ -301,6 +301,26 @@ class DbBrowserContainer extends Component {
     this.setState({ rowInfo });
   }
 
+  // Modifying connPoolInfo
+  onSetConnValue(index, value) {
+    const connPoolInfo = [...this.state.connPoolInfo];
+    connPoolInfo[index] = value;
+    this.setState({ connPoolInfo });
+  }
+
+  onAddConn() {
+    const lastItem = this.state.connPoolInfo[this.state.connPoolInfo.length - 1];
+    const connPoolInfo = [...this.state.connPoolInfo, lastItem];
+    this.setState({ connPoolInfo });
+  }
+
+  onRemoveConn(index) {
+    const connPoolInfo = [...this.state.connPoolInfo];
+    connPoolInfo.splice(index, 1);
+    this.setState({ connPoolInfo });
+  }
+
+  // FOR GENERIC FUNCTIONS
   setMenus() {
     this.menuHandler.setMenus({
       'sqlectron:query-execute': () => {
@@ -327,8 +347,10 @@ class DbBrowserContainer extends Component {
   }
 
   print() {
-    // console.log(this.state.schemaInfo);
-    console.log(this.props.queries);
+    console.log(this.state.schemaInfo);
+    // console.log(this.props.queries);
+    // console.log(this.props.connections);
+    console.log(localStoragePrefix(this.props.connections.server));
   }
 
   // Stuff for queries
@@ -571,7 +593,7 @@ class DbBrowserContainer extends Component {
   }
 
   render() {
-    const { schemaInfo, rowInfo } = this.state;
+    const { schemaInfo, rowInfo, connPoolInfo } = this.state;
     const {
       status,
       connections,
@@ -584,7 +606,6 @@ class DbBrowserContainer extends Component {
       views,
       routines,
     } = this.props;
-    const currentDB = this.getCurrentQuery() ? this.getCurrentQuery().database : null;
 
     if (connections.waitingPrivateKeyPassphrase) {
       return (
@@ -675,12 +696,21 @@ class DbBrowserContainer extends Component {
           <Tab2
             id="3"
             title="Queries"
-            panel={<div className="query-container">{this.renderTabQueries()} </div>}
+            panel={<div className="query-container bordered-area">{this.renderTabQueries()} </div>}
           />
           <Tab2
             id="4"
             title="Connections"
-            panel={<div className="bordered-area">Conns CONFIGS </div>}
+            panel={
+              <div className="bordered-area">
+                {connPoolPanel(
+                  connPoolInfo,
+                  ::this.onSetConnValue,
+                  ::this.onAddConn,
+                  ::this.onRemoveConn
+                )}
+              </div>
+            }
           />
           <Tabs2.Expander />
           <button

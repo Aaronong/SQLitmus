@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 // import { Button, Overlay, Popover } from '@blueprintjs/core';
 import { Modal } from 'react-bootstrap';
-import CustomJson, { CUSTOM_JSON } from './custom-json.jsx';
+import CustomJson, { CUSTOM_JSON, customJsonGenerator } from './custom-json.jsx';
 
 const jsonOptions = [CUSTOM_JSON];
+const jsonGenerators = [customJsonGenerator];
 
 class Json extends Component {
   static propTypes = {
@@ -69,4 +70,4 @@ class Json extends Component {
 }
 
 export default Json;
-export { jsonOptions };
+export { jsonOptions, jsonGenerators };

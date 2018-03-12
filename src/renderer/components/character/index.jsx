@@ -1,9 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 // import { Button, Overlay, Popover } from '@blueprintjs/core';
 import { Modal } from 'react-bootstrap';
-import CustomCharacter, { CUSTOM_CHARACTER } from './custom-character.jsx';
+import CustomCharacter, {
+  CUSTOM_CHARACTER,
+  customCharacterGenerator,
+} from './custom-character.jsx';
 
 const characterOptions = [CUSTOM_CHARACTER];
+const characterGenerators = [customCharacterGenerator];
 
 class Character extends Component {
   static propTypes = {
@@ -69,4 +73,4 @@ class Character extends Component {
 }
 
 export default Character;
-export { characterOptions };
+export { characterOptions, characterGenerators };

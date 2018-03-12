@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Modal } from 'react-bootstrap';
 import { Slider } from '@blueprintjs/core';
 
-function runGenerator(randNum, [trueRate]) {
+function customBooleanGenerator(randNum, [trueRate]) {
   return Math.random() < trueRate;
 }
 
@@ -59,7 +59,7 @@ class CustomBoolean extends Component {
             className="pt-button pt-intent-primary"
             onClick={() => {
               onSetField(tableIndex, fieldIndex, 'generator', {
-                func: runGenerator,
+                func: customBooleanGenerator,
                 inputs,
                 name: CUSTOM_BOOLEAN,
               });
@@ -78,4 +78,4 @@ class CustomBoolean extends Component {
 }
 
 export default CustomBoolean;
-export { CUSTOM_BOOLEAN };
+export { CUSTOM_BOOLEAN, customBooleanGenerator };

@@ -3,7 +3,7 @@ import { Modal } from 'react-bootstrap';
 import { Slider } from '@blueprintjs/core';
 
 // input of form [ [val1, weight1], [val2, weight2], ... ]
-function runGenerator(randNum, input) {
+function customCharacterGenerator(randNum, input) {
   const reducer = (accumulator, currentValue) => accumulator + currentValue[1];
   const totalWeight = input.reduce(reducer, 0);
   let counter = Math.round(randNum * totalWeight);
@@ -116,7 +116,7 @@ class CustomCharacter extends Component {
             className="pt-button pt-intent-primary"
             onClick={() => {
               onSetField(tableIndex, fieldIndex, 'generator', {
-                func: runGenerator,
+                func: customCharacterGenerator,
                 inputs,
                 name: CUSTOM_CHARACTER,
               });
@@ -135,4 +135,4 @@ class CustomCharacter extends Component {
 }
 
 export default CustomCharacter;
-export { CUSTOM_CHARACTER };
+export { CUSTOM_CHARACTER, customCharacterGenerator };

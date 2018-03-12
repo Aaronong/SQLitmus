@@ -7,7 +7,7 @@ import 'brace/mode/json';
 import 'brace/theme/solarized_light';
 
 // input of form [ [val1, weight1], [val2, weight2], ... ]
-function runGenerator(randNum, input) {
+function customJsonGenerator(randNum, input) {
   const reducer = (accumulator, currentValue) => accumulator + currentValue[1];
   const totalWeight = input.reduce(reducer, 0);
   let counter = Math.round(randNum * totalWeight);
@@ -150,7 +150,7 @@ class CustomJson extends Component {
             className="pt-button pt-intent-primary"
             onClick={() => {
               onSetField(tableIndex, fieldIndex, 'generator', {
-                func: runGenerator,
+                func: customJsonGenerator,
                 inputs,
                 name: CUSTOM_JSON,
               });
@@ -169,4 +169,4 @@ class CustomJson extends Component {
 }
 
 export default CustomJson;
-export { CUSTOM_JSON };
+export { CUSTOM_JSON, customJsonGenerator };

@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Modal } from 'react-bootstrap';
 import { jStat } from 'jStat';
 
-function runGenerator(randNum, [start, end, isInteger]) {
+function uniformDistributionGenerator(randNum, [start, end, isInteger]) {
   const ans = jStat.uniform.inv(randNum, start, end);
   return isInteger ? Math.round(ans) : ans;
 }
@@ -74,7 +74,7 @@ class UniformDistribution extends Component {
             className="pt-button pt-intent-primary"
             onClick={() => {
               onSetField(tableIndex, fieldIndex, 'generator', {
-                func: runGenerator,
+                func: uniformDistributionGenerator,
                 inputs,
                 name: UNIFORM_DISTRIBUTION,
               });
@@ -93,4 +93,4 @@ class UniformDistribution extends Component {
 }
 
 export default UniformDistribution;
-export { UNIFORM_DISTRIBUTION };
+export { UNIFORM_DISTRIBUTION, uniformDistributionGenerator };

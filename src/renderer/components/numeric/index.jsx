@@ -2,11 +2,22 @@ import React, { Component, PropTypes } from 'react';
 // import { Button, Overlay, Popover } from '@blueprintjs/core';
 import { Modal } from 'react-bootstrap';
 import { tableRelations } from '../test-tables-to-cards.jsx';
-import CustomNumeric, { CUSTOM_NUMERIC } from './custom-numeric.jsx';
-import NormalDistribution, { NORMAL_DISTRIBUTION } from './normal-distribution.jsx';
-import UniformDistribution, { UNIFORM_DISTRIBUTION } from './uniform-distribution.jsx';
+import CustomNumeric, { CUSTOM_NUMERIC, customNumericGenerator } from './custom-numeric.jsx';
+import NormalDistribution, {
+  NORMAL_DISTRIBUTION,
+  normalDistributionGenerator,
+} from './normal-distribution.jsx';
+import UniformDistribution, {
+  UNIFORM_DISTRIBUTION,
+  uniformDistributionGenerator,
+} from './uniform-distribution.jsx';
 
 const numericOptions = [NORMAL_DISTRIBUTION, UNIFORM_DISTRIBUTION, CUSTOM_NUMERIC];
+const numericGenerators = [
+  normalDistributionGenerator,
+  uniformDistributionGenerator,
+  customNumericGenerator,
+];
 
 class Numeric extends Component {
   static propTypes = {
@@ -97,4 +108,4 @@ class Numeric extends Component {
 }
 
 export default Numeric;
-export { numericOptions };
+export { numericOptions, numericGenerators };

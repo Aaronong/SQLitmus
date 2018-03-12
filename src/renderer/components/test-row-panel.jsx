@@ -65,15 +65,17 @@ function TestSchemaPanel(schemaInfo, rowInfo, onSetRowItem, onAddRow, onRemoveRo
     </tr>
   ));
   return (
-    <Table striped bordered condensed style={{ tableLayout: 'fixed' }}>
-      <thead>
-        <tr>
-          <th />
-          {headerDisplay}
-        </tr>
-      </thead>
-      <tbody>{rowDisplay}</tbody>
-    </Table>
+    <div className="query-container">
+      <Table striped bordered condensed style={{ tableLayout: 'fixed' }}>
+        <thead>
+          <tr>
+            <th />
+            {headerDisplay}
+          </tr>
+        </thead>
+        <tbody>{rowDisplay}</tbody>
+      </Table>
+    </div>
   );
 }
 

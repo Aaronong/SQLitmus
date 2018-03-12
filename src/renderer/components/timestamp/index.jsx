@@ -1,9 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 // import { Button, Overlay, Popover } from '@blueprintjs/core';
 import { Modal } from 'react-bootstrap';
-import TimestampBetween, { TIMESTAMP_BETWEEN } from './timestamp-between.jsx';
+import TimestampBetween, {
+  TIMESTAMP_BETWEEN,
+  timestampBetweenGenerator,
+} from './timestamp-between.jsx';
 
 const timestampOptions = [TIMESTAMP_BETWEEN];
+const timestampGenerators = [timestampBetweenGenerator];
 
 class Timestamp extends Component {
   static propTypes = {
@@ -69,4 +73,4 @@ class Timestamp extends Component {
 }
 
 export default Timestamp;
-export { timestampOptions };
+export { timestampOptions, timestampGenerators };

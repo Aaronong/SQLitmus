@@ -3,7 +3,7 @@ import { Modal } from 'react-bootstrap';
 import { Slider } from '@blueprintjs/core';
 
 // input of form [ [val1, weight1], [val2, weight2], ... ]
-function runGenerator(randNum, input) {
+function customNumericGenerator(randNum, input) {
   const reducer = (accumulator, currentValue) => accumulator + currentValue[1];
   const totalWeight = input.reduce(reducer, 0);
   let counter = Math.round(randNum * totalWeight);
@@ -117,7 +117,7 @@ class CustomNumeric extends Component {
             className="pt-button pt-intent-primary"
             onClick={() => {
               onSetField(tableIndex, fieldIndex, 'generator', {
-                func: runGenerator,
+                func: customNumericGenerator,
                 inputs,
                 name: CUSTOM_NUMERIC,
               });
@@ -136,4 +136,4 @@ class CustomNumeric extends Component {
 }
 
 export default CustomNumeric;
-export { CUSTOM_NUMERIC };
+export { CUSTOM_NUMERIC, customNumericGenerator };

@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 // import { Button, Overlay, Popover } from '@blueprintjs/core';
 import { Modal } from 'react-bootstrap';
-import CustomBoolean, { CUSTOM_BOOLEAN } from './custom-boolean.jsx';
+import CustomBoolean, { CUSTOM_BOOLEAN, customBooleanGenerator } from './custom-boolean.jsx';
 
 const booleanOptions = [CUSTOM_BOOLEAN];
+const booleanGenerators = [customBooleanGenerator];
 
 class Boolean extends Component {
   static propTypes = {
@@ -69,4 +70,4 @@ class Boolean extends Component {
 }
 
 export default Boolean;
-export { booleanOptions };
+export { booleanOptions, booleanGenerators };

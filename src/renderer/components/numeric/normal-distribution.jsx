@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { Modal } from 'react-bootstrap';
 import { jStat } from 'jStat';
 
-function runGenerator(randNum, [miu, sigma, isInteger]) {
+function normalDistributionGenerator(randNum, [miu, sigma, isInteger]) {
   const ans = jStat.normal.inv(randNum, miu, sigma);
   return isInteger ? Math.round(ans) : ans;
 }
@@ -74,7 +74,7 @@ class NormalDistribution extends Component {
             className="pt-button pt-intent-primary"
             onClick={() => {
               onSetField(tableIndex, fieldIndex, 'generator', {
-                func: runGenerator,
+                func: normalDistributionGenerator,
                 inputs,
                 name: NORMAL_DISTRIBUTION,
               });
@@ -93,4 +93,4 @@ class NormalDistribution extends Component {
 }
 
 export default NormalDistribution;
-export { NORMAL_DISTRIBUTION };
+export { NORMAL_DISTRIBUTION, normalDistributionGenerator };
