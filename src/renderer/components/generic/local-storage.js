@@ -20,6 +20,14 @@ const allGenerators = [
   ...timestampGenerators,
 ];
 
+function lengthenArray(arr, length) {
+  let outArr = cloneDeep(arr);
+  while (outArr.length < length) {
+    outArr = [...outArr, outArr[outArr.length - 1]];
+  }
+  return outArr;
+}
+
 function localStoragePrefix(server) {
   return `${server.client}|>_<|${server.host}|>_<|${server.port}|>_<|${server.database}|>_<|`;
 }
@@ -78,4 +86,57 @@ function fillSchemaInfo(schemaInfo, server) {
   return schema;
 }
 
-export { localStoragePrefix, fillSchemaInfo, storeSchemaInfo };
+function storeRowInfo(rowInfo, server) {
+  const prefix = localStoragePrefix(server);
+  rowInfo.forEach(([tableName, rows]) => {
+    localStorage.setItem(`${prefix}|>_<|rowInfo|>_<|${tableName}`, JSON.stringify(rows));
+  });
+}
+
+function fillRowInfo(rowInfo, server) {
+  const prefix = localStoragePrefix(server);
+  const clonedRow = cloneDeep(rowInfo);
+  clonedRow.forEach(([tableName, rows], tIndex) => {
+    const retrievedRow = JSON.parse(localStorage.getItem(`${prefix}|>_<|rowInfo|>_<|${tableName}`));
+    if (retrievedRow !== null) {
+      clonedRow[tIndex][1] = retrievedRow;
+    }
+  });
+  const rowLengths = clonedRow.map(([tableName, rows]) => rows.length);
+  const maxLength = Math.max(rowLengths);
+  return clonedRow.map(([tableName, rows]) => [tableName, lengthenArray(rows, maxLength)]);
+}
+
+function storeConnInfo(connInfo, server) {
+  const prefix = localStoragePrefix(server);
+  localStorage.setItem(`${prefix}|>_<|connInfo`, JSON.stringify(connInfo));
+}
+
+function fillConnInfo(connInfo, server) {
+  const prefix = localStoragePrefix(server);
+  const retrievedConn = JSON.parse(localStorage.getItem(`${prefix}|>_<|connInfo`));
+  return retrievedConn !== null ? retrievedConn : connInfo;
+}
+
+function storeQueryInfo(queryInfo, server) {
+  const prefix = localStoragePrefix(server);
+  localStorage.setItem(`${prefix}|>_<|queryInfo`, JSON.stringify(queryInfo));
+}
+
+function fillQueryInfo(queryInfo, server) {
+  const prefix = localStoragePrefix(server);
+  const retrievedQuery = JSON.parse(localStorage.getItem(`${prefix}|>_<|queryInfo`));
+  return retrievedQuery !== null ? retrievedQuery : queryInfo;
+}
+
+export {
+  localStoragePrefix,
+  fillSchemaInfo,
+  storeSchemaInfo,
+  storeRowInfo,
+  fillRowInfo,
+  storeConnInfo,
+  fillConnInfo,
+  storeQueryInfo,
+  fillQueryInfo,
+};

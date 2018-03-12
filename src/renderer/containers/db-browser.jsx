@@ -42,6 +42,12 @@ import {
   localStoragePrefix,
   storeSchemaInfo,
   fillSchemaInfo,
+  storeRowInfo,
+  fillRowInfo,
+  storeConnInfo,
+  fillConnInfo,
+  storeQueryInfo,
+  fillQueryInfo,
 } from '../components/generic/local-storage.js';
 
 require('./db-browser.css');
@@ -127,7 +133,7 @@ class DbBrowserContainer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { dispatch, router, connections, columns } = nextProps;
+    const { dispatch, router, connections, columns, queries } = nextProps;
 
     if (
       connections.error ||
@@ -141,10 +147,19 @@ class DbBrowserContainer extends Component {
       return;
     }
 
+    // If connected for the first time, load query
+    if (connections !== this.props.connections) {
+      dispatch(QueryActions.setQueryState(fillQueryInfo(queries, connections.server)));
+    }
+
     const lastConnectedDB = connections.databases[connections.databases.length - 1];
     const filter = connections.server.filter;
     const dbName = connections.server.database;
 
+    // When query changes, store query
+    if (queries !== this.props.queries) {
+      storeQueryInfo(queries, connections.server);
+    }
     dispatch(DbAction.fetchDatabasesIfNeeded(filter));
     dispatch(fetchSchemasIfNeeded(lastConnectedDB));
     dispatch(fetchTablesIfNeeded(lastConnectedDB, filter));
@@ -162,9 +177,9 @@ class DbBrowserContainer extends Component {
     // Generating schema and config information based on data retrieved
     if (columns !== this.props.columns) {
       console.log('REFRESH SCHEMAINFO');
-      if (this.state.schemaInfo) {
-        storeSchemaInfo(this.state.schemaInfo, this.props.connections.server);
-      }
+      // if (this.state.schemaInfo) {
+      //   storeSchemaInfo(this.state.schemaInfo, this.props.connections.server);
+      // }
       const tableInfo = columns.columnsByTable[dbName];
       let schemaInfo = null;
       let rowInfo = null;
@@ -189,7 +204,8 @@ class DbBrowserContainer extends Component {
         rowInfo = Object.entries(columns.columnsByTable[dbName]).map(key => [key[0], [1]]);
         this.setState({
           schemaInfo: fillSchemaInfo(schemaInfo, connections.server),
-          rowInfo: rehydrateSchemaInfo(cloneDeep(this.state.rowInfo), rowInfo),
+          rowInfo: fillRowInfo(rowInfo, connections.server),
+          connPoolInfo: fillConnInfo(this.state.connPoolInfo, connections.server),
         });
       }
     }
@@ -286,18 +302,21 @@ class DbBrowserContainer extends Component {
   onSetRowItem(tableIndex, testIndex, value) {
     const rowInfo = cloneDeep(this.state.rowInfo);
     rowInfo[tableIndex][1][testIndex] = value;
+    storeRowInfo(rowInfo, this.props.connections.server);
     this.setState({ rowInfo });
   }
 
   onAddRow() {
     let rowInfo = cloneDeep(this.state.rowInfo);
     rowInfo = rowInfo.map(([key, value]) => [key, [...value, value[value.length - 1]]]);
+    storeRowInfo(rowInfo, this.props.connections.server);
     this.setState({ rowInfo });
   }
 
   onRemoveRow(rowIndex) {
     const rowInfo = cloneDeep(this.state.rowInfo);
     rowInfo.forEach(([key, value]) => value.splice(rowIndex, 1));
+    storeRowInfo(rowInfo, this.props.connections.server);
     this.setState({ rowInfo });
   }
 
@@ -305,18 +324,21 @@ class DbBrowserContainer extends Component {
   onSetConnValue(index, value) {
     const connPoolInfo = [...this.state.connPoolInfo];
     connPoolInfo[index] = value;
+    storeConnInfo(connPoolInfo, this.props.connections.server);
     this.setState({ connPoolInfo });
   }
 
   onAddConn() {
     const lastItem = this.state.connPoolInfo[this.state.connPoolInfo.length - 1];
     const connPoolInfo = [...this.state.connPoolInfo, lastItem];
+    storeConnInfo(connPoolInfo, this.props.connections.server);
     this.setState({ connPoolInfo });
   }
 
   onRemoveConn(index) {
     const connPoolInfo = [...this.state.connPoolInfo];
     connPoolInfo.splice(index, 1);
+    storeConnInfo(connPoolInfo, this.props.connections.server);
     this.setState({ connPoolInfo });
   }
 
@@ -347,10 +369,10 @@ class DbBrowserContainer extends Component {
   }
 
   print() {
-    console.log(this.state.schemaInfo);
-    // console.log(this.props.queries);
+    // console.log(this.state.schemaInfo);
+    console.log(this.props.queries);
     // console.log(this.props.connections);
-    console.log(localStoragePrefix(this.props.connections.server));
+    // console.log(localStoragePrefix(this.props.connections.server));
   }
 
   // Stuff for queries

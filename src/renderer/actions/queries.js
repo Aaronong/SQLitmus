@@ -31,6 +31,11 @@ export const OPEN_QUERY_REQUEST = 'OPEN_QUERY_REQUEST';
 export const OPEN_QUERY_SUCCESS = 'OPEN_QUERY_SUCCESS';
 export const OPEN_QUERY_FAILURE = 'OPEN_QUERY_FAILURE';
 export const UPDATE_QUERY = 'UPDATE_QUERY';
+export const SET_QUERY_STATE = 'SET_QUERY_STATE';
+
+export function setQueryState(state) {
+  return { type: SET_QUERY_STATE, state };
+}
 
 export function newQuery(database) {
   return { type: NEW_QUERY, database };

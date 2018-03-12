@@ -20,6 +20,9 @@ export default function(state = INITIAL_STATE, action) {
     case types.NEW_QUERY: {
       return addNewQuery(state, action);
     }
+    case types.SET_QUERY_STATE: {
+      return setQueryState(state, action);
+    }
     case types.SELECT_QUERY: {
       return {
         ...state,
@@ -149,6 +152,10 @@ export default function(state = INITIAL_STATE, action) {
     default:
       return state;
   }
+}
+
+function setQueryState(state, action) {
+  return action.state;
 }
 
 function addNewQuery(state, action) {
