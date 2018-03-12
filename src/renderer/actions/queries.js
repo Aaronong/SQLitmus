@@ -8,7 +8,6 @@ import { rowsValuesToString } from '../utils/convert';
 import * as fileHandler from '../utils/file-handler';
 import wait from '../utils/wait';
 
-
 export const NEW_QUERY = 'NEW_QUERY';
 export const RENAME_QUERY = 'RENAME_QUERY';
 export const SELECT_QUERY = 'SELECT_QUERY';
@@ -33,28 +32,23 @@ export const OPEN_QUERY_SUCCESS = 'OPEN_QUERY_SUCCESS';
 export const OPEN_QUERY_FAILURE = 'OPEN_QUERY_FAILURE';
 export const UPDATE_QUERY = 'UPDATE_QUERY';
 
-
-export function newQuery (database) {
+export function newQuery(database) {
   return { type: NEW_QUERY, database };
 }
 
-
-export function renameQuery (name) {
+export function renameQuery(name) {
   return { type: RENAME_QUERY, name };
 }
 
-
-export function selectQuery (id) {
+export function selectQuery(id) {
   return { type: SELECT_QUERY, id };
 }
 
-
-export function removeQuery (id) {
+export function removeQuery(id) {
   return { type: REMOVE_QUERY, id };
 }
 
-
-export function executeQueryIfNeeded (query, queryId) {
+export function executeQueryIfNeeded(query, queryId) {
   return (dispatch, getState) => {
     if (shouldExecuteQuery(query, getState())) {
       dispatch(executeQuery(query, false, null, queryId));
@@ -62,8 +56,7 @@ export function executeQueryIfNeeded (query, queryId) {
   };
 }
 
-
-export function executeDefaultSelectQueryIfNeeded (database, table, schema) {
+export function executeDefaultSelectQueryIfNeeded(database, table, schema) {
   return async (dispatch, getState) => {
     const currentState = getState();
     const dbConn = getDBConnByName(database);
@@ -82,7 +75,7 @@ export function executeDefaultSelectQueryIfNeeded (database, table, schema) {
   };
 }
 
-export function updateQueryIfNeeded (query, selectedQuery) {
+export function updateQueryIfNeeded(query, selectedQuery) {
   return (dispatch, getState) => {
     if (shouldUpdateQuery(query, selectedQuery, getState())) {
       dispatch(updateQuery(query, selectedQuery));
@@ -90,23 +83,25 @@ export function updateQueryIfNeeded (query, selectedQuery) {
   };
 }
 
-function updateQuery (query, selectedQuery) {
+function updateQuery(query, selectedQuery) {
   return { type: UPDATE_QUERY, query, selectedQuery };
 }
 
-function shouldUpdateQuery (query, selectedQuery, state) {
+function shouldUpdateQuery(query, selectedQuery, state) {
   const currentQuery = getCurrentQuery(state);
   if (!currentQuery) return true;
   if (currentQuery.isExecuting) return false;
-  if (query === currentQuery.query
-      && (selectedQuery !== undefined && selectedQuery === currentQuery.selectedQuery)) {
+  if (
+    query === currentQuery.query &&
+    (selectedQuery !== undefined && selectedQuery === currentQuery.selectedQuery)
+  ) {
     return false;
   }
 
   return true;
 }
 
-export function appendQuery (query) {
+export function appendQuery(query) {
   return (dispatch, getState) => {
     const currentQuery = getCurrentQuery(getState()).query;
     const newLine = !currentQuery ? '' : '\n';
@@ -117,8 +112,7 @@ export function appendQuery (query) {
   };
 }
 
-
-export function copyToClipboard (rows, type) {
+export function copyToClipboard(rows, type) {
   return async dispatch => {
     dispatch({ type: COPY_QUERY_RESULT_TO_CLIPBOARD_REQUEST });
     try {
@@ -139,7 +133,7 @@ export function copyToClipboard (rows, type) {
   };
 }
 
-export function saveToFile (rows, type) {
+export function saveToFile(rows, type) {
   return async dispatch => {
     dispatch({ type: SAVE_QUERY_RESULT_TO_FILE_REQUEST });
     try {
@@ -167,8 +161,7 @@ export function saveToFile (rows, type) {
   };
 }
 
-
-export function saveQuery () {
+export function saveQuery() {
   return async (dispatch, getState) => {
     dispatch({ type: SAVE_QUERY_REQUEST });
     try {
@@ -178,7 +171,7 @@ export function saveQuery () {
         { name: 'All Files', extensions: ['*'] },
       ];
 
-      let filename = (currentQuery.filename || await fileHandler.showSaveDialog(filters));
+      let filename = currentQuery.filename || (await fileHandler.showSaveDialog(filters));
       if (path.extname(filename) !== '.sql') {
         filename += '.sql';
       }
@@ -193,13 +186,11 @@ export function saveQuery () {
   };
 }
 
-export function openQuery () {
-  return async (dispatch) => {
+export function openQuery() {
+  return async dispatch => {
     dispatch({ type: OPEN_QUERY_REQUEST });
     try {
-      const filters = [
-        { name: 'SQL', extensions: ['sql'] },
-      ];
+      const filters = [{ name: 'SQL', extensions: ['sql'] }];
 
       const [filename] = await fileHandler.showOpenDialog(filters);
       const name = path.basename(filename, '.sql');
@@ -213,8 +204,7 @@ export function openQuery () {
   };
 }
 
-
-function shouldExecuteQuery (query, state) {
+function shouldExecuteQuery(query, state) {
   const currentQuery = getCurrentQuery(state);
   if (!currentQuery) return true;
   if (currentQuery.isExecuting) return false;
@@ -227,7 +217,7 @@ function canCancelQuery(state) {
   return !state.connections.disabledFeatures.includes('cancelQuery');
 }
 
-function executeQuery (query, isDefaultSelect = false, dbConnection, queryId) {
+function executeQuery(query, isDefaultSelect = false, dbConnection, queryId) {
   return async (dispatch, getState) => {
     dispatch({ type: EXECUTE_QUERY_REQUEST, query, isDefaultSelect });
     try {
@@ -254,9 +244,8 @@ function executeQuery (query, isDefaultSelect = false, dbConnection, queryId) {
   };
 }
 
-
-export function cancelQuery (queryId) {
-  return async (dispatch) => {
+export function cancelQuery(queryId) {
+  return async dispatch => {
     dispatch({ type: CANCEL_QUERY_REQUEST, queryId });
     try {
       if (executingQueries[queryId]) {
@@ -272,7 +261,6 @@ export function cancelQuery (queryId) {
   };
 }
 
-
 function stringifyResultToCSV(rows) {
   if (!rows.length) {
     return '';
@@ -283,10 +271,7 @@ function stringifyResultToCSV(rows) {
     return _header;
   }, {});
 
-  const data = [
-    header,
-    ...rowsValuesToString(rows),
-  ];
+  const data = [header, ...rowsValuesToString(rows)];
 
   return new Promise((resolve, reject) => {
     csvStringify(data, (err, csv) => {
@@ -298,7 +283,6 @@ function stringifyResultToCSV(rows) {
     });
   });
 }
-
 
 function getCurrentQuery(state) {
   return state.queries.queriesById[state.queries.currentQueryId];
