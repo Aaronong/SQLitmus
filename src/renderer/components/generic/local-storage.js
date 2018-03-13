@@ -60,12 +60,16 @@ function fillSchemaInfo(schemaInfo, server) {
           const targetTableIndex = schema.findIndex(
             ([k, v]) => k === retrievedField.foreignTarget[0]
           );
-          const targetFields = schema[targetTableIndex][1];
-          const targetFieldIndex = targetFields.findIndex(
-            f => f.name === retrievedField.foreignTarget[1]
-          );
-          if (targetTableIndex !== 1 && targetFieldIndex !== 1) {
-            retrievedField.foreignTarget = [targetTableIndex, targetFieldIndex];
+          if (targetTableIndex !== -1) {
+            const targetFields = schema[targetTableIndex][1];
+            const targetFieldIndex = targetFields.findIndex(
+              f => f.name === retrievedField.foreignTarget[1]
+            );
+            if (targetFieldIndex !== -1) {
+              retrievedField.foreignTarget = [targetTableIndex, targetFieldIndex];
+            } else {
+              retrievedField.foreignTarget = null;
+            }
           } else {
             retrievedField.foreignTarget = null;
           }
