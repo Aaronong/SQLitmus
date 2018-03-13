@@ -41,9 +41,11 @@ function schemaConfig(schemaInfo, onSetField, onSelectField, tableIndex, fieldIn
     table[1].forEach((field, fIndex) => {
       if (
         field.dataType === configuredField.dataType && // FK can only target fields of same type
-        tableIndex !== tIndex && // FK can only target fields in other tables
+        // tableIndex !== tIndex && // FK can only target fields in other tables
         (field.index || field.unique || field.pk) && // FK can only target unique keys
-        !relations[tableIndex].find(relation => relation[1][0] === tIndex) // FK can only target fields it has no relations with
+        !relations[tableIndex].find(
+          relation => relation[1][0] === tIndex && relation[1][1] === fIndex
+        ) // FK can only target fields it has no relations with
       ) {
         foreignKeyTargets.push([tIndex, fIndex]);
       }

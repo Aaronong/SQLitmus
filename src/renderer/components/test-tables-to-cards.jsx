@@ -6,6 +6,8 @@ function relationToColor(relation) {
     return 'pt-intent-success';
   } else if (relation === 'hasMany') {
     return 'pt-intent-primary';
+  } else if (relation === 'selfReference') {
+    return 'pt-intent-warning';
   }
   return 'pt-intent-danger';
 }
@@ -34,9 +36,17 @@ function tableRelations(tables) {
   tables.forEach(([key, value], tIndex) => {
     value.forEach((field, fIndex) => {
       if (!field.index && field.fk && field.foreignTarget) {
-        relations[tIndex].push(['belongsTo', field.foreignTarget]);
-        const hasRelation = field.manyToOne ? 'hasMany' : 'hasOne';
-        relations[field.foreignTarget[0]].push([hasRelation, [tIndex, fIndex]]);
+        // If relations already contains the given relation, dont push.
+        // This is used for composite FKs
+        if (relations[tIndex].findIndex(rel => rel[1][0] === field.foreignTarget[0]) === -1) {
+          if (field.foreignTarget[0] === tIndex) {
+            relations[tIndex].push(['selfReference', field.foreignTarget]);
+          } else {
+            relations[tIndex].push(['belongsTo', field.foreignTarget]);
+            const hasRelation = field.manyToOne ? 'hasMany' : 'hasOne';
+            relations[field.foreignTarget[0]].push([hasRelation, [tIndex, fIndex]]);
+          }
+        }
       }
     });
   });
