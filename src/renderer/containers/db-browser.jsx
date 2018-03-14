@@ -36,7 +36,7 @@ import rowPanel from '../components/test-row-panel.jsx';
 import connPoolPanel from '../components/test-conn-panel.jsx';
 import { requireLogos } from '../components/require-context';
 // import Loading from '../components/loader.jsx';
-import rehydrateSchemaInfo from '../components/generic/rehydrate-schema-info.js';
+import runTest from '../components/generic/run-test.js';
 import parseQuery from '../components/generic/parse-query.js';
 import {
   localStoragePrefix,
@@ -619,14 +619,7 @@ class DbBrowserContainer extends Component {
     const {
       status,
       connections,
-      databases,
-      schemas,
-      tables,
-      columns,
-      triggers,
-      indexes,
-      views,
-      routines,
+      queries,
     } = this.props;
 
     if (connections.waitingPrivateKeyPassphrase) {
@@ -738,7 +731,7 @@ class DbBrowserContainer extends Component {
           <button
             className="pt-button pt-large pt-intent-primary"
             title="Run"
-            onClick={() => this.print()}
+            onClick={() => runTest(schemaInfo, rowInfo, queries, connPoolInfo)}
           >
             Run
           </button>
