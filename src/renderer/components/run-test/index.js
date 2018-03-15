@@ -3,6 +3,12 @@ import Sequelize from 'sequelize';
 import { tableRelations } from '../test-tables-to-cards.jsx';
 import generateData from './generate-data.js';
 import populateData from './populate-data.js';
+import runQueries from './run-queries.js';
+import { APP_DATA_PATH, getPersistentStore } from './persistant-storage.js';
+import { parseQueryList } from '../generic/parse-query';
+
+const dbData = getPersistentStore(`${APP_DATA_PATH}/db`);
+const testData = getPersistentStore(`${APP_DATA_PATH}/test`);
 
 // Sorts schemaInfo according to the order of data generation
 function sortSchemaInfo(schemaInfo) {
@@ -79,23 +85,60 @@ function createSequelizeConnection(s, maxPoolSize) {
   return sequelize;
 }
 
-async function runTest(server, schemaInfo, rowInfo, queries, connInfo) {
+async function runTest(testConfig, server, schemaInfo, rowInfo, queries, connInfo) {
   const sortedSchema = sortSchemaInfo(schemaInfo);
   const numTests = rowInfo[0][1].length;
   const maxPoolSize = Math.max(connInfo);
   const sequelize = createSequelizeConnection(server, maxPoolSize);
 
-  for (let testNum = 0; testNum < numTests; testNum++) {
-    const data = await generateData(sortedSchema, rowInfo, testNum);
-    // const data = null;
-    populateData(sortedSchema, sequelize, data);
+  // Generate list of queries we will use
+  const rawQueryList = Object.entries(queries.queriesById).map(qObj => qObj[1].query);
+  let queryList = [];
+  for (let i = 0; i < 10; i++) {
+    queryList = [...queryList, ...parseQueryList(rawQueryList, schemaInfo)];
   }
-  //   console.log('ROW INFO');
-  //   console.log(rowInfo);
-  //   console.log('QUERIES');
-  //   console.log(queries);
-  //   console.log('CONN INFO');
-  //   console.log(connInfo);
+  queryList = [...new Set(queryList)];
+  console.log(queryList);
+
+  //   Perform upsert operation.
+  //   Find if a record of the current database already exists, if not create
+  const dbRecord = {
+    client: server.client,
+    host: server.host,
+    port: server.port,
+    database: server.database,
+  };
+  const dbId = await new Promise((resolve, reject) => {
+    dbData.update(dbRecord, dbRecord, { upsert: true }, (err, numReplaced, upsert) => {
+      if (err) {
+        reject(err);
+      }
+      dbData.findOne(dbRecord, (err, doc) => resolve(doc._id));
+    });
+  });
+
+  // Perform insert operation. Insert a record of the current test
+  const testRecord = {
+    dbId,
+    testName: testConfig[0],
+    testDetails: testConfig[1],
+    testDate: testConfig[2],
+  };
+  const testId = await new Promise((resolve, reject) => {
+    testData.insert(testRecord, err => {
+      if (err) {
+        reject(err);
+      }
+      testData.findOne(testRecord, (err, doc) => resolve(doc._id));
+    });
+  });
+
+  for (let testNum = 0; testNum < numTests; testNum++) {
+    const currRowInfo = rowInfo.map(([tName, rows]) => [tName, rows[testNum]]);
+    const data = await generateData(sortedSchema, currRowInfo);
+    await populateData(sortedSchema, sequelize, data);
+    await runQueries(testId, sequelize, queryList, connInfo, currRowInfo);
+  }
 }
 
 export default runTest;

@@ -8,11 +8,12 @@ import { connect } from 'react-redux';
 // import { ResizableBox } from 'react-resizable';
 import { Tab as Tab2, Tabs as Tabs2 } from '@blueprintjs/core';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import { Modal } from 'react-bootstrap';
 import { sqlectron } from '../../browser/remote';
 import * as ConnActions from '../actions/connections.js';
 import * as QueryActions from '../actions/queries';
 import * as DbAction from '../actions/databases';
-import { fetchTablesIfNeeded, selectTablesForDiagram } from '../actions/tables';
+import { fetchTablesIfNeeded } from '../actions/tables';
 import { fetchSchemasIfNeeded } from '../actions/schemas';
 import { fetchTableColumnsIfNeeded } from '../actions/columns';
 import { fetchTableTriggersIfNeeded } from '../actions/triggers';
@@ -34,10 +35,9 @@ import SchemaPanel from '../components/test-schema-panel.jsx';
 import DataPanel from '../components/test-data-panel.jsx';
 import rowPanel from '../components/test-row-panel.jsx';
 import connPoolPanel from '../components/test-conn-panel.jsx';
+import RunModal from '../components/run-test/run-modal.jsx';
 import { requireLogos } from '../components/require-context';
-// import Loading from '../components/loader.jsx';
-import runTest from '../components/run-test/index.js';
-import parseQuery from '../components/generic/parse-query.js';
+import { parseQuery } from '../components/generic/parse-query.js';
 import {
   localStoragePrefix,
   storeSchemaInfo,
@@ -119,6 +119,7 @@ class DbBrowserContainer extends Component {
       schemaInfo: null,
       rowInfo: null,
       connPoolInfo: [5],
+      runModalOpen: false,
     };
     this.menuHandler = new MenuHandler();
   }
@@ -431,6 +432,15 @@ class DbBrowserContainer extends Component {
     this.setState({ renamingTabQueryId: queryId });
   }
 
+  // Display Run Modal
+  hideRunModal() {
+    this.setState({ runModalOpen: false });
+  }
+
+  showRunModal() {
+    this.setState({ runModalOpen: true });
+  }
+
   renderTabQueries() {
     const {
       dispatch,
@@ -615,7 +625,7 @@ class DbBrowserContainer extends Component {
   }
 
   render() {
-    const { schemaInfo, rowInfo, connPoolInfo } = this.state;
+    const { schemaInfo, rowInfo, connPoolInfo, runModalOpen } = this.state;
     const { status, connections, queries } = this.props;
 
     if (connections.waitingPrivateKeyPassphrase) {
@@ -727,7 +737,7 @@ class DbBrowserContainer extends Component {
           <button
             className="pt-button pt-large pt-intent-primary"
             title="Run"
-            onClick={() => runTest(connections.server, schemaInfo, rowInfo, queries, connPoolInfo)}
+            onClick={::this.showRunModal}
           >
             Run
           </button>
@@ -749,6 +759,16 @@ class DbBrowserContainer extends Component {
             onReConnectionClick={::this.onReConnectionClick}
           />
         </div>
+        <Modal show={runModalOpen} onHide={::this.hideRunModal}>
+          <RunModal
+            server={connections.server}
+            schemaInfo={schemaInfo}
+            rowInfo={rowInfo}
+            queries={queries}
+            connInfo={connPoolInfo}
+            handleClose={::this.hideRunModal}
+          />
+        </Modal>
         <div style={{ padding: '100px' }}>{MainDisplay}</div>
         <div style={STYLES.footer}>
           <Footer status={status} />

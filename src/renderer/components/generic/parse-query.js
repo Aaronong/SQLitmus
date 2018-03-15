@@ -23,12 +23,8 @@ const generateTemplateString = (function() {
   return generateTemplate;
 })();
 
-export default function parseQuery(query, schemaInfo) {
-  if (!schemaInfo) {
-    return query;
-  }
+function generateContext(schemaInfo) {
   const cloneSchema = cloneDeep(schemaInfo);
-  const queryTemplate = generateTemplateString(query);
   const generatedValues = {};
   cloneSchema.forEach(([key, value]) => {
     generatedValues[key] = {};
@@ -42,7 +38,27 @@ export default function parseQuery(query, schemaInfo) {
       }
     });
   });
-  // console.log(generatedValues);
-  // console.log(queryTemplate(generatedValues));
+  return generatedValues;
+}
+
+function parseQuery(query, schemaInfo) {
+  if (!schemaInfo) {
+    return query;
+  }
+  const queryTemplate = generateTemplateString(query);
+  const generatedValues = generateContext(schemaInfo);
   return queryTemplate(generatedValues);
 }
+
+function parseQueryList(queries, schemaInfo) {
+  if (!schemaInfo) {
+    return queries;
+  }
+  const generatedValues = generateContext(schemaInfo);
+  return queries.map(query => {
+    const queryTemplate = generateTemplateString(query);
+    return queryTemplate(generatedValues);
+  });
+}
+
+export { parseQuery, parseQueryList };
