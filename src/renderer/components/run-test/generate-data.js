@@ -1,17 +1,12 @@
-import electron from 'electron';
-import fs from 'fs';
 import Random from 'rng.js';
 import shuffle from 'shuffle-array';
 import { generateNumVals } from '../generic/test-generator.js';
-
+import { GENERATED_DATA_PATH, getPersistentStore } from './persistant-storage.js';
 let START_TIME = new Date().getTime();
 let END_TIME = new Date().getTime();
 
-// Selecting storage path and ensuring that it exists
-const STORAGE_DATA_PATH = `${electron.remote.app.getPath('userData')}/generatedData`;
-if (!fs.existsSync(STORAGE_DATA_PATH)) {
-  fs.mkdirSync(STORAGE_DATA_PATH);
-}
+// Persisting extensionData to a datastore with automatic loading
+const db = {};
 
 function unique(arr) {
   let uniq = arr.map(item => JSON.stringify(item));
@@ -31,10 +26,6 @@ function flattenCartesianProduct(arr) {
     product.reduce((obj, item) => Object.assign(obj, item), {})
   );
 }
-
-// Persisting extensionData to a datastore with automatic loading
-const Datastore = require('nedb');
-const db = {};
 
 function spawnRNG(parentRNG) {
   const lowSeed = parentRNG.nextNumber();
@@ -401,10 +392,10 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
 
 async function generateTable([tableName, fields], numRows, tableRNG) {
   console.log(`Generating ${numRows} rows of ${tableName}`);
-  const tablePath = `${STORAGE_DATA_PATH}/${tableName}`;
+  const tablePath = `${GENERATED_DATA_PATH}/${tableName}`;
   if (!db[tableName]) {
     // Load datastore into db
-    db[tableName] = new Datastore({ filename: tablePath, autoload: true });
+    db[tableName] = getPersistentStore(tablePath);
   }
   // Removing all documents with the 'match-all' query
   db[tableName].remove({}, { multi: true });
@@ -458,11 +449,11 @@ async function generateTable([tableName, fields], numRows, tableRNG) {
   });
 }
 
-async function generateData(schemaInfo, rowInfo, testNum) {
+async function generateData(schemaInfo, rowInfo) {
   const rootRNG = new Random();
   const tablePromises = schemaInfo.map(table => {
     const tIndex = rowInfo.findIndex(row => row[0] === table[0]);
-    return Promise.resolve(generateTable(table, rowInfo[tIndex][1][testNum], spawnRNG(rootRNG)));
+    return Promise.resolve(generateTable(table, rowInfo[tIndex][1], spawnRNG(rootRNG)));
   });
   await Promise.all(tablePromises);
   return db;
