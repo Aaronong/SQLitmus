@@ -56,7 +56,7 @@ function TestSchemaPanel(schemaInfo, rowInfo, onSetRowItem, onAddRow, onRemoveRo
             <input
               type="number"
               className="pt-input pt-numeric-input"
-              onChange={e => onSetRowItem(tIndex, rIndex, e.target.value)}
+              onChange={e => onSetRowItem(tIndex, rIndex, Number(e.target.value))}
               value={rowCount}
             />
           )}
