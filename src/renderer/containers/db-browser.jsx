@@ -36,7 +36,7 @@ import rowPanel from '../components/test-row-panel.jsx';
 import connPoolPanel from '../components/test-conn-panel.jsx';
 import { requireLogos } from '../components/require-context';
 // import Loading from '../components/loader.jsx';
-import runTest from '../components/generic/run-test.js';
+import runTest from '../components/run-test/index.js';
 import parseQuery from '../components/generic/parse-query.js';
 import {
   localStoragePrefix,
@@ -616,11 +616,7 @@ class DbBrowserContainer extends Component {
 
   render() {
     const { schemaInfo, rowInfo, connPoolInfo } = this.state;
-    const {
-      status,
-      connections,
-      queries,
-    } = this.props;
+    const { status, connections, queries } = this.props;
 
     if (connections.waitingPrivateKeyPassphrase) {
       return (

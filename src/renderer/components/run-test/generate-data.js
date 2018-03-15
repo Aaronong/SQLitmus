@@ -1,10 +1,8 @@
-import cloneDeep from 'lodash.clonedeep';
 import electron from 'electron';
 import fs from 'fs';
 import Random from 'rng.js';
 import shuffle from 'shuffle-array';
-import { tableRelations } from '../test-tables-to-cards.jsx';
-import { generateNumVals } from './test-generator.js';
+import { generateNumVals } from '../generic/test-generator.js';
 
 let START_TIME = new Date().getTime();
 let END_TIME = new Date().getTime();
@@ -37,75 +35,6 @@ function flattenCartesianProduct(arr) {
 // Persisting extensionData to a datastore with automatic loading
 const Datastore = require('nedb');
 const db = {};
-
-function refreshDB(dbName) {
-  if (!db[dbName]) {
-    // Load datastore into db
-    db[dbName] = new Datastore({ filename: `${STORAGE_DATA_PATH}/${dbName}`, autoload: true });
-  }
-  // remove all current records
-  db[dbName].remove({}, { multi: true });
-  db[dbName].persistence.compactDatafile();
-}
-
-function getDB(dbName) {
-  if (!db[dbName]) {
-    // Load datastore into db
-    db[dbName] = new Datastore({ filename: `${STORAGE_DATA_PATH}/${dbName}`, autoload: true });
-  }
-  return db[dbName];
-}
-
-// Sorts schemaInfo according to the order of data generation
-function sortSchemaInfo(schemaInfo) {
-  if (schemaInfo) {
-    const relations = tableRelations(schemaInfo);
-    console.log(relations);
-    const tableNames = schemaInfo.map(table => table[0]);
-    const orderingRules = [];
-    const sortedSchema = cloneDeep(schemaInfo);
-
-    // Populate ordering rules
-    relations.forEach((relationsOfTable, tIndex) => {
-      relationsOfTable.forEach(([relType, relTarget]) => {
-        if (relType === 'belongsTo') {
-          orderingRules.push([tableNames[relTarget[0]], tableNames[tIndex]]);
-        }
-      });
-    });
-
-    // Transform foreign Key indexes to foreign Key names
-    sortedSchema.forEach(([tableName, value], tIndex) => {
-      value.forEach((field, fIndex) => {
-        if (field.foreignTarget !== null) {
-          const targetTable = sortedSchema[field.foreignTarget[0]][0];
-          const targetField = sortedSchema[field.foreignTarget[0]][1][field.foreignTarget[1]].name;
-          field.foreignTarget = [targetTable, targetField];
-        }
-        sortedSchema[tIndex][1][fIndex] = field;
-      });
-    });
-
-    // Do the switcheroo
-    let switchesMade = true;
-    while (switchesMade) {
-      switchesMade = false;
-      orderingRules.forEach(([before, after]) => {
-        const beforeIndex = sortedSchema.findIndex(table => table[0] === before);
-        const afterIndex = sortedSchema.findIndex(table => table[0] === after);
-        if (beforeIndex > afterIndex) {
-          // Swap positions
-          const tmp = sortedSchema[beforeIndex];
-          sortedSchema[beforeIndex] = sortedSchema[afterIndex];
-          sortedSchema[afterIndex] = tmp;
-          switchesMade = true;
-        }
-      });
-    }
-    return sortedSchema;
-  }
-  return schemaInfo;
-}
 
 function spawnRNG(parentRNG) {
   const lowSeed = parentRNG.nextNumber();
@@ -529,29 +458,12 @@ async function generateTable([tableName, fields], numRows, tableRNG) {
   });
 }
 
-function generateData(schemaInfo, rowInfo) {
-  const numTests = rowInfo[0][1].length;
+function generateData(schemaInfo, rowInfo, testNum) {
   const rootRNG = new Random();
-  for (let testNum = 0; testNum < numTests; testNum++) {
-    schemaInfo.forEach(table => {
-      const tIndex = rowInfo.findIndex(row => row[0] === table[0]);
-      generateTable(table, rowInfo[tIndex][1][testNum], spawnRNG(rootRNG));
-    });
-  }
+  schemaInfo.forEach(table => {
+    const tIndex = rowInfo.findIndex(row => row[0] === table[0]);
+    generateTable(table, rowInfo[tIndex][1][testNum], spawnRNG(rootRNG));
+  });
 }
 
-function runTest(schemaInfo, rowInfo, queries, connInfo) {
-  const sortedSchema = sortSchemaInfo(schemaInfo);
-  console.log('SORTED SCHEMA INFO');
-  console.log(sortedSchema);
-  generateData(sortedSchema, rowInfo);
-
-  //   console.log('ROW INFO');
-  //   console.log(rowInfo);
-  //   console.log('QUERIES');
-  //   console.log(queries);
-  //   console.log('CONN INFO');
-  //   console.log(connInfo);
-}
-
-export default runTest;
+export default generateData;
