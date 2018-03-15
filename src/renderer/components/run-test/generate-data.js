@@ -458,12 +458,14 @@ async function generateTable([tableName, fields], numRows, tableRNG) {
   });
 }
 
-function generateData(schemaInfo, rowInfo, testNum) {
+async function generateData(schemaInfo, rowInfo, testNum) {
   const rootRNG = new Random();
-  schemaInfo.forEach(table => {
+  const tablePromises = schemaInfo.map(table => {
     const tIndex = rowInfo.findIndex(row => row[0] === table[0]);
-    generateTable(table, rowInfo[tIndex][1][testNum], spawnRNG(rootRNG));
+    return Promise.resolve(generateTable(table, rowInfo[tIndex][1][testNum], spawnRNG(rootRNG)));
   });
+  await Promise.all(tablePromises);
+  return db;
 }
 
 export default generateData;

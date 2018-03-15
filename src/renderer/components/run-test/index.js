@@ -1,6 +1,8 @@
 import cloneDeep from 'lodash.clonedeep';
+import Sequelize from 'sequelize';
 import { tableRelations } from '../test-tables-to-cards.jsx';
 import generateData from './generate-data.js';
+import populateData from './populate-data.js';
 
 // Sorts schemaInfo according to the order of data generation
 function sortSchemaInfo(schemaInfo) {
@@ -53,15 +55,40 @@ function sortSchemaInfo(schemaInfo) {
   return schemaInfo;
 }
 
-async function runTest(schemaInfo, rowInfo, queries, connInfo) {
+function createSequelizeConnection(s, maxPoolSize) {
+  const client = s.client === 'postgresql' ? 'postgres' : s.client;
+  const connString = `${client}://${s.user}:${s.password}@${s.host}:${s.port}/${s.database}`;
+  console.log(connString);
+
+  const sequelize = new Sequelize(connString, {
+    pool: {
+      max: maxPoolSize,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+  });
+  sequelize
+    .authenticate()
+    .then(() => {
+      console.log('Connection has been established successfully.');
+    })
+    .catch(err => {
+      console.error('Unable to connect to the database:', err);
+    });
+  return sequelize;
+}
+
+async function runTest(server, schemaInfo, rowInfo, queries, connInfo) {
   const sortedSchema = sortSchemaInfo(schemaInfo);
-  console.log('SORTED SCHEMA INFO');
-  console.log(sortedSchema);
   const numTests = rowInfo[0][1].length;
+  const maxPoolSize = Math.max(connInfo);
+  const sequelize = createSequelizeConnection(server, maxPoolSize);
 
   for (let testNum = 0; testNum < numTests; testNum++) {
-    await generateData(sortedSchema, rowInfo, testNum);
-    // populateData(sortedSchema);
+    const data = await generateData(sortedSchema, rowInfo, testNum);
+    // const data = null;
+    populateData(sortedSchema, sequelize, data);
   }
   //   console.log('ROW INFO');
   //   console.log(rowInfo);

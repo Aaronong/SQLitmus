@@ -727,7 +727,7 @@ class DbBrowserContainer extends Component {
           <button
             className="pt-button pt-large pt-intent-primary"
             title="Run"
-            onClick={() => runTest(schemaInfo, rowInfo, queries, connPoolInfo)}
+            onClick={() => runTest(connections.server, schemaInfo, rowInfo, queries, connPoolInfo)}
           >
             Run
           </button>
