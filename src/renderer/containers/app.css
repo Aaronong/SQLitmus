@@ -6,7 +6,9 @@ html {
   padding: 0;
 }
 
-*, *:before, *:after {
+*,
+*:before,
+*:after {
   -webkit-box-sizing: inherit;
   -moz-box-sizing: inherit;
   box-sizing: inherit;
@@ -18,7 +20,7 @@ body {
   padding: 0;
   font-size: 14px;
   line-height: 30px;
-  color: rgba(0,0,0,.87);
+  color: rgba(0, 0, 0, 0.87);
 }
 
 p.help {
@@ -32,7 +34,8 @@ p.help {
 
 .ui.message pre {
   margin-top: 1em;
-  font: 12px/normal 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+  font: 12px / normal "Monaco", "Menlo", "Ubuntu Mono", "Consolas",
+    "source-code-pro", monospace;
 }
 
 /* Custom css for tables, views and routines lists */
@@ -49,10 +52,17 @@ span.clickable {
   cursor: pointer;
 }
 
-::-webkit-scrollbar { width:8px; height:8px }
-::-webkit-scrollbar-track { background: #fff; }
-::-webkit-scrollbar-thumb { background: #666; border-radius:5px }
-
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #fff;
+}
+::-webkit-scrollbar-thumb {
+  background: #666;
+  border-radius: 5px;
+}
 
 /* Dark theme */
 body.dark-theme {
@@ -82,4 +92,34 @@ body.dark-theme .ui.toggle.checkbox label:before {
 body.dark-theme .ui.toggle.checkbox .box:after,
 body.dark-theme .ui.toggle.checkbox label:after {
   box-shadow: 0px 1px 2px 0 #333, 0px 0px 0px 1px #333 inset;
+}
+
+table {
+  border: 1px solid #e2e2e2;
+  margin-bottom: 20px;
+}
+table th,
+table td {
+  padding: 8px;
+  line-height: 1.5rem;
+  vertical-align: top;
+  border: 1px solid #e2e2e2;
+}
+table th {
+  font-weight: normal;
+  background-color: #f0f7fd;
+}
+table thead th {
+  vertical-align: bottom;
+}
+table caption + thead tr:first-child th,
+table caption + thead tr:first-child td,
+table colgroup + thead tr:first-child th,
+table colgroup + thead tr:first-child td,
+table thead:first-child tr:first-child th,
+table thead:first-child tr:first-child td {
+  border-top: 0;
+}
+table tbody + tbody {
+  border-top: 2px solid #ddd;
 }

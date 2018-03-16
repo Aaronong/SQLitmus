@@ -31,6 +31,7 @@ import Query from '../components/query.jsx';
 import Loader from '../components/loader.jsx';
 import PromptModal from '../components/prompt-modal.jsx';
 import MenuHandler from '../menu-handler';
+import HistoryDisplay from '../components/history/index.jsx';
 import SchemaPanel from '../components/test-schema-panel.jsx';
 import DataPanel from '../components/test-data-panel.jsx';
 import rowPanel from '../components/test-row-panel.jsx';
@@ -647,29 +648,7 @@ class DbBrowserContainer extends Component {
 
     let MainDisplay = null;
     if (this.state.navBarPosition === 0) {
-      MainDisplay = (
-        <table style={{ width: '100%' }} className="pt-table pt-striped">
-          <thead>
-            <tr>
-              <th>Test Name</th>
-              <th>Test Date</th>
-              <th>Test Details</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Jill</td>
-              <td>Smith</td>
-              <td>50</td>
-            </tr>
-            <tr>
-              <td>Eve</td>
-              <td>Jackson</td>
-              <td>94</td>
-            </tr>
-          </tbody>
-        </table>
-      );
+      MainDisplay = !connections.server ? <div /> : <HistoryDisplay server={connections.server} />;
     } else {
       MainDisplay = (
         <Tabs2 id="TabsExample" selectedTabId={this.testTabPosition}>

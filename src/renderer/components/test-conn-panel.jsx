@@ -8,7 +8,7 @@ function TestConnPanel(connPoolInfo, onSetConnValue, onAddConn, onRemoveConn) {
         type="number"
         style={{ position: 'relative', top: '10px' }}
         className="pt-input pt-numeric-input"
-        onChange={e => onSetConnValue(index, e.target.value)}
+        onChange={e => onSetConnValue(index, Number(e.target.value))}
         value={connVal}
       />
       <button

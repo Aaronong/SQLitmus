@@ -1,8 +1,4 @@
-import { APP_DATA_PATH, QUERY_RESULTS_PATH, getPersistentStore } from './persistant-storage.js';
-import MacPackager from 'electron-builder/out/macPackager';
-
-const dbData = getPersistentStore(`${APP_DATA_PATH}/db`);
-const testData = getPersistentStore(`${APP_DATA_PATH}/test`);
+import { QUERY_RESULTS_PATH, getPersistentStore } from './persistant-storage.js';
 
 function postfixObjName(obj, postfix) {
   const retObj = {};
@@ -25,11 +21,9 @@ async function testQuery(sequelize, query, TestId, record, queryStore) {
   for (let j = 0; j < 5; j++) {
     const TimeStart = Date.now();
     let Command;
-    for (let i = 0; i < 10; i++) {
-      await sequelize.query(query).spread((results, metadata) => {
-        Command = metadata.command;
-      });
-    }
+    await sequelize.query(query).spread((results, metadata) => {
+      Command = metadata.command;
+    });
     const TimeEnd = Date.now();
     const TimeTaken = TimeEnd - TimeStart;
     queryStore.insert({ ...record, Command, TimeTaken });
