@@ -121,6 +121,7 @@ class DbBrowserContainer extends Component {
       rowInfo: null,
       connPoolInfo: [5],
       runModalOpen: false,
+      loadedQueries: false,
     };
     this.menuHandler = new MenuHandler();
   }
@@ -152,6 +153,7 @@ class DbBrowserContainer extends Component {
     // If connected for the first time, load query
     if (connections !== this.props.connections) {
       dispatch(QueryActions.setQueryState(fillQueryInfo(queries, connections.server)));
+      this.setState({ loadedQueries: true });
     }
 
     const lastConnectedDB = connections.databases[connections.databases.length - 1];
@@ -159,7 +161,7 @@ class DbBrowserContainer extends Component {
     const dbName = connections.server.database;
 
     // When query changes, store query
-    if (queries !== this.props.queries) {
+    if (queries !== this.props.queries && this.state.loadedQueries) {
       storeQueryInfo(queries, connections.server);
     }
     dispatch(DbAction.fetchDatabasesIfNeeded(filter));

@@ -124,7 +124,16 @@ function fillConnInfo(connInfo, server) {
 
 function storeQueryInfo(queryInfo, server) {
   const prefix = localStoragePrefix(server);
-  localStorage.setItem(`${prefix}|>_<|queryInfo`, JSON.stringify(queryInfo));
+  const queryCopy = cloneDeep(queryInfo);
+  const tmp = Object.entries(queryCopy.queriesById).map(([id, obj]) => [
+    id,
+    { ...obj, queryHistory: [], results: [] },
+  ]);
+  tmp.forEach(([id, obj]) => {
+    queryCopy.queriesById[id] = obj;
+  });
+  queryCopy.currentQueryId = 1;
+  localStorage.setItem(`${prefix}|>_<|queryInfo`, JSON.stringify(queryCopy));
 }
 
 function fillQueryInfo(queryInfo, server) {
