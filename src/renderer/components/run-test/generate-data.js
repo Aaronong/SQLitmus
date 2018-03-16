@@ -1,7 +1,7 @@
 import Random from 'rng.js';
 import shuffle from 'shuffle-array';
 import { generateNumVals } from '../generic/test-generator.js';
-import { GENERATED_DATA_PATH, getPersistentStore } from './persistant-storage.js';
+import { getMemoryStore } from './persistant-storage.js';
 let START_TIME = new Date().getTime();
 let END_TIME = new Date().getTime();
 
@@ -34,7 +34,7 @@ function spawnRNG(parentRNG) {
   return new Random(lowSeed % 2 ? lowSeed : lowSeed + 1, highSeed);
 }
 
-function generateIndexes(tableName, indexFields, numRows) {
+async function generateIndexes(tableName, indexFields, numRows) {
   if (indexFields.length === 0) {
     return;
   }
@@ -44,7 +44,11 @@ function generateIndexes(tableName, indexFields, numRows) {
     indexFields.forEach(field => {
       setObj[field.name] = i;
     });
-    db[tableName].update({ _id: i }, { $set: setObj });
+    await new Promise((resolve, reject) => {
+      db[tableName].update({ _id: i }, { $set: setObj }, {}, (err, numReplaced) =>
+        resolve(numReplaced)
+      );
+    });
   }
 }
 
@@ -186,42 +190,48 @@ async function generateFKs(tableName, fkFields, numRows, fieldRNG) {
   if (fkFields.length > 1) {
     // Group foreign keys by the table they reference
     const groups = groupFKs(fkFields);
-    const promises = groups.map(fkGroup => {
+    for (let j = 0; j < groups.length; j++) {
+      const fkGroup = groups[j];
       // Split groups up into composites or non-composites
       if (fkGroup.length === 1) {
         const field = fkGroup[0];
-        const resultsPromise = Promise.resolve(
+        const results = await Promise.resolve(
           generateSingularFK(field, numRows, fieldRNG, tableName)
         );
-        return resultsPromise.then(results => {
-          for (let i = 0; i < numRows; i++) {
-            const setObj = {};
-            setObj[field.name] = results[i];
-            db[tableName].update({ _id: i }, { $set: setObj });
-          }
-        });
+        for (let i = 0; i < numRows; i++) {
+          const setObj = {};
+          setObj[field.name] = results[i];
+          await new Promise((resolve, reject) => {
+            db[tableName].update({ _id: i }, { $set: setObj }, {}, (err, numReplaced) =>
+              resolve(numReplaced)
+            );
+          });
+        }
       } else {
-        const resultsPromise = Promise.resolve(
+        const results = await Promise.resolve(
           generateCompositeFK(fkGroup, numRows, fieldRNG, tableName)
         );
-        return resultsPromise.then(results => {
-          for (let i = 0; i < numRows; i++) {
-            db[tableName].update({ _id: i }, { $set: results[i] });
-          }
-        });
+        for (let i = 0; i < numRows; i++) {
+          await new Promise((resolve, reject) => {
+            db[tableName].update({ _id: i }, { $set: results[i] }, {}, (err, numReplaced) =>
+              resolve(numReplaced)
+            );
+          });
+        }
       }
-    });
-    await Promise.all(promises);
+    }
   } else {
     const field = fkFields[0];
-    const resultsPromise = Promise.resolve(generateSingularFK(field, numRows, fieldRNG, tableName));
-    await resultsPromise.then(results => {
-      for (let i = 0; i < numRows; i++) {
-        const setObj = {};
-        setObj[field.name] = results[i];
-        db[tableName].update({ _id: i }, { $set: setObj });
-      }
-    });
+    const results = await Promise.resolve(generateSingularFK(field, numRows, fieldRNG, tableName));
+    for (let i = 0; i < numRows; i++) {
+      const setObj = {};
+      setObj[field.name] = results[i];
+      await new Promise((resolve, reject) => {
+        db[tableName].update({ _id: i }, { $set: setObj }, {}, (err, numReplaced) =>
+          resolve(numReplaced)
+        );
+      });
+    }
   }
 }
 
@@ -240,34 +250,32 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
     const groups = groupFKs(fkFields);
     const sortedResults = [];
     const genRows = Math.round(Math.sqrt(numRows)) * 2;
-    const groupPromises = groups.map(fkGroup => {
+    for (let j = 0; j < groups.length; j++) {
+      const fkGroup = groups[j];
       // Split groups up into composites or non-composites
       if (fkGroup.length === 1) {
         const field = fkGroup[0];
-        const resultsPromise = Promise.resolve(
+        const dupResults = await Promise.resolve(
           generateSingularFK(field, genRows, fieldRNG, tableName)
         );
-        return resultsPromise.then(dupResults => {
-          const results = unique(dupResults);
-          const tmp = [];
-          for (let i = 0; i < results.length; i++) {
-            const setObj = {};
-            setObj[field.name] = results[i];
-            tmp.push(setObj);
-          }
-          sortedResults.push([field.name, results]);
-        });
+        const results = unique(dupResults);
+        const tmp = [];
+        for (let i = 0; i < results.length; i++) {
+          const setObj = {};
+          setObj[field.name] = results[i];
+          tmp.push(setObj);
+        }
+        sortedResults.push([field.name, results]);
       } else {
-        const resultsPromise = Promise.resolve(
+        const dupResults = await Promise.resolve(
           generateCompositeFK(fkGroup, genRows, fieldRNG, tableName)
         );
-        return resultsPromise.then(dupResults => {
-          const results = unique(dupResults);
-          // save results under the name of the first field in the group
-          sortedResults.push([fkGroup[0].name, results]);
-        });
+        const results = unique(dupResults);
+        // save results under the name of the first field in the group
+        sortedResults.push([fkGroup[0].name, results]);
       }
-    });
+    }
+
     pkRemainder.forEach(field => {
       const results = unique(generateNumVals(field, genRows, fieldRNG, false));
       const tmp = [];
@@ -278,7 +286,6 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
       }
       sortedResults.push([field.name, tmp]);
     });
-    await Promise.all(groupPromises);
     let endTime = new Date().getTime();
     console.log(sortedResults);
     console.log(`Composite Key part 1: Generate genRows took ${endTime - startTime} miliseconds`);
@@ -365,7 +372,11 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
       throw errorMsg;
     }
     for (let i = 0; i < numRows; i++) {
-      db[tableName].update({ _id: i }, { $set: combinations[i] });
+      await new Promise((resolve, reject) => {
+        db[tableName].update({ _id: i }, { $set: combinations[i] }, {}, (err, numReplaced) =>
+          resolve(numReplaced)
+        );
+      });
     }
     endTime = new Date().getTime();
     console.log(`Composite Key part 4: Shuffle and pick took ${endTime - startTime} miliseconds`);
@@ -376,7 +387,11 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
       for (let i = 0; i < numRows; i++) {
         const setObj = {};
         setObj[field.name] = results[i];
-        db[tableName].update({ _id: i }, { $set: setObj });
+        await new Promise((resolve, reject) => {
+          db[tableName].update({ _id: i }, { $set: setObj }, {}, (err, numReplaced) =>
+            resolve(numReplaced)
+          );
+        });
       }
     } else {
       const results = generateNumVals(field, numRows, fieldRNG, true);
@@ -384,7 +399,11 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
       for (let i = 0; i < numRows; i++) {
         const setObj = {};
         setObj[field.name] = results[i];
-        db[tableName].update({ _id: i }, { $set: setObj });
+        await new Promise((resolve, reject) => {
+          db[tableName].update({ _id: i }, { $set: setObj }, {}, (err, numReplaced) =>
+            resolve(numReplaced)
+          );
+        });
       }
     }
   }
@@ -392,25 +411,20 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
 
 async function generateTable([tableName, fields], numRows, tableRNG) {
   console.log(`Generating ${numRows} rows of ${tableName}`);
-  const tablePath = `${GENERATED_DATA_PATH}/${tableName}`;
-  if (!db[tableName]) {
-    // Load datastore into db
-    db[tableName] = getPersistentStore(tablePath);
-  }
-  // Removing all documents with the 'match-all' query
-  db[tableName].remove({}, { multi: true });
-  db[tableName].persistence.compactDatafile();
+  db[tableName] = getMemoryStore();
 
   // Insert a record for each row we are required to generate
   for (let i = 0; i < numRows; i++) {
-    db[tableName].insert({ _id: i });
+    await new Promise((resolve, reject) => {
+      db[tableName].insert({ _id: i }, (err, newDoc) => resolve(newDoc));
+    });
   }
 
   // Generate indexes
   const indexFields = fields.filter(field => field.index);
   let filteredFields = fields.filter(field => !field.index);
   START_TIME = new Date().getTime();
-  generateIndexes(tableName, indexFields, numRows);
+  await generateIndexes(tableName, indexFields, numRows);
   END_TIME = new Date().getTime();
   console.log(`Generating index rows for ${tableName} took ${END_TIME - START_TIME} miliseconds`);
   // if a PK element is found in index, we can skip processing PKs
@@ -434,28 +448,33 @@ async function generateTable([tableName, fields], numRows, tableRNG) {
   END_TIME = new Date().getTime();
   console.log(`Generating Foreign keys for ${tableName} took ${END_TIME - START_TIME} miliseconds`);
   // Generate remaining fields
-  filteredFields.forEach(field => {
+  for (let j = 0; j < filteredFields.length; j++) {
+    const field = filteredFields[j];
     START_TIME = new Date().getTime();
     const results = generateNumVals(field, numRows, spawnRNG(tableRNG), field.unique);
     for (let i = 0; i < numRows; i++) {
       const setObj = {};
       setObj[field.name] = results[i];
-      db[tableName].update({ _id: i }, { $set: setObj });
+      await new Promise((resolve, reject) => {
+        db[tableName].update({ _id: i }, { $set: setObj }, {}, (err, numReplaced) =>
+          resolve(numReplaced)
+        );
+      });
     }
     END_TIME = new Date().getTime();
     console.log(
       `Generating ${field.name} for ${tableName} took ${END_TIME - START_TIME} miliseconds`
     );
-  });
+  }
 }
 
 async function generateData(schemaInfo, rowInfo) {
   const rootRNG = new Random();
-  const tablePromises = schemaInfo.map(table => {
+  for (let i = 0; i < schemaInfo.length; i++) {
+    const table = schemaInfo[i];
     const tIndex = rowInfo.findIndex(row => row[0] === table[0]);
-    return Promise.resolve(generateTable(table, rowInfo[tIndex][1], spawnRNG(rootRNG)));
-  });
-  await Promise.all(tablePromises);
+    await Promise.resolve(generateTable(table, rowInfo[tIndex][1], spawnRNG(rootRNG)));
+  }
   return db;
 }
 

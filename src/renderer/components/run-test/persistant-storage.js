@@ -16,6 +16,10 @@ if (!fs.existsSync(BASE_PATH)) {
   fs.mkdirSync(QUERY_RESULTS_PATH);
 }
 
+function getMemoryStore() {
+  return new Datastore();
+}
+
 function getPersistentStore(path) {
   if (!loadedDBs[path]) {
     loadedDBs[path] = new Datastore({ filename: path, autoload: true });
@@ -23,4 +27,11 @@ function getPersistentStore(path) {
   return loadedDBs[path];
 }
 
-export { BASE_PATH, GENERATED_DATA_PATH, APP_DATA_PATH, QUERY_RESULTS_PATH, getPersistentStore };
+export {
+  BASE_PATH,
+  GENERATED_DATA_PATH,
+  APP_DATA_PATH,
+  QUERY_RESULTS_PATH,
+  getPersistentStore,
+  getMemoryStore,
+};
