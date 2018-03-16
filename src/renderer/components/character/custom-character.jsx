@@ -3,7 +3,7 @@ import { Modal } from 'react-bootstrap';
 import { Slider } from '@blueprintjs/core';
 
 // input of form [ [val1, weight1], [val2, weight2], ... ]
-function customCharacterGenerator(randNum, input) {
+function customCharacterGenerator(randNum, [maxLength, input]) {
   const reducer = (accumulator, currentValue) => accumulator + currentValue[1];
   const totalWeight = input.reduce(reducer, 0);
   let counter = Math.round(randNum * totalWeight);
@@ -16,7 +16,7 @@ function customCharacterGenerator(randNum, input) {
       found = true;
     }
   });
-  return result;
+  return result.length > maxLength ? result.slice(0, maxLength) : result;
 }
 
 const CUSTOM_CHARACTER = 'Custom Character';
@@ -65,7 +65,12 @@ class CustomCharacter extends Component {
     const defaultInput = schemaInfo[tableIndex][1][fieldIndex].generator.inputs;
     this.state = {
       inputs: defaultInput,
+      maxLength: 255,
     };
+  }
+
+  setMaxLength(maxLength) {
+    this.setState({ maxLength });
   }
 
   setValueAtRow(rowIndex, value) {
@@ -92,10 +97,21 @@ class CustomCharacter extends Component {
 
   render() {
     const { onSetField, tableIndex, fieldIndex, handleClose } = this.props;
-    const { inputs } = this.state;
+    const { inputs, maxLength } = this.state;
+    const compressedInput = [maxLength, inputs];
     return (
       <div>
         <Modal.Body>
+          <label className="pt-label">
+            Select Max String Length
+            <input
+              type="number"
+              style={{ marginRight: '13px' }}
+              className="pt-input pt-numeric-input"
+              onChange={e => this.setMaxLength(parseInt(e.target.value, 10))}
+              value={maxLength}
+            />
+          </label>
           <div className="pair-label-switch-container">
             <span className="modal-subheader">Value</span>
             <span className="modal-subheader">Weight</span>
@@ -117,7 +133,7 @@ class CustomCharacter extends Component {
             onClick={() => {
               onSetField(tableIndex, fieldIndex, 'generator', {
                 func: customCharacterGenerator,
-                inputs,
+                inputs: compressedInput,
                 name: CUSTOM_CHARACTER,
               });
               handleClose();

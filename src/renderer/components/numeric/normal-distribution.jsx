@@ -1,10 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { Modal } from 'react-bootstrap';
 import { jStat } from 'jStat';
+import { toPrecisionScale } from './custom-numeric.jsx';
 
-function normalDistributionGenerator(randNum, [miu, sigma, isInteger]) {
-  const ans = jStat.normal.inv(randNum, miu, sigma);
-  return isInteger ? Math.round(ans) : ans;
+function normalDistributionGenerator(randNum, [miu, sigma, isInteger, precision, scale]) {
+  const ans = toPrecisionScale(jStat.normal.inv(randNum, miu, sigma), precision, scale);
+  return isInteger ? parseInt(ans, 10) : Number(ans);
 }
 
 const NORMAL_DISTRIBUTION = 'Normal Distribution';
@@ -28,7 +29,17 @@ class NormalDistribution extends Component {
     }
     this.state = {
       inputs: defaultInput,
+      precision: 10,
+      scale: 2,
     };
+  }
+
+  setPrecision(precision) {
+    this.setState({ precision });
+  }
+
+  setScale(scale) {
+    this.setState({ scale });
   }
 
   setMiu(miu) {
@@ -45,28 +56,55 @@ class NormalDistribution extends Component {
 
   render() {
     const { onSetField, tableIndex, fieldIndex, handleClose } = this.props;
-    const { inputs } = this.state;
+    const { inputs, precision, scale } = this.state;
+    const combinedInput = [...inputs, precision, scale];
     return (
       <div>
         <Modal.Body>
           <div className="pair-label-switch-container">
-            <span className="modal-subheader">Miu</span>
-            <span className="modal-subheader">Sigma</span>
+            <label className="pt-label">
+              Set Precision
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => this.setPrecision(parseInt(e.target.value, 10))}
+                value={precision}
+              />
+            </label>
+            <label className="pt-label">
+              Set Scale
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => this.setScale(parseInt(e.target.value, 10))}
+                value={scale}
+              />
+            </label>
           </div>
-          <input
-            type="number"
-            style={{ marginRight: '13px' }}
-            className="pt-input pt-numeric-input"
-            onChange={e => this.setMiu(e.target.value)}
-            value={inputs[0]}
-          />
-          <input
-            type="number"
-            style={{ marginRight: '13px' }}
-            className="pt-input pt-numeric-input"
-            onChange={e => this.setSigma(e.target.value)}
-            value={inputs[1]}
-          />
+          <div className="pair-label-switch-container">
+            <label className="pt-label">
+              Set Miu
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => this.setMiu(e.target.value)}
+                value={inputs[0]}
+              />
+            </label>
+            <label className="pt-label">
+              Set Sigma
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => this.setSigma(e.target.value)}
+                value={inputs[1]}
+              />
+            </label>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <button
@@ -75,7 +113,7 @@ class NormalDistribution extends Component {
             onClick={() => {
               onSetField(tableIndex, fieldIndex, 'generator', {
                 func: normalDistributionGenerator,
-                inputs,
+                inputs: combinedInput,
                 name: NORMAL_DISTRIBUTION,
               });
               handleClose();

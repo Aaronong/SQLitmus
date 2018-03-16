@@ -2,8 +2,15 @@ import React, { Component, PropTypes } from 'react';
 import { Modal } from 'react-bootstrap';
 import { Slider } from '@blueprintjs/core';
 
+function toPrecisionScale(number, precision, scale) {
+  const out = number.toFixed(scale);
+  const parts = out.split('.');
+  const front = parts[0].length > precision - scale ? parts[0].slice(scale - precision) : parts[0];
+  return `${front}.${parts[1]}`;
+}
+
 // input of form [ [val1, weight1], [val2, weight2], ... ]
-function customNumericGenerator(randNum, input) {
+function customNumericGenerator(randNum, [input, precision, scale, isInteger]) {
   const reducer = (accumulator, currentValue) => accumulator + currentValue[1];
   const totalWeight = input.reduce(reducer, 0);
   let counter = Math.round(randNum * totalWeight);
@@ -16,7 +23,8 @@ function customNumericGenerator(randNum, input) {
       found = true;
     }
   });
-  return result;
+  result = toPrecisionScale(result, precision, scale);
+  return isInteger ? parseInt(result, 10) : Number(result);
 }
 
 const CUSTOM_NUMERIC = 'Custom Numeric';
@@ -66,7 +74,17 @@ class CustomNumeric extends Component {
     const defaultInput = schemaInfo[tableIndex][1][fieldIndex].generator.inputs;
     this.state = {
       inputs: defaultInput,
+      precision: 10,
+      scale: 2,
     };
+  }
+
+  setPrecision(precision) {
+    this.setState({ precision });
+  }
+
+  setScale(scale) {
+    this.setState({ scale });
   }
 
   setValueAtRow(rowIndex, value) {
@@ -92,11 +110,32 @@ class CustomNumeric extends Component {
   }
 
   render() {
-    const { onSetField, tableIndex, fieldIndex, handleClose } = this.props;
-    const { inputs } = this.state;
+    const { onSetField, tableIndex, fieldIndex, handleClose, isInteger } = this.props;
+    const { inputs, precision, scale } = this.state;
+    const combinedInput = [inputs, precision, scale, isInteger];
     return (
       <div>
         <Modal.Body>
+          <label className="pt-label">
+            Set Precision
+            <input
+              type="number"
+              style={{ marginRight: '13px' }}
+              className="pt-input pt-numeric-input"
+              onChange={e => this.setPrecision(parseInt(e.target.value, 10))}
+              value={precision}
+            />
+          </label>
+          <label className="pt-label">
+            Set Scale
+            <input
+              type="number"
+              style={{ marginRight: '13px' }}
+              className="pt-input pt-numeric-input"
+              onChange={e => this.setScale(parseInt(e.target.value, 10))}
+              value={scale}
+            />
+          </label>
           <div className="pair-label-switch-container">
             <span className="modal-subheader">Value</span>
             <span className="modal-subheader">Weight</span>
@@ -118,7 +157,7 @@ class CustomNumeric extends Component {
             onClick={() => {
               onSetField(tableIndex, fieldIndex, 'generator', {
                 func: customNumericGenerator,
-                inputs,
+                inputs: combinedInput,
                 name: CUSTOM_NUMERIC,
               });
               handleClose();
@@ -136,4 +175,4 @@ class CustomNumeric extends Component {
 }
 
 export default CustomNumeric;
-export { CUSTOM_NUMERIC, customNumericGenerator };
+export { CUSTOM_NUMERIC, customNumericGenerator, toPrecisionScale };

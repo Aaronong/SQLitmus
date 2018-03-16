@@ -1,10 +1,11 @@
 import React, { Component, PropTypes } from 'react';
 import { Modal } from 'react-bootstrap';
 import { jStat } from 'jStat';
+import { toPrecisionScale } from './custom-numeric.jsx';
 
-function uniformDistributionGenerator(randNum, [start, end, isInteger]) {
-  const ans = jStat.uniform.inv(randNum, start, end);
-  return isInteger ? Math.round(ans) : ans;
+function uniformDistributionGenerator(randNum, [start, end, isInteger, precision, scale]) {
+  const ans = toPrecisionScale(jStat.uniform.inv(randNum, start, end), precision, scale);
+  return isInteger ? parseInt(ans, 10) : Number(ans);
 }
 
 const UNIFORM_DISTRIBUTION = 'Uniform Distribution';
@@ -28,7 +29,17 @@ class UniformDistribution extends Component {
     }
     this.state = {
       inputs: defaultInput,
+      precision: 10,
+      scale: 2,
     };
+  }
+
+  setPrecision(precision) {
+    this.setState({ precision });
+  }
+
+  setScale(scale) {
+    this.setState({ scale });
   }
 
   setStart(start) {
@@ -45,28 +56,55 @@ class UniformDistribution extends Component {
 
   render() {
     const { onSetField, tableIndex, fieldIndex, handleClose } = this.props;
-    const { inputs } = this.state;
+    const { inputs, precision, scale } = this.state;
+    const combinedInput = [...inputs, precision, scale];
     return (
       <div>
         <Modal.Body>
           <div className="pair-label-switch-container">
-            <span className="modal-subheader">Start</span>
-            <span className="modal-subheader">End</span>
+            <label className="pt-label">
+              Set Precision
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => this.setPrecision(parseInt(e.target.value, 10))}
+                value={precision}
+              />
+            </label>
+            <label className="pt-label">
+              Set Scale
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => this.setScale(parseInt(e.target.value, 10))}
+                value={scale}
+              />
+            </label>
           </div>
-          <input
-            type="number"
-            style={{ marginRight: '13px' }}
-            className="pt-input pt-numeric-input"
-            onChange={e => this.setStart(e.target.value)}
-            value={inputs[0]}
-          />
-          <input
-            type="number"
-            style={{ marginRight: '13px' }}
-            className="pt-input pt-numeric-input"
-            onChange={e => this.setEnd(e.target.value)}
-            value={inputs[1]}
-          />
+          <div className="pair-label-switch-container">
+            <label className="pt-label">
+              Set Start
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => this.setStart(e.target.value)}
+                value={inputs[0]}
+              />
+            </label>{' '}
+            <label className="pt-label">
+              Set End
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => this.setEnd(e.target.value)}
+                value={inputs[1]}
+              />
+            </label>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <button
@@ -75,7 +113,7 @@ class UniformDistribution extends Component {
             onClick={() => {
               onSetField(tableIndex, fieldIndex, 'generator', {
                 func: uniformDistributionGenerator,
-                inputs,
+                inputs: combinedInput,
                 name: UNIFORM_DISTRIBUTION,
               });
               handleClose();
