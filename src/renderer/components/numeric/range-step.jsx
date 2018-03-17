@@ -1,16 +1,21 @@
 import React, { Component, PropTypes } from 'react';
 import { Modal } from 'react-bootstrap';
-import { jStat } from 'jStat';
 import { toPrecisionScale } from './custom-numeric.jsx';
 
-function uniformDistributionGenerator(randNum, [start, end, isInteger, precision, scale]) {
-  const ans = toPrecisionScale(jStat.uniform.inv(randNum, start, end), precision, scale);
+function rangeStepGenerator(randNum, [start, end, step, isInteger, precision, scale]) {
+  const numVals = Math.floor((end - start) / step);
+  console.log(`${numVals} numVals`);
+  const numSteps = Math.round(randNum * Number.MAX_SAFE_INTEGER) % numVals;
+  console.log(`${numSteps} numSteps`);
+  console.log(`${numSteps * step} incrementer`);
+  console.log(`${start + numSteps * step} ANS`);
+  const ans = toPrecisionScale(start + numSteps * step, precision, scale);
   return isInteger ? parseInt(ans, 10) : Number(ans);
 }
 
-const UNIFORM_DISTRIBUTION = 'Uniform Distribution';
+const RANGE_STEP = 'Range Step';
 
-class UniformDistribution extends Component {
+class RangeStep extends Component {
   static propTypes = {
     schemaInfo: PropTypes.array.isRequired,
     onSetField: PropTypes.func.isRequired,
@@ -24,13 +29,13 @@ class UniformDistribution extends Component {
     super(props, context);
     const { schemaInfo, tableIndex, fieldIndex, isInteger } = props;
     let defaultInput = schemaInfo[tableIndex][1][fieldIndex].generator.inputs;
-    if (defaultInput.length !== 5) {
-      defaultInput = [0, 1, isInteger, 10, 2];
+    if (defaultInput.length !== 6) {
+      defaultInput = [0, 10, 1, isInteger, 10, 2];
     }
     this.state = {
-      inputs: defaultInput.slice(0, 3),
-      precision: defaultInput[3],
-      scale: defaultInput[4],
+      inputs: defaultInput.slice(0, 4),
+      precision: defaultInput[4],
+      scale: defaultInput[5],
     };
   }
 
@@ -51,6 +56,12 @@ class UniformDistribution extends Component {
   setEnd(end) {
     const inputs = [...this.state.inputs];
     inputs[1] = Number(end);
+    this.setState({ inputs });
+  }
+
+  setStep(step) {
+    const inputs = [...this.state.inputs];
+    inputs[2] = Number(step);
     this.setState({ inputs });
   }
 
@@ -104,6 +115,16 @@ class UniformDistribution extends Component {
                 value={inputs[1]}
               />
             </label>
+            <label className="pt-label">
+              Set Step
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => this.setStep(e.target.value)}
+                value={inputs[2]}
+              />
+            </label>
           </div>
         </Modal.Body>
         <Modal.Footer>
@@ -112,9 +133,9 @@ class UniformDistribution extends Component {
             className="pt-button pt-intent-primary"
             onClick={() => {
               onSetField(tableIndex, fieldIndex, 'generator', {
-                func: uniformDistributionGenerator,
+                func: rangeStepGenerator,
                 inputs: combinedInput,
-                name: UNIFORM_DISTRIBUTION,
+                name: RANGE_STEP,
               });
               handleClose();
             }}
@@ -130,5 +151,5 @@ class UniformDistribution extends Component {
   }
 }
 
-export default UniformDistribution;
-export { UNIFORM_DISTRIBUTION, uniformDistributionGenerator };
+export default RangeStep;
+export { RANGE_STEP, rangeStepGenerator };

@@ -11,11 +11,13 @@ import UniformDistribution, {
   UNIFORM_DISTRIBUTION,
   uniformDistributionGenerator,
 } from './uniform-distribution.jsx';
+import RangeStep, { RANGE_STEP, rangeStepGenerator } from './range-step.jsx';
 
-const numericOptions = [NORMAL_DISTRIBUTION, UNIFORM_DISTRIBUTION, CUSTOM_NUMERIC];
+const numericOptions = [NORMAL_DISTRIBUTION, UNIFORM_DISTRIBUTION, RANGE_STEP, CUSTOM_NUMERIC];
 const numericGenerators = [
   normalDistributionGenerator,
   uniformDistributionGenerator,
+  rangeStepGenerator,
   customNumericGenerator,
 ];
 
@@ -61,6 +63,17 @@ class Numeric extends Component {
       case UNIFORM_DISTRIBUTION:
         return (
           <UniformDistribution
+            schemaInfo={schemaInfo}
+            onSetField={onSetField}
+            tableIndex={tableIndex}
+            fieldIndex={fieldIndex}
+            handleClose={::this.handleClose}
+            isInteger={isInteger}
+          />
+        );
+      case RANGE_STEP:
+        return (
+          <RangeStep
             schemaInfo={schemaInfo}
             onSetField={onSetField}
             tableIndex={tableIndex}

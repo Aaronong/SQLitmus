@@ -24,13 +24,13 @@ class NormalDistribution extends Component {
     super(props, context);
     const { schemaInfo, tableIndex, fieldIndex, isInteger } = props;
     let defaultInput = schemaInfo[tableIndex][1][fieldIndex].generator.inputs;
-    if (defaultInput.length !== 3) {
-      defaultInput = [0, 1, isInteger];
+    if (defaultInput.length !== 5) {
+      defaultInput = [0, 1, isInteger, 10, 2];
     }
     this.state = {
-      inputs: defaultInput,
-      precision: 10,
-      scale: 2,
+      inputs: defaultInput.slice(0, 3),
+      precision: defaultInput[3],
+      scale: defaultInput[4],
     };
   }
 

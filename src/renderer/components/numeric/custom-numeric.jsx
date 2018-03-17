@@ -3,6 +3,11 @@ import { Modal } from 'react-bootstrap';
 import { Slider } from '@blueprintjs/core';
 
 function toPrecisionScale(number, precision, scale) {
+  if (scale === 0) {
+    let front = Math.round(number).toString();
+    front = front.length > precision ? front.slice(-precision) : front;
+    return front;
+  }
   const out = number.toFixed(scale);
   const parts = out.split('.');
   const front = parts[0].length > precision - scale ? parts[0].slice(scale - precision) : parts[0];
@@ -10,7 +15,7 @@ function toPrecisionScale(number, precision, scale) {
 }
 
 // input of form [ [val1, weight1], [val2, weight2], ... ]
-function customNumericGenerator(randNum, [input, precision, scale, isInteger]) {
+function customNumericGenerator(randNum, [input, isInteger, precision, scale]) {
   const reducer = (accumulator, currentValue) => accumulator + currentValue[1];
   const totalWeight = input.reduce(reducer, 0);
   let counter = Math.round(randNum * totalWeight);
@@ -71,11 +76,14 @@ class CustomNumeric extends Component {
   constructor(props, context) {
     super(props, context);
     const { schemaInfo, tableIndex, fieldIndex } = props;
-    const defaultInput = schemaInfo[tableIndex][1][fieldIndex].generator.inputs;
+    let defaultInput = schemaInfo[tableIndex][1][fieldIndex].generator.inputs;
+    if (defaultInput.length !== 4) {
+      defaultInput = [[], null, 10, 2];
+    }
     this.state = {
-      inputs: defaultInput,
-      precision: 10,
-      scale: 2,
+      inputs: defaultInput[0],
+      precision: defaultInput[2],
+      scale: defaultInput[3],
     };
   }
 
@@ -112,7 +120,7 @@ class CustomNumeric extends Component {
   render() {
     const { onSetField, tableIndex, fieldIndex, handleClose, isInteger } = this.props;
     const { inputs, precision, scale } = this.state;
-    const combinedInput = [inputs, precision, scale, isInteger];
+    const combinedInput = [inputs, isInteger, precision, scale];
     return (
       <div>
         <Modal.Body>
