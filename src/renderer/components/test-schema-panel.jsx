@@ -27,8 +27,8 @@ function schemaConfig(schemaInfo, onSetField, onSelectField, tableIndex, fieldIn
   }
   const configuredField = schemaInfo[tableIndex][1][fieldIndex];
   const supportedTypes = ['integer', 'character', 'timestamp', 'numeric', 'json', 'boolean'];
-  let currentType = supportedTypes.find(typ => configuredField.dataType.includes(typ))
-    ? configuredField.dataType
+  let currentType = supportedTypes.find(typ => configuredField.mappedType.includes(typ))
+    ? configuredField.mappedType
     : configuredField.configuredType;
   const relations = tableRelations(schemaInfo);
   // TODO
@@ -40,7 +40,7 @@ function schemaConfig(schemaInfo, onSetField, onSelectField, tableIndex, fieldIn
   schemaInfo.forEach((table, tIndex) =>
     table[1].forEach((field, fIndex) => {
       if (
-        field.dataType === configuredField.dataType && // FK can only target fields of same type
+        field.mappedType === configuredField.mappedType && // FK can only target fields of same type
         // tableIndex !== tIndex && // FK can only target fields in other tables
         (field.index || field.unique || field.pk) && // FK can only target unique keys
         !relations[tableIndex].find(
@@ -61,7 +61,7 @@ function schemaConfig(schemaInfo, onSetField, onSelectField, tableIndex, fieldIn
     <div key={JSON.stringify([tableIndex, fieldIndex])}>
       <h2>{`${schemaInfo[tableIndex][0]}.${configuredField.name}`}</h2>
 
-      {supportedTypes.find(typ => configuredField.dataType.includes(typ)) ? (
+      {supportedTypes.find(typ => configuredField.mappedType.includes(typ)) ? (
         <div />
       ) : (
         <div className="pt-select" style={{ marginBottom: '5px' }}>

@@ -25,8 +25,8 @@ function dataConfig(schemaInfo, onSetField, tableIndex, fieldIndex) {
   }
   const configuredField = schemaInfo[tableIndex][1][fieldIndex];
   const supportedTypes = ['integer', 'character', 'timestamp', 'numeric', 'json', 'boolean'];
-  let currentType = supportedTypes.find(typ => configuredField.dataType.includes(typ))
-    ? configuredField.dataType
+  let currentType = supportedTypes.find(typ => configuredField.mappedType.includes(typ))
+    ? configuredField.mappedType
     : configuredField.configuredType;
   const notConfigurable = configuredField.index || configuredField.fk;
   //   const relations = tableRelations(schemaInfo);
@@ -95,7 +95,7 @@ function dataConfig(schemaInfo, onSetField, tableIndex, fieldIndex) {
     <div key={JSON.stringify([tableIndex, fieldIndex])}>
       <h2>{`${schemaInfo[tableIndex][0]}.${configuredField.name}`}</h2>
 
-      {supportedTypes.find(typ => configuredField.dataType.includes(typ)) ? (
+      {supportedTypes.find(typ => configuredField.mappedType.includes(typ)) ? (
         <div />
       ) : (
         <h4>

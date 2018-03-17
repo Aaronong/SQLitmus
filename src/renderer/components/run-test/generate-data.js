@@ -42,10 +42,10 @@ async function generateIndexes(tableName, indexFields, numRows) {
   for (let i = 0; i < numRows; i++) {
     const setObj = {};
     indexFields.forEach(field => {
-      setObj[field.name] = i;
+      setObj[field.name] = i + 1;
     });
     await new Promise((resolve, reject) => {
-      db[tableName].update({ _id: i }, { $set: setObj }, {}, (err, numReplaced) =>
+      db[tableName].update({ _id: i + 1 }, { $set: setObj }, {}, (err, numReplaced) =>
         resolve(numReplaced)
       );
     });
@@ -202,7 +202,7 @@ async function generateFKs(tableName, fkFields, numRows, fieldRNG) {
           const setObj = {};
           setObj[field.name] = results[i];
           await new Promise((resolve, reject) => {
-            db[tableName].update({ _id: i }, { $set: setObj }, {}, (err, numReplaced) =>
+            db[tableName].update({ _id: i + 1 }, { $set: setObj }, {}, (err, numReplaced) =>
               resolve(numReplaced)
             );
           });
@@ -213,7 +213,7 @@ async function generateFKs(tableName, fkFields, numRows, fieldRNG) {
         );
         for (let i = 0; i < numRows; i++) {
           await new Promise((resolve, reject) => {
-            db[tableName].update({ _id: i }, { $set: results[i] }, {}, (err, numReplaced) =>
+            db[tableName].update({ _id: i + 1 }, { $set: results[i] }, {}, (err, numReplaced) =>
               resolve(numReplaced)
             );
           });
@@ -227,7 +227,7 @@ async function generateFKs(tableName, fkFields, numRows, fieldRNG) {
       const setObj = {};
       setObj[field.name] = results[i];
       await new Promise((resolve, reject) => {
-        db[tableName].update({ _id: i }, { $set: setObj }, {}, (err, numReplaced) =>
+        db[tableName].update({ _id: i + 1 }, { $set: setObj }, {}, (err, numReplaced) =>
           resolve(numReplaced)
         );
       });
@@ -373,7 +373,7 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
     }
     for (let i = 0; i < numRows; i++) {
       await new Promise((resolve, reject) => {
-        db[tableName].update({ _id: i }, { $set: combinations[i] }, {}, (err, numReplaced) =>
+        db[tableName].update({ _id: i + 1 }, { $set: combinations[i] }, {}, (err, numReplaced) =>
           resolve(numReplaced)
         );
       });
@@ -388,7 +388,7 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
         const setObj = {};
         setObj[field.name] = results[i];
         await new Promise((resolve, reject) => {
-          db[tableName].update({ _id: i }, { $set: setObj }, {}, (err, numReplaced) =>
+          db[tableName].update({ _id: i + 1 }, { $set: setObj }, {}, (err, numReplaced) =>
             resolve(numReplaced)
           );
         });
@@ -400,7 +400,7 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
         const setObj = {};
         setObj[field.name] = results[i];
         await new Promise((resolve, reject) => {
-          db[tableName].update({ _id: i }, { $set: setObj }, {}, (err, numReplaced) =>
+          db[tableName].update({ _id: i + 1 }, { $set: setObj }, {}, (err, numReplaced) =>
             resolve(numReplaced)
           );
         });
@@ -416,7 +416,7 @@ async function generateTable([tableName, fields], numRows, tableRNG) {
   // Insert a record for each row we are required to generate
   for (let i = 0; i < numRows; i++) {
     await new Promise((resolve, reject) => {
-      db[tableName].insert({ _id: i }, (err, newDoc) => resolve(newDoc));
+      db[tableName].insert({ _id: i + 1 }, (err, newDoc) => resolve(newDoc));
     });
   }
 
@@ -456,7 +456,7 @@ async function generateTable([tableName, fields], numRows, tableRNG) {
       const setObj = {};
       setObj[field.name] = results[i];
       await new Promise((resolve, reject) => {
-        db[tableName].update({ _id: i }, { $set: setObj }, {}, (err, numReplaced) =>
+        db[tableName].update({ _id: i + 1 }, { $set: setObj }, {}, (err, numReplaced) =>
           resolve(numReplaced)
         );
       });

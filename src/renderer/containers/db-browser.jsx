@@ -89,6 +89,76 @@ const CLIENTS = sqlectron.db.CLIENTS.reduce((clients, dbClient) => {
 }, {});
 
 const DEFAULT_GENERATOR = { name: '', func: null, inputs: [], testResults: [] };
+const SUPPORTED_TYPES = [
+  'boolean',
+  'boolean',
+  'character',
+  'character',
+  'character',
+  'integer',
+  'integer',
+  'integer',
+  'numeric',
+  'numeric',
+  'numeric',
+  'numeric',
+  'timestamp',
+  'timestamp',
+  'timestamp',
+];
+const POSTGRES_TYPES = [
+  'bool',
+  'bool',
+  'char',
+  'blob',
+  'text',
+  'int',
+  'serial',
+  'uuid',
+  'float',
+  'real',
+  'numeric',
+  'numeric',
+  'time',
+  'date',
+  'interval',
+];
+const MYSQL_TYPES = [
+  'tinyint',
+  'bool',
+  'char',
+  'blob',
+  'text',
+  'int',
+  'int',
+  'int',
+  'float',
+  'dec',
+  'numeric',
+  'double',
+  'time',
+  'date',
+  'year',
+];
+
+// Map all db types to a single generic type
+function mapTypes(dataType, dbType) {
+  if (dbType === 'mysql') {
+    const foundIndex = MYSQL_TYPES.findIndex(item => dataType.toLowerCase().includes(item));
+    if (foundIndex === -1) {
+      return dataType;
+    }
+    return SUPPORTED_TYPES[foundIndex];
+  }
+  if (dbType === 'postgresql') {
+    const foundIndex = POSTGRES_TYPES.findIndex(item => dataType.toLowerCase().includes(item));
+    if (foundIndex === -1) {
+      return dataType;
+    }
+    return SUPPORTED_TYPES[foundIndex];
+  }
+  return dataType;
+}
 
 class DbBrowserContainer extends Component {
   static propTypes = {
@@ -188,6 +258,7 @@ class DbBrowserContainer extends Component {
       let schemaInfo = null;
       let rowInfo = null;
       if (tableInfo) {
+        const dbType = connections.server.client;
         schemaInfo = Object.entries(columns.columnsByTable[dbName]).map(([key, value]) => [
           key,
           value.map(field =>
@@ -201,6 +272,7 @@ class DbBrowserContainer extends Component {
               manyToOne: false,
               foreignTarget: null,
               configuredType: '',
+              mappedType: mapTypes(field.dataType, dbType),
               generator: DEFAULT_GENERATOR,
             })
           ),

@@ -83,6 +83,7 @@ function fillSchemaInfo(schemaInfo, server) {
             retrievedField.generator.func = allGenerators[nameIndex];
           }
         }
+        retrievedField.mappedType = schema[tIndex][1][fIndex].mappedType;
         schema[tIndex][1][fIndex] = retrievedField;
       }
     });

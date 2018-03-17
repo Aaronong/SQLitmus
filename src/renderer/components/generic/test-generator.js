@@ -28,9 +28,9 @@ function generateNumVals(field, numToGen, RNG, uniq) {
   const results = [];
   let unique = uniq;
   if (
-    field.dataType.includes('bool') ||
-    field.dataType.includes('tiny') ||
-    field.dataType.includes('time')
+    field.mappedType.includes('bool') ||
+    field.mappedType.includes('tiny') ||
+    field.mappedType.includes('time')
   ) {
     unique = false;
   }
@@ -43,7 +43,7 @@ function generateNumVals(field, numToGen, RNG, uniq) {
     while (results.length < numToGen) {
       if (reachedThreshold) {
         // Character type
-        if (field.dataType.includes('char')) {
+        if (field.mappedType.includes('char')) {
           const output = testOnceRNG(field.generator, nullable, field.nullRate, RNG);
           let charCount = charDict[output];
           if (charCount) {
@@ -57,13 +57,13 @@ function generateNumVals(field, numToGen, RNG, uniq) {
         }
         // Numeric type
         if (
-          field.dataType.includes('int') ||
-          field.dataType.includes('numeric') ||
-          field.dataType.includes('decimal')
+          field.mappedType.includes('int') ||
+          field.mappedType.includes('numeric') ||
+          field.mappedType.includes('decimal')
         ) {
           // We use RNG to generate numeric instead
           let output = RNG.nextNumber() * Number.MAX_SAFE_INTEGER;
-          if (field.dataType.includes('int')) {
+          if (field.mappedType.includes('int')) {
             output = Math.round(output);
           }
           if (bs(results, output) === -1) {

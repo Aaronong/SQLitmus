@@ -1,10 +1,19 @@
-function fieldVal(val, fIndex, length, type) {
+function fieldVal(val, fIndex, length, type, dialect) {
   let value = val;
 
   if (typeof val === 'string') {
     value = `'${val}'`;
   } else if (type.includes('time')) {
-    value = `to_timestamp(${val})`;
+    if (dialect === 'mysql') {
+      if (val) {
+        value = `FROM_UNIXTIME(${Math.round(val / 1000)})`;
+      }
+    } else if (dialect === 'postgres') {
+      value = `to_timestamp(${val})`;
+    }
+  }
+  if (!val && dialect === 'mysql') {
+    value = 'null';
   }
   if (fIndex < length - 1) {
     return `${value},`;
@@ -29,7 +38,7 @@ async function resetTableStr(sequelize, tableStr, dialect) {
       console.log(metadata);
     });
     await sequelize
-      .query(`ALTER TABLE ${tableStr} AUTO_INCREMENT = 1`)
+      .query(`ALTER TABLE ${tableStr} AUTO_INCREMENT = 0`)
       .spread((results, metadata) => {
         console.log(metadata);
       });
@@ -50,7 +59,7 @@ async function populateData(sortedSchema, sequelize, db) {
     const [tableName, fields] = sortedSchema[i];
     console.log(tableName);
     const fieldNames = fields.map(field => field.name);
-    const fieldTypes = fields.map(field => field.dataType);
+    const fieldTypes = fields.map(field => field.mappedType);
     console.log(fieldNames);
     const tableStr = tableInDialect(tableName, dialect);
     let insertStr = `INSERT INTO ${tableStr} VALUES `;
@@ -68,7 +77,13 @@ async function populateData(sortedSchema, sequelize, db) {
       insertStr += '(';
       fieldNames.forEach(
         (name, fIndex) =>
-          (insertStr += fieldVal(record[name], fIndex, fieldNames.length, fieldTypes[fIndex]))
+          (insertStr += fieldVal(
+            record[name],
+            fIndex,
+            fieldNames.length,
+            fieldTypes[fIndex],
+            dialect
+          ))
       );
       if (rIndex < retrievedRecords.length - 1) {
         insertStr += '),';
