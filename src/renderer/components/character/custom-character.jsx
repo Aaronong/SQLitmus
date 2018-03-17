@@ -2,6 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import { Modal } from 'react-bootstrap';
 import { Slider } from '@blueprintjs/core';
 
+function doubleQuote(str) {
+  return str.replace("'", "''");
+}
+
 // input of form [ [val1, weight1], [val2, weight2], ... ]
 function customCharacterGenerator(randNum, [maxLength, input]) {
   const reducer = (accumulator, currentValue) => accumulator + currentValue[1];
@@ -16,7 +20,7 @@ function customCharacterGenerator(randNum, [maxLength, input]) {
       found = true;
     }
   });
-  return result.length > maxLength ? result.slice(0, maxLength) : result;
+  return doubleQuote(result.length > maxLength ? result.slice(0, maxLength) : result);
 }
 
 const CUSTOM_CHARACTER = 'Custom Character';
@@ -62,10 +66,13 @@ class CustomCharacter extends Component {
   constructor(props, context) {
     super(props, context);
     const { schemaInfo, tableIndex, fieldIndex } = props;
-    const defaultInput = schemaInfo[tableIndex][1][fieldIndex].generator.inputs;
+    let defaultInput = schemaInfo[tableIndex][1][fieldIndex].generator.inputs;
+    if (defaultInput.length !== 2) {
+      defaultInput = [255, []];
+    }
     this.state = {
-      inputs: defaultInput,
-      maxLength: 255,
+      inputs: defaultInput[1],
+      maxLength: defaultInput[0],
     };
   }
 
@@ -151,4 +158,4 @@ class CustomCharacter extends Component {
 }
 
 export default CustomCharacter;
-export { CUSTOM_CHARACTER, customCharacterGenerator };
+export { CUSTOM_CHARACTER, customCharacterGenerator, doubleQuote };
