@@ -45,6 +45,19 @@ async function resetTableStr(sequelize, tableStr, dialect) {
   }
 }
 
+function recordIntoBatches(records) {
+  const batchSize = 5000;
+  const batches = [];
+  for (let i = 0; i < records.length; i += batchSize) {
+    if (records.length - i < batchSize) {
+      batches.push(records.slice(i));
+    } else {
+      batches.push(records.slice(i, i + batchSize));
+    }
+  }
+  return batches;
+}
+
 async function populateData(sortedSchema, sequelize, db) {
   console.log(sequelize);
   const dialect = sequelize.dialect.connectionManager.dialectName;
@@ -62,7 +75,6 @@ async function populateData(sortedSchema, sequelize, db) {
     const fieldTypes = fields.map(field => field.mappedType);
     console.log(fieldNames);
     const tableStr = tableInDialect(tableName, dialect);
-    let insertStr = `INSERT INTO ${tableStr} VALUES `;
 
     const retrievedRecords = await new Promise((resolve, reject) => {
       // Find all documents in the collection
@@ -73,28 +85,33 @@ async function populateData(sortedSchema, sequelize, db) {
         resolve(docs);
       });
     });
-    retrievedRecords.forEach((record, rIndex) => {
-      insertStr += '(';
-      fieldNames.forEach(
-        (name, fIndex) =>
-          (insertStr += fieldVal(
-            record[name],
-            fIndex,
-            fieldNames.length,
-            fieldTypes[fIndex],
-            dialect
-          ))
-      );
-      if (rIndex < retrievedRecords.length - 1) {
-        insertStr += '),';
-      } else {
-        insertStr += ');';
-      }
-    });
-    await sequelize.query(insertStr).spread((results, metadata) => {
-      console.log(metadata);
-      // Results will be an empty array and metadata will contain the number of affected rows.
-    });
+    const recordBatches = recordIntoBatches(retrievedRecords);
+    for (let j = 0; j < recordBatches.length; j++) {
+      const currBatch = recordBatches[j];
+      let insertStr = `INSERT INTO ${tableStr} VALUES `;
+      currBatch.forEach((record, rIndex) => {
+        insertStr += '(';
+        fieldNames.forEach(
+          (name, fIndex) =>
+            (insertStr += fieldVal(
+              record[name],
+              fIndex,
+              fieldNames.length,
+              fieldTypes[fIndex],
+              dialect
+            ))
+        );
+        if (rIndex < currBatch.length - 1) {
+          insertStr += '),';
+        } else {
+          insertStr += ');';
+        }
+      });
+      await sequelize.query(insertStr).spread((results, metadata) => {
+        console.log(metadata);
+        // Results will be an empty array and metadata will contain the number of affected rows.
+      });
+    }
   }
 }
 
