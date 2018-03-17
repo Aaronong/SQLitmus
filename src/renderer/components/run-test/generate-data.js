@@ -75,7 +75,7 @@ async function generateSingularFK(field, numRows, fieldRNG, tableName) {
       if (err) {
         reject(err);
       }
-      resolve(docs.sort((a, b) => a._id > b._id));
+      resolve(docs);
     });
   });
 
@@ -136,7 +136,7 @@ async function generateCompositeFK(fields, numRows, fieldRNG, tableName) {
       if (err) {
         reject(err);
       }
-      resolve(docs.sort((a, b) => a._id > b._id));
+      resolve(docs);
     });
   });
 
@@ -293,7 +293,7 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
     startTime = new Date().getTime();
 
     // Sort in descending
-    sortedResults.sort((a, b) => a[1].length < b[1].length);
+    sortedResults.sort((a, b) => b[1].length - a[1].length);
     // The first n tries we sort in decending order and generate unique values
     // The second n tries we sort in ascending order and generate non-unique values
     const tries = sortedResults.length * 2;
@@ -301,7 +301,7 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
       const genNum = tryNum % sortedResults.length;
       // Sort in ascending
       if (tryNum === sortedResults.length) {
-        sortedResults.sort((a, b) => a[1].length > b[1].length);
+        sortedResults.sort((a, b) => a[1].length - b[1].length);
       }
       const combinations = sortedResults.reduce((sum, num) => num[1].length * sum, 1);
       console.log(`Num combinations = ${combinations}`);

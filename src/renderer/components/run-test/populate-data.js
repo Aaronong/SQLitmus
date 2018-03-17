@@ -61,7 +61,7 @@ async function populateData(sortedSchema, sequelize, db) {
         if (err) {
           reject(err);
         }
-        resolve(docs.sort((a, b) => a._id > b._id));
+        resolve(docs);
       });
     });
     retrievedRecords.forEach((record, rIndex) => {

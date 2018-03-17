@@ -37,16 +37,15 @@ async function runQueries(TestId, sequelize, queryList, connInfo, currRowInfo) {
     TotalRows: sumVals(currRowInfo),
   };
   const queryStore = await getPersistentStore(`${QUERY_RESULTS_PATH}/${TestId}`);
-  const promises = connInfo.map(MaxConnPool => {
+  for (let i = 0; i < connInfo.length; i++) {
+    const MaxConnPool = connInfo[i];
     sequelize.config.pool.max = MaxConnPool;
-    return Promise.all(
-      queryList.map(Query => {
-        const specificRecord = { Query, MaxConnPool, ...genericRecord };
-        return testQuery(sequelize, Query, TestId, specificRecord, queryStore);
-      })
-    );
-  });
-  await Promise.all(promises);
+    for (let j = 0; j < queryList.length; j++) {
+      const Query = queryList[j];
+      const specificRecord = { Query, MaxConnPool, ...genericRecord };
+      await testQuery(sequelize, Query, TestId, specificRecord, queryStore);
+    }
+  }
 }
 
 export default runQueries;
