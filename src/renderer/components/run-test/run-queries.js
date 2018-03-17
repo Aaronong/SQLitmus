@@ -18,16 +18,16 @@ function sumVals(obj) {
 
 async function testQuery(sequelize, query, TestId, record, queryStore) {
   console.log(`testing query - ${query}`);
+  const TimeStart = Date.now();
+  let Command;
   for (let j = 0; j < 5; j++) {
-    const TimeStart = Date.now();
-    let Command;
     await sequelize.query(query).spread((results, metadata) => {
       Command = metadata.command;
     });
-    const TimeEnd = Date.now();
-    const TimeTaken = TimeEnd - TimeStart;
-    queryStore.insert({ ...record, Command, TimeTaken });
   }
+  const TimeEnd = Date.now();
+  const TimeTaken = Math.round((TimeEnd - TimeStart) / 5);
+  queryStore.insert({ ...record, Command, TimeTaken });
 }
 
 async function runQueries(TestId, sequelize, queryList, connInfo, currRowInfo) {
@@ -40,10 +40,12 @@ async function runQueries(TestId, sequelize, queryList, connInfo, currRowInfo) {
   for (let i = 0; i < connInfo.length; i++) {
     const MaxConnPool = connInfo[i];
     sequelize.config.pool.max = MaxConnPool;
-    for (let j = 0; j < queryList.length; j++) {
-      const Query = queryList[j];
-      const specificRecord = { Query, MaxConnPool, ...genericRecord };
-      await testQuery(sequelize, Query, TestId, specificRecord, queryStore);
+    for (let k = 0; k < 5; k++) {
+      for (let j = 0; j < queryList.length; j++) {
+        const Query = queryList[j];
+        const specificRecord = { Query, MaxConnPool, ...genericRecord };
+        await testQuery(sequelize, Query, TestId, specificRecord, queryStore);
+      }
     }
   }
 }
