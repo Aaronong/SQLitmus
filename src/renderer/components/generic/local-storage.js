@@ -55,7 +55,7 @@ function fillSchemaInfo(schemaInfo, server) {
       const retrievedField = JSON.parse(
         localStorage.getItem(`${prefix}|>_<|${tableName}|>_<|${field.name}`)
       );
-      if (retrievedField) {
+      if (retrievedField && retrievedField.dataType === schema[tIndex][1][fIndex].dataType) {
         if (retrievedField.foreignTarget !== null) {
           const targetTableIndex = schema.findIndex(
             ([k, v]) => k === retrievedField.foreignTarget[0]

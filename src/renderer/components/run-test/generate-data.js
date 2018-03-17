@@ -145,9 +145,9 @@ async function generateCompositeFK(fields, numRows, fieldRNG, tableName) {
     //  targetNum must be greater or equals to sourceNum
     if (retrievedRecords.length === 0 && nullable) {
       const setObj = {};
-      targetFields.forEach(field => {
-        setObj[field.name] = null;
-      });
+      for (let j = 0; j < fields.length; j++) {
+        setObj[fields[j].name] = null;
+      }
       results.push(setObj);
       continue;
     }
@@ -159,23 +159,23 @@ async function generateCompositeFK(fields, numRows, fieldRNG, tableName) {
     }
     if (nullable && nullRate && fieldRNG.nextNumber() < nullRate) {
       const setObj = {};
-      targetFields.forEach(field => {
-        setObj[field.name] = null;
-      });
+      for (let j = 0; j < fields.length; j++) {
+        setObj[fields[j].name] = null;
+      }
       results.push(setObj);
     } else {
       const selectedIndex =
-        Math.round(fieldRNG.nextNumber() * Number.MAX_SAFE_INTEGER) % retrievedRecords.length;
+        Math.floor(fieldRNG.nextNumber() * Number.MAX_SAFE_INTEGER) % retrievedRecords.length;
       const selectedRecord = retrievedRecords[selectedIndex];
       const setObj = {};
-      targetFields.forEach(field => {
-        setObj[field.name] = selectedRecord[field];
-      });
+      for (let j = 0; j < fields.length; j++) {
+        setObj[fields[j].name] = selectedRecord[targetFields[j]];
+      }
       results.push(setObj);
 
       if (!manyToOne) {
         // Remove from sample
-        results.splice(selectedIndex, 1);
+        retrievedRecords.splice(selectedIndex, 1);
       }
     }
   }
@@ -244,10 +244,26 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
     let startTime = new Date().getTime();
     const fkFields = pkFields.filter(field => field.fk && field.foreignTarget);
     const pkRemainder = pkFields.filter(field => !(field.fk && field.foreignTarget));
+    // Group foreign keys by the table they reference
+    let groups = groupFKs(fkFields);
+    // if groups.length is 1, we have a composite PK comprised of one composite FK
+    if (groups.length === 1) {
+      const results = await Promise.resolve(
+        generateCompositeFK(groups[0], numRows, fieldRNG, tableName)
+      );
+      for (let i = 0; i < numRows; i++) {
+        await new Promise((resolve, reject) => {
+          db[tableName].update({ _id: i + 1 }, { $set: results[i] }, {}, (err, numReplaced) =>
+            resolve(numReplaced)
+          );
+        });
+      }
+      return;
+    }
     // for field in fkFields set to manyToOne - gets rid of conflict - make uniq ltr
     fkFields.forEach((field, fIndex) => (fkFields[fIndex].manyToOne = true));
-    // Group foreign keys by the table they reference
-    const groups = groupFKs(fkFields);
+    // we group again on updated fkFields
+    groups = groupFKs(fkFields);
     const sortedResults = [];
     const genRows = Math.round(Math.sqrt(numRows)) * 2;
     for (let j = 0; j < groups.length; j++) {
