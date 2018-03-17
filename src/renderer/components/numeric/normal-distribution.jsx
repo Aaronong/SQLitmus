@@ -25,7 +25,8 @@ class NormalDistribution extends Component {
     const { schemaInfo, tableIndex, fieldIndex, isInteger } = props;
     let defaultInput = schemaInfo[tableIndex][1][fieldIndex].generator.inputs;
     if (defaultInput.length !== 5) {
-      defaultInput = [0, 1, isInteger, 10, 2];
+      const defaultScale = props.isInteger ? 0 : 2;
+      defaultInput = [0, 1, isInteger, 10, defaultScale];
     }
     this.state = {
       inputs: defaultInput.slice(0, 3),

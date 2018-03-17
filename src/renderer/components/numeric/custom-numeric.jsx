@@ -78,7 +78,8 @@ class CustomNumeric extends Component {
     const { schemaInfo, tableIndex, fieldIndex } = props;
     let defaultInput = schemaInfo[tableIndex][1][fieldIndex].generator.inputs;
     if (defaultInput.length !== 4) {
-      defaultInput = [[], null, 10, 2];
+      const defaultScale = props.isInteger ? 0 : 2;
+      defaultInput = [[], null, 10, defaultScale];
     }
     this.state = {
       inputs: defaultInput[0],

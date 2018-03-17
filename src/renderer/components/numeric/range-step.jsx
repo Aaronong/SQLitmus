@@ -4,11 +4,7 @@ import { toPrecisionScale } from './custom-numeric.jsx';
 
 function rangeStepGenerator(randNum, [start, end, step, isInteger, precision, scale]) {
   const numVals = Math.floor((end - start) / step);
-  console.log(`${numVals} numVals`);
   const numSteps = Math.round(randNum * Number.MAX_SAFE_INTEGER) % numVals;
-  console.log(`${numSteps} numSteps`);
-  console.log(`${numSteps * step} incrementer`);
-  console.log(`${start + numSteps * step} ANS`);
   const ans = toPrecisionScale(start + numSteps * step, precision, scale);
   return isInteger ? parseInt(ans, 10) : Number(ans);
 }
@@ -30,7 +26,8 @@ class RangeStep extends Component {
     const { schemaInfo, tableIndex, fieldIndex, isInteger } = props;
     let defaultInput = schemaInfo[tableIndex][1][fieldIndex].generator.inputs;
     if (defaultInput.length !== 6) {
-      defaultInput = [0, 10, 1, isInteger, 10, 2];
+      const defaultScale = props.isInteger ? 0 : 2;
+      defaultInput = [0, 10, 1, isInteger, 10, defaultScale];
     }
     this.state = {
       inputs: defaultInput.slice(0, 4),
