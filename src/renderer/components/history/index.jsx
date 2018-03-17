@@ -4,9 +4,7 @@ import { Tab, Tabs } from '@blueprintjs/core';
 import ReactTable from 'react-table';
 import matchSorter from 'match-sorter';
 import { ScatterplotChart, Legend } from 'react-easy-chart';
-import randomColor from 'randomcolor';
 
-// import LineChart from './line-chart.jsx';
 import {
   APP_DATA_PATH,
   QUERY_RESULTS_PATH,
@@ -16,6 +14,11 @@ import 'react-table/react-table.css';
 
 const dbData = getPersistentStore(`${APP_DATA_PATH}/db`);
 const testData = getPersistentStore(`${APP_DATA_PATH}/test`);
+
+function selectColor(colorNum, colors) {
+  if (colors < 1) colors = 1; // defaults to one color - avoid divide by zero
+  return 'hsl(' + (colorNum * (360 / colors)) % 360 + ',100%,50%)';
+}
 
 function testRecordsToRows(tests, setCurrentTest) {
   return tests.map(test => (
@@ -75,6 +78,7 @@ function getCurrentQueries(queries, filters) {
 }
 
 function queriesToDatapoints(queries, typeKey, xAxisKey) {
+  let totalColors = 0;
   let colorConfig = {};
   const datapoints = queries.map(query => {
     const datapoint = {};
@@ -82,12 +86,13 @@ function queriesToDatapoints(queries, typeKey, xAxisKey) {
     datapoint.type = query[typeKey] ? query[typeKey].toString() : 'unclassified';
     datapoint.x = query[xAxisKey] + Math.random();
     if (!colorConfig[datapoint.type]) {
-      colorConfig[datapoint.type] = randomColor();
+      colorConfig[datapoint.type] = totalColors;
+      totalColors += 1;
     }
     return datapoint;
   });
   colorConfig = Object.entries(colorConfig).map(([type, color]) => {
-    return { type, color };
+    return { type, color: selectColor(color, totalColors) };
   });
   return [datapoints, colorConfig];
 }
@@ -106,7 +111,7 @@ class HistoryDisplay extends Component {
       queries: [],
       filters: [],
       xAxisKey: 'TotalRows',
-      groupBy: '',
+      groupBy: 'MaxConnPool',
     };
   }
 
@@ -123,7 +128,11 @@ class HistoryDisplay extends Component {
     dbData.findOne(dbRecord, (err, dbDoc) => {
       if (dbDoc) {
         testData.find({ dbId: dbDoc._id }, (err, testDocs) => {
-          this.setState({ dbId: dbDoc._id, tests: testDocs });
+          testDocs.sort((a, b) => b.testDate - a.testDate);
+          this.setState({
+            dbId: dbDoc._id,
+            tests: testDocs,
+          });
         });
       }
     });
