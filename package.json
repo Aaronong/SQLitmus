@@ -90,6 +90,7 @@
     "react-addons-css-transition-group": "^15.6.2",
     "react-bootstrap": "^0.32.1",
     "react-easy-chart": "^1.0.0",
+    "react-graph-vis": "^1.0.2",
     "react-table": "^6.8.0",
     "rng-js": "^1.0.1",
     "rng.js": "^1.0.0",

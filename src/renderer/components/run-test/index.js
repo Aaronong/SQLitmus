@@ -91,15 +91,6 @@ async function runTest(testConfig, server, schemaInfo, rowInfo, queries, connInf
   const maxPoolSize = Math.max(connInfo);
   const sequelize = createSequelizeConnection(server, maxPoolSize);
 
-  // Generate list of queries we will use
-  const rawQueryList = Object.entries(queries.queriesById).map(qObj => qObj[1].query);
-  let queryList = [];
-  for (let i = 0; i < 10; i++) {
-    queryList = [...queryList, ...parseQueryList(rawQueryList, schemaInfo)];
-  }
-  queryList = [...new Set(queryList)];
-  console.log(queryList);
-
   //   Perform upsert operation.
   //   Find if a record of the current database already exists, if not create
   const dbRecord = {
@@ -135,6 +126,14 @@ async function runTest(testConfig, server, schemaInfo, rowInfo, queries, connInf
 
   for (let testNum = 0; testNum < numTests; testNum++) {
     const currRowInfo = rowInfo.map(([tName, rows]) => [tName, rows[testNum]]);
+    // Generate list of queries we will use
+    let rawQueryList = Object.entries(queries.queriesById).map(qObj => qObj[1].query);
+    rawQueryList = rawQueryList.map(q => q.replace(/\n/gi, ' '));
+    let queryList = [];
+    for (let i = 0; i < 1; i++) {
+      queryList = [...queryList, ...parseQueryList(rawQueryList, schemaInfo, currRowInfo)];
+    }
+    queryList = [...new Set(queryList)];
     const data = await generateData(sortedSchema, currRowInfo);
     await populateData(sortedSchema, sequelize, data);
     await runQueries(testId, sequelize, queryList, connInfo, currRowInfo);

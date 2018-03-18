@@ -133,13 +133,13 @@ function storeQueryInfo(queryInfo, server) {
   tmp.forEach(([id, obj]) => {
     queryCopy.queriesById[id] = obj;
   });
-  queryCopy.currentQueryId = 1;
   localStorage.setItem(`${prefix}|>_<|queryInfo`, JSON.stringify(queryCopy));
 }
 
 function fillQueryInfo(queryInfo, server) {
   const prefix = localStoragePrefix(server);
   const retrievedQuery = JSON.parse(localStorage.getItem(`${prefix}|>_<|queryInfo`));
+  retrievedQuery.currentQueryId = Math.min(...retrievedQuery.queryIds);
   return retrievedQuery !== null ? retrievedQuery : queryInfo;
 }
 

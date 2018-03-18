@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Switch } from '@blueprintjs/core';
-import { tablesToCards, tableRelations } from './test-tables-to-cards.jsx';
-import vis from 'vis';
+import { tablesToCards } from './test-tables-to-cards.jsx';
+import SchemaDiagram from './schema-diagram/index.jsx';
 require('./test-schema-panel.css');
 // require('../../../node_modules/vis/dist/vis');
 
@@ -30,22 +30,13 @@ function schemaConfig(schemaInfo, onSetField, onSelectField, tableIndex, fieldIn
   let currentType = supportedTypes.find(typ => configuredField.mappedType.includes(typ))
     ? configuredField.mappedType
     : configuredField.configuredType;
-  const relations = tableRelations(schemaInfo);
   // TODO
   const foreignKeyTargets = [];
-  // Push current foreign target if it exists
-  if (configuredField.foreignTarget) {
-    foreignKeyTargets.push(configuredField.foreignTarget);
-  }
   schemaInfo.forEach((table, tIndex) =>
     table[1].forEach((field, fIndex) => {
       if (
         field.mappedType === configuredField.mappedType && // FK can only target fields of same type
-        // tableIndex !== tIndex && // FK can only target fields in other tables
-        (field.index || field.unique || field.pk) && // FK can only target unique keys
-        !relations[tableIndex].find(
-          relation => relation[1][0] === tIndex && relation[1][1] === fIndex
-        ) // FK can only target fields it has no relations with
+        (field.index || field.unique || field.pk) // FK can only target unique keys
       ) {
         foreignKeyTargets.push([tIndex, fIndex]);
       }
@@ -181,6 +172,7 @@ class TestSchemaPanel extends Component {
           {tablesToCards(schemaInfo, activeTableIndex, activeFieldIndex, ::this.setTableAndField)}
         </div>
         <div className="schema-table-config">
+          <SchemaDiagram schemaInfo={schemaInfo} />
           {schemaConfig(schemaInfo, onSetField, onSelectField, activeTableIndex, activeFieldIndex)}
         </div>
       </div>

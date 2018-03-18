@@ -1,5 +1,6 @@
 import cloneDeep from 'lodash.clonedeep';
 import { testOnce } from './test-generator.js';
+const SETUP_DELIMITER = '-- SETUPDELIMITER --';
 
 const generateTemplateString = (function() {
   const cache = {};
@@ -23,7 +24,7 @@ const generateTemplateString = (function() {
   return generateTemplate;
 })();
 
-function generateContext(schemaInfo) {
+function generateContext(schemaInfo, numRows) {
   const cloneSchema = cloneDeep(schemaInfo);
   const generatedValues = {};
   cloneSchema.forEach(([key, value]) => {
@@ -37,7 +38,13 @@ function generateContext(schemaInfo) {
         generatedValues[key][field.name] = result;
       }
     });
+    if (numRows) {
+      generatedValues[key].numRows = numRows.find(item => item[0] === key)[1];
+    } else {
+      generatedValues[key].numRows = 10;
+    }
   });
+  generatedValues.SETUP = { DELIMITER: SETUP_DELIMITER };
   return generatedValues;
 }
 
@@ -46,19 +53,19 @@ function parseQuery(query, schemaInfo) {
     return query;
   }
   const queryTemplate = generateTemplateString(query);
-  const generatedValues = generateContext(schemaInfo);
+  const generatedValues = generateContext(schemaInfo, null);
   return queryTemplate(generatedValues);
 }
 
-function parseQueryList(queries, schemaInfo) {
+function parseQueryList(queries, schemaInfo, numRows) {
   if (!schemaInfo) {
     return queries;
   }
-  const generatedValues = generateContext(schemaInfo);
+  const generatedValues = generateContext(schemaInfo, numRows);
   return queries.map(query => {
     const queryTemplate = generateTemplateString(query);
     return queryTemplate(generatedValues);
   });
 }
 
-export { parseQuery, parseQueryList };
+export { parseQuery, parseQueryList, SETUP_DELIMITER };

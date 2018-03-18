@@ -251,9 +251,6 @@ class DbBrowserContainer extends Component {
     // Generating schema and config information based on data retrieved
     if (columns !== this.props.columns) {
       console.log('REFRESH SCHEMAINFO');
-      // if (this.state.schemaInfo) {
-      //   storeSchemaInfo(this.state.schemaInfo, this.props.connections.server);
-      // }
       const tableInfo = columns.columnsByTable[dbName];
       let schemaInfo = null;
       let rowInfo = null;
