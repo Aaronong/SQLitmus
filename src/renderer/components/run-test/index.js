@@ -135,7 +135,7 @@ async function runTest(testConfig, server, schemaInfo, rowInfo, queries, connInf
     }
     queryList = [...new Set(queryList)];
     const data = await generateData(sortedSchema, currRowInfo);
-    await populateData(sortedSchema, sequelize, data);
+    await populateData(sortedSchema, sequelize, data, currRowInfo);
     await runQueries(testId, sequelize, queryList, connInfo, currRowInfo);
   }
 }

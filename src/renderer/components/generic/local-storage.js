@@ -139,7 +139,9 @@ function storeQueryInfo(queryInfo, server) {
 function fillQueryInfo(queryInfo, server) {
   const prefix = localStoragePrefix(server);
   const retrievedQuery = JSON.parse(localStorage.getItem(`${prefix}|>_<|queryInfo`));
-  retrievedQuery.currentQueryId = Math.min(...retrievedQuery.queryIds);
+  if (retrievedQuery) {
+    retrievedQuery.currentQueryId = Math.min(...retrievedQuery.queryIds);
+  }
   return retrievedQuery !== null ? retrievedQuery : queryInfo;
 }
 

@@ -9,7 +9,9 @@ function fieldVal(val, fIndex, length, type, dialect) {
         value = `FROM_UNIXTIME(${Math.round(val / 1000)})`;
       }
     } else if (dialect === 'postgres') {
-      value = `to_timestamp(${val})`;
+      if (val) {
+        value = `to_timestamp(${val})`;
+      }
     }
   }
   if (!val && dialect === 'mysql') {
@@ -28,11 +30,16 @@ function tableInDialect(tableName, dialect) {
   return tableName;
 }
 
-async function resetTableStr(sequelize, tableStr, dialect) {
+async function resetTableStr(sequelize, tableStr, dialect, tableName, tableNum) {
   if (dialect === 'postgres') {
     await sequelize.query(`DELETE FROM ${tableStr}`).spread((results, metadata) => {
       console.log(metadata);
     });
+    await sequelize
+      .query(`ALTER SEQUENCE "${tableName}_id_seq" RESTART WITH ${tableNum + 1};`)
+      .spread((results, metadata) => {
+        console.log(metadata);
+      });
   } else {
     await sequelize.query(`DELETE FROM ${tableStr}`).spread((results, metadata) => {
       console.log(metadata);
@@ -58,15 +65,16 @@ function recordIntoBatches(records) {
   return batches;
 }
 
-async function populateData(sortedSchema, sequelize, db) {
+async function populateData(sortedSchema, sequelize, db, currRowInfo) {
   console.log(sequelize);
   const dialect = sequelize.dialect.connectionManager.dialectName;
   // Truncate tables first
   for (let i = sortedSchema.length - 1; i >= 0; i--) {
     const tableName = sortedSchema[i][0];
+    const tableNum = currRowInfo.find(row => row[0] === tableName)[1];
     console.log(tableName);
     const tableStr = tableInDialect(tableName, dialect);
-    await resetTableStr(sequelize, tableStr, dialect);
+    await resetTableStr(sequelize, tableStr, dialect, tableName, tableNum);
   }
   for (let i = 0; i < sortedSchema.length; i++) {
     const [tableName, fields] = sortedSchema[i];
