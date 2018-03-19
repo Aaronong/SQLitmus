@@ -5,6 +5,8 @@ import faker from 'faker';
 require('@blueprintjs/datetime/src/blueprint-datetime.scss');
 
 function timestampBetweenGenerator(randNum, [from, to]) {
+  const seed = randNum * Number.MAX_SAFE_INTEGER;
+  faker.seed(seed);
   const ans = faker.date.between(new Date(from), new Date(to));
   return Math.round(ans);
 }

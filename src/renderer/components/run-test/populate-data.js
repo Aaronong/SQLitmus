@@ -10,7 +10,7 @@ function fieldVal(val, fIndex, length, type, dialect) {
       }
     } else if (dialect === 'postgres') {
       if (val) {
-        value = `to_timestamp(${val})`;
+        value = `to_timestamp(${Math.round(val / 1000)})`;
       }
     }
   }
