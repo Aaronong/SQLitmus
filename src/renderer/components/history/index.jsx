@@ -20,6 +20,45 @@ function selectColor(colorNum, colors) {
   return 'hsl(' + (colorNum * (360 / colors)) % 360 + ',100%,50%)';
 }
 
+function numberSearcher(rawSearchStr, val) {
+  const searchStr = rawSearchStr.trim();
+  if (searchStr.includes('&&')) {
+    const index = searchStr.indexOf('&&');
+    return (
+      numberSearcher(searchStr.slice(0, index), val) &&
+      numberSearcher(searchStr.slice(index + 2), val)
+    );
+  }
+  if (searchStr.includes('||')) {
+    const index = searchStr.indexOf('||');
+    return (
+      numberSearcher(searchStr.slice(0, index), val) ||
+      numberSearcher(searchStr.slice(index + 2), val)
+    );
+  }
+  if (searchStr.startsWith('>=')) {
+    const searchNum = Number(searchStr.slice(2));
+    return val >= searchNum;
+  }
+  if (searchStr.startsWith('<=')) {
+    const searchNum = Number(searchStr.slice(2));
+    return val <= searchNum;
+  }
+  if (searchStr.startsWith('>')) {
+    const searchNum = Number(searchStr.slice(1));
+    return val > searchNum;
+  }
+  if (searchStr.startsWith('<')) {
+    const searchNum = Number(searchStr.slice(1));
+    return val < searchNum;
+  }
+  if (searchStr.startsWith('=')) {
+    const searchNum = Number(searchStr.slice(1));
+    return val === searchNum;
+  }
+  return val.toString().includes(searchStr);
+}
+
 function testRecordsToRows(tests, setCurrentTest) {
   return tests.map(test => (
     <tr key={test._id} className="clickableRow" onClick={() => setCurrentTest(test._id)}>
@@ -47,7 +86,7 @@ function queriesToColumns(queries) {
   const arr = [];
   Object.entries(queries[0]).forEach(([key, val]) => {
     if (key !== '_id' && key !== 'TestId') {
-      if (key === 'Query') {
+      if (key === 'Query' || key === 'TemplateName') {
         arr.push({
           Header: key,
           accessor: key,
@@ -55,7 +94,11 @@ function queriesToColumns(queries) {
           filterAll: true,
         });
       } else {
-        arr.push({ Header: key, accessor: key });
+        arr.push({
+          Header: key,
+          accessor: key,
+          filterMethod: (filter, row) => numberSearcher(filter.value, row[filter.id]),
+        });
       }
     }
   });
@@ -68,10 +111,10 @@ function getCurrentQueries(queries, filters) {
   }
   let currentQueries = queries;
   filters.forEach(({ id, value }) => {
-    if (id === 'Query') {
-      currentQueries = currentQueries.filter(query => query[id].includes(value));
+    if (id === 'Query' || id === 'TemplateName') {
+      currentQueries = matchSorter(currentQueries, value, { keys: [id] });
     } else {
-      currentQueries = currentQueries.filter(query => query[id].toString().startsWith(value));
+      currentQueries = currentQueries.filter(query => numberSearcher(value, query[id]));
     }
   });
   return currentQueries;
