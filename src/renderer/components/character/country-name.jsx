@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import { Modal } from 'react-bootstrap';
 import faker from 'faker';
+import { doubleQuote } from './custom-character.jsx';
 
 function countryNameGenerator(randNum, [maxLength]) {
   const seed = randNum * Number.MAX_SAFE_INTEGER;
   faker.seed(seed);
   const result = faker.address.country();
-  return result.length > maxLength ? result.slice(0, maxLength) : result;
+  return doubleQuote(result.length > maxLength ? result.slice(0, maxLength) : result);
 }
 
 const COUNTRY_NAME = 'Country';
