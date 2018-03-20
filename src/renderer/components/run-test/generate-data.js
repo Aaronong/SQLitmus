@@ -28,8 +28,8 @@ function flattenCartesianProduct(arr) {
 }
 
 function spawnRNG(parentRNG) {
-  const lowSeed = parentRNG.nextNumber();
-  const highSeed = parentRNG.nextNumber();
+  const lowSeed = Math.round(parentRNG.nextNumber() * Number.MAX_SAFE_INTEGER);
+  const highSeed = Math.round(parentRNG.nextNumber() * Number.MAX_SAFE_INTEGER);
   // For good statistical properties, lowSeed must be odd
   return new Random(lowSeed % 2 ? lowSeed : lowSeed + 1, highSeed);
 }
@@ -523,7 +523,10 @@ async function generateTable([tableName, fields], numRows, tableRNG) {
     const field = filteredFields[j];
     START_TIME = new Date().getTime();
     let results = generateNumVals(field, numRows, spawnRNG(tableRNG), field.unique);
-    if (field.sorted === true) {
+    if (field.unique === true && field.sorted === false) {
+      results = shuffle(results, { rng: tableRNG.nextNumber });
+    }
+    if (field.sorted === true && field.unique === false) {
       results = results.sort();
     }
     for (let i = 0; i < numRows; i++) {
@@ -546,8 +549,8 @@ async function generateTable([tableName, fields], numRows, tableRNG) {
   }
 }
 
-async function generateData(schemaInfo, rowInfo) {
-  const rootRNG = new Random();
+async function generateData(schemaInfo, rowInfo, dataSeed) {
+  const rootRNG = new Random(-23920393, dataSeed);
   for (let i = 0; i < schemaInfo.length; i++) {
     const table = schemaInfo[i];
     const tIndex = rowInfo.findIndex(row => row[0] === table[0]);

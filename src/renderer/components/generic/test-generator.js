@@ -97,4 +97,4 @@ function generateNumVals(field, numToGen, RNG, uniq) {
   return results;
 }
 
-export { testGenerator, testOnce, generateNumVals };
+export { testGenerator, testOnce, testOnceRNG, generateNumVals };

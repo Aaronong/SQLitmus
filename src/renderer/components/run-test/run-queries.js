@@ -1,6 +1,6 @@
+import shuffle from 'shuffle-array';
 import { QUERY_RESULTS_PATH, getPersistentStore } from './persistant-storage.js';
 import { SETUP_DELIMITER } from '../generic/parse-query.js';
-import shuffle from 'shuffle-array';
 
 function postfixObjName(obj, postfix) {
   const retObj = {};
@@ -72,7 +72,7 @@ async function testQuery(sequelize, query, TestId, record, queryStore) {
   return queryStore.insert({ ...record, Command, TimeTaken, Query: testedQuery });
 }
 
-async function runQueries(TestId, sequelize, queryList, connInfo, currRowInfo) {
+async function runQueries(TestId, sequelize, queryList, connInfo, currRowInfo, queryRNG) {
   const genericRecord = {
     TestId,
     ...postfixObjName(currRowInfo, '-Rows'),
@@ -82,7 +82,12 @@ async function runQueries(TestId, sequelize, queryList, connInfo, currRowInfo) {
   for (let i = 0; i < connInfo.length; i++) {
     const MaxConnPool = connInfo[i];
     sequelize.config.pool.max = MaxConnPool;
-    const queryPromises = shuffle(queryList).map(Query => {
+    await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('Sleep for one second');
+      }, 1000);
+    });
+    const queryPromises = shuffle(queryList, { rng: queryRNG.nextNumber }).map(Query => {
       const specificRecord = { MaxConnPool, ...genericRecord };
       return testQuery(sequelize, Query, TestId, specificRecord, queryStore);
     });

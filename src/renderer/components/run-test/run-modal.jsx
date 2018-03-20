@@ -19,6 +19,8 @@ class RunModal extends Component {
     this.state = {
       testName: '',
       testDetails: '',
+      dataSeed: 1025138,
+      querySeed: 3948034,
     };
   }
 
@@ -30,16 +32,26 @@ class RunModal extends Component {
     this.setState({ testDetails });
   }
 
+  setDataSeed(dataSeed) {
+    console.log(dataSeed);
+    this.setState({ dataSeed });
+  }
+
+  setQuerySeed(querySeed) {
+    console.log(querySeed);
+    this.setState({ querySeed });
+  }
+
   render() {
     const { server, schemaInfo, rowInfo, queries, connInfo, handleClose } = this.props;
-    const { testName, testDetails } = this.state;
+    const { testName, testDetails, dataSeed, querySeed } = this.state;
     return (
       <div>
         <Modal.Header closeButton>
           <Modal.Title>RUN TEST</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div className="pair-label-switch-container">
+          <div>
             <label className="pt-label">
               Test Name
               <span className="pt-text-muted">(required)</span>
@@ -65,6 +77,30 @@ class RunModal extends Component {
               />
             </label>
           </div>
+          <div>
+            <label className="pt-label">
+              Data Generation Seed
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => ::this.setDataSeed(Math.round(e.target.value))}
+                value={dataSeed}
+              />
+            </label>
+          </div>
+          <div>
+            <label className="pt-label">
+              Query Generation Seed
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => ::this.setQuerySeed(Math.round(e.target.value))}
+                value={querySeed}
+              />
+            </label>
+          </div>
         </Modal.Body>
         <Modal.Footer>
           <button
@@ -77,7 +113,9 @@ class RunModal extends Component {
                 schemaInfo,
                 rowInfo,
                 queries,
-                connInfo
+                connInfo,
+                dataSeed,
+                querySeed
               );
             }}
           >

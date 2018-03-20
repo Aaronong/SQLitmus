@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash.clonedeep';
-import { testOnce } from './test-generator.js';
+import { testOnce, testOnceRNG } from './test-generator.js';
 const SETUP_DELIMITER = '-- SETUPDELIMITER --';
 
 const generateTemplateString = (function() {
@@ -24,14 +24,19 @@ const generateTemplateString = (function() {
   return generateTemplate;
 })();
 
-function generateContext(schemaInfo, numRows) {
+function generateContext(schemaInfo, numRows, queryRNG) {
   const cloneSchema = cloneDeep(schemaInfo);
   const generatedValues = {};
   cloneSchema.forEach(([key, value]) => {
     generatedValues[key] = {};
     value.forEach(field => {
       if (field.generator.func) {
-        let result = testOnce(field.generator, field.nullable, field.nullRate);
+        let result;
+        if (queryRNG) {
+          result = testOnceRNG(field.generator, field.nullable, field.nullRate, queryRNG);
+        } else {
+          result = testOnce(field.generator, field.nullable, field.nullRate);
+        }
         if (typeof result === 'string') {
           result = `'${result}'`;
         }
@@ -57,11 +62,11 @@ function parseQuery(query, schemaInfo) {
   return queryTemplate(generatedValues);
 }
 
-function parseQueryList(queries, schemaInfo, numRows) {
+function parseQueryList(queries, schemaInfo, numRows, queryRNG) {
   if (!schemaInfo) {
     return queries;
   }
-  const generatedValues = generateContext(schemaInfo, numRows);
+  const generatedValues = generateContext(schemaInfo, numRows, queryRNG);
   return queries.map(query => {
     const queryTemplate = generateTemplateString(query);
     return queryTemplate(generatedValues);

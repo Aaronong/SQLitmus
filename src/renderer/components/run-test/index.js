@@ -1,3 +1,4 @@
+import Random from 'rng.js';
 import cloneDeep from 'lodash.clonedeep';
 import Sequelize from 'sequelize';
 import { tableRelations } from '../test-tables-to-cards.jsx';
@@ -85,11 +86,21 @@ function createSequelizeConnection(s, maxPoolSize) {
   return sequelize;
 }
 
-async function runTest(testConfig, server, schemaInfo, rowInfo, queries, connInfo) {
+async function runTest(
+  testConfig,
+  server,
+  schemaInfo,
+  rowInfo,
+  queries,
+  connInfo,
+  dataSeed,
+  querySeed
+) {
   const sortedSchema = sortSchemaInfo(schemaInfo);
   const numTests = rowInfo[0][1].length;
   const maxPoolSize = Math.max(connInfo);
   const sequelize = createSequelizeConnection(server, maxPoolSize);
+  const queryRNG = new Random(0xf02385, querySeed);
 
   //   Perform upsert operation.
   //   Find if a record of the current database already exists, if not create
@@ -131,12 +142,15 @@ async function runTest(testConfig, server, schemaInfo, rowInfo, queries, connInf
     rawQueryList = rawQueryList.map(q => q.replace(/\n/gi, ' '));
     let queryList = [];
     for (let i = 0; i < 15; i++) {
-      queryList = [...queryList, ...parseQueryList(rawQueryList, schemaInfo, currRowInfo)];
+      queryList = [
+        ...queryList,
+        ...parseQueryList(rawQueryList, schemaInfo, currRowInfo, queryRNG),
+      ];
     }
     queryList = [...new Set(queryList)];
-    const data = await generateData(sortedSchema, currRowInfo);
+    const data = await generateData(sortedSchema, currRowInfo, dataSeed);
     await populateData(sortedSchema, sequelize, data, currRowInfo);
-    await runQueries(testId, sequelize, queryList, connInfo, currRowInfo);
+    await runQueries(testId, sequelize, queryList, connInfo, currRowInfo, queryRNG);
   }
 }
 
