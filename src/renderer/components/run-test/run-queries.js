@@ -1,6 +1,6 @@
 import { QUERY_RESULTS_PATH, getPersistentStore } from './persistant-storage.js';
 import { SETUP_DELIMITER } from '../generic/parse-query.js';
-import Sequelize from 'sequelize';
+import shuffle from 'shuffle-array';
 
 function postfixObjName(obj, postfix) {
   const retObj = {};
@@ -21,58 +21,55 @@ function sumVals(obj) {
 async function testQuery(sequelize, query, TestId, record, queryStore) {
   const setup = query.split(SETUP_DELIMITER);
   let testedQuery = query;
-  let TimeTaken = 0;
   if (setup.length > 1) {
     // [?setup, test, ?setup]
     testedQuery = setup[1];
   }
   // console.log(`testing query - ${testedQuery}`);
   let Command = null;
-  for (let j = 0; j < 5; j++) {
-    if (setup.length > 1) {
-      // First chunk is setup, speed not recorded
-      const chunk1 = setup[0].split(';');
-      for (let k = 0; k < chunk1.length; k++) {
-        if (chunk1[k].trim() !== '') {
-          await sequelize.query(chunk1[k]).catch(err => {
-            console.log(err);
-          });
-        }
-      }
-    }
-    const chunk2 = testedQuery.split(';');
-    const TimeStart = Date.now();
-    for (let k = 0; k < chunk2.length; k++) {
-      if (chunk2[k].trim() !== '') {
-        await sequelize
-          .query(chunk2[k])
-          .spread((results, metadata) => {
-            console.log(metadata);
-            if (metadata && metadata.command) {
-              Command = metadata.command;
-            }
-          })
-          .catch(err => {
-            console.log(err);
-          });
-      }
-    }
-    const TimeEnd = Date.now();
-    TimeTaken += TimeEnd - TimeStart;
-    if (setup.length > 2) {
-      // Last chunk is reset, speed not recorded
-      const chunk3 = setup[2].split(';');
-      for (let k = 0; k < chunk3.length; k++) {
-        if (chunk3[k].trim() !== '') {
-          await sequelize.query(chunk3[k]).catch(err => {
-            console.log(err);
-          });
-        }
+  if (setup.length > 1) {
+    // First chunk is setup, speed not recorded
+    const chunk1 = setup[0].split(';');
+    for (let k = 0; k < chunk1.length; k++) {
+      if (chunk1[k].trim() !== '') {
+        await sequelize.query(chunk1[k]).catch(err => {
+          console.log(err);
+        });
       }
     }
   }
-  TimeTaken = Math.round(TimeTaken / 5);
-  queryStore.insert({ ...record, Command, TimeTaken, Query: testedQuery });
+  const chunk2 = testedQuery.split(';');
+  const TimeStart = Date.now();
+  for (let k = 0; k < chunk2.length; k++) {
+    if (chunk2[k].trim() !== '') {
+      await sequelize
+        .query(chunk2[k])
+        .spread((results, metadata) => {
+          console.log(metadata);
+          if (metadata && metadata.command) {
+            Command = metadata.command;
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  }
+  const TimeEnd = Date.now();
+  const TimeTaken = Math.round(TimeEnd - TimeStart);
+  if (setup.length > 2) {
+    // Last chunk is reset, speed not recorded
+    const chunk3 = setup[2].split(';');
+    for (let k = 0; k < chunk3.length; k++) {
+      if (chunk3[k].trim() !== '') {
+        await sequelize.query(chunk3[k]).catch(err => {
+          console.log(err);
+        });
+      }
+    }
+  }
+
+  return queryStore.insert({ ...record, Command, TimeTaken, Query: testedQuery });
 }
 
 async function runQueries(TestId, sequelize, queryList, connInfo, currRowInfo) {
@@ -85,13 +82,16 @@ async function runQueries(TestId, sequelize, queryList, connInfo, currRowInfo) {
   for (let i = 0; i < connInfo.length; i++) {
     const MaxConnPool = connInfo[i];
     sequelize.config.pool.max = MaxConnPool;
-    for (let k = 0; k < 3; k++) {
-      for (let j = 0; j < queryList.length; j++) {
-        const Query = queryList[j];
-        const specificRecord = { MaxConnPool, ...genericRecord };
-        await testQuery(sequelize, Query, TestId, specificRecord, queryStore);
-      }
-    }
+    const queryPromises = shuffle(queryList).map(Query => {
+      const specificRecord = { MaxConnPool, ...genericRecord };
+      return testQuery(sequelize, Query, TestId, specificRecord, queryStore);
+    });
+    await Promise.all(queryPromises);
+    // for (let j = 0; j < queryList.length; j++) {
+    //   const Query = queryList[j];
+    //   const specificRecord = { MaxConnPool, ...genericRecord };
+    //   await testQuery(sequelize, Query, TestId, specificRecord, queryStore);
+    // }
   }
 }
 

@@ -130,7 +130,7 @@ async function runTest(testConfig, server, schemaInfo, rowInfo, queries, connInf
     let rawQueryList = Object.entries(queries.queriesById).map(qObj => qObj[1].query);
     rawQueryList = rawQueryList.map(q => q.replace(/\n/gi, ' '));
     let queryList = [];
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < 15; i++) {
       queryList = [...queryList, ...parseQueryList(rawQueryList, schemaInfo, currRowInfo)];
     }
     queryList = [...new Set(queryList)];
