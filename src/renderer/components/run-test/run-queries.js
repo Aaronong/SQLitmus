@@ -18,7 +18,9 @@ function sumVals(obj) {
   return sum;
 }
 
-async function testQuery(sequelize, query, TestId, record, queryStore) {
+async function testQuery(sequelize, queryObj, TestId, record, queryStore) {
+  const TemplateName = queryObj[0];
+  const query = queryObj[1];
   const setup = query.split(SETUP_DELIMITER);
   let testedQuery = query;
   if (setup.length > 1) {
@@ -69,7 +71,7 @@ async function testQuery(sequelize, query, TestId, record, queryStore) {
     }
   }
 
-  return queryStore.insert({ ...record, Command, TimeTaken, Query: testedQuery });
+  return queryStore.insert({ ...record, TemplateName, TimeTaken, Query: testedQuery });
 }
 
 async function runQueries(TestId, sequelize, queryList, connInfo, currRowInfo, queryRNG) {
@@ -87,8 +89,8 @@ async function runQueries(TestId, sequelize, queryList, connInfo, currRowInfo, q
         resolve('Sleep for one second');
       }, 1000);
     });
+    const specificRecord = { MaxConnPool, ...genericRecord };
     const queryPromises = shuffle(queryList, { rng: queryRNG.nextNumber }).map(Query => {
-      const specificRecord = { MaxConnPool, ...genericRecord };
       return testQuery(sequelize, Query, TestId, specificRecord, queryStore);
     });
     await Promise.all(queryPromises);

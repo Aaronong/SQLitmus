@@ -135,19 +135,21 @@ async function runTest(
     });
   });
 
+  const nameQueryMap = {};
+  const rawQueryNames = Object.entries(queries.queriesById).map(qObj => qObj[1].name);
+  let rawQueryList = Object.entries(queries.queriesById).map(qObj => qObj[1].query);
+  rawQueryList = rawQueryList.map(q => q.replace(/\n/gi, ' '));
   for (let testNum = 0; testNum < numTests; testNum++) {
     const currRowInfo = rowInfo.map(([tName, rows]) => [tName, rows[testNum]]);
     // Generate list of queries we will use
-    let rawQueryList = Object.entries(queries.queriesById).map(qObj => qObj[1].query);
-    rawQueryList = rawQueryList.map(q => q.replace(/\n/gi, ' '));
     let queryList = [];
     for (let i = 0; i < 15; i++) {
-      queryList = [
-        ...queryList,
-        ...parseQueryList(rawQueryList, schemaInfo, currRowInfo, queryRNG),
-      ];
+      const generatedQueries = parseQueryList(rawQueryList, schemaInfo, currRowInfo, queryRNG);
+      generatedQueries.forEach((genQ, i) => (nameQueryMap[genQ] = rawQueryNames[i]));
+      queryList = [...queryList, ...generatedQueries];
     }
     queryList = [...new Set(queryList)];
+    queryList = queryList.map(q => [nameQueryMap[q], q]);
     const data = await generateData(sortedSchema, currRowInfo, dataSeed);
     await populateData(sortedSchema, sequelize, data, currRowInfo);
     await runQueries(testId, sequelize, queryList, connInfo, currRowInfo, queryRNG);
