@@ -44,12 +44,18 @@ function generateContext(schemaInfo, numRows, queryRNG) {
       }
     });
     if (numRows) {
-      generatedValues[key].numRows = numRows.find(item => item[0] === key)[1];
+      generatedValues[key].NUMROWS = numRows.find(item => item[0] === key)[1];
+      generatedValues[key].RANDROW = Math.ceil(
+        generatedValues[key].NUMROWS * queryRNG.nextNumber()
+      );
     } else {
-      generatedValues[key].numRows = 10;
+      generatedValues[key].NUMROWS = 10;
+      generatedValues[key].RANDROW = Math.ceil(Math.random() * 10);
     }
   });
   generatedValues.SETUP = { DELIMITER: SETUP_DELIMITER };
+  generatedValues.BEGIN = { DELIMITER: SETUP_DELIMITER };
+  generatedValues.END = { DELIMITER: SETUP_DELIMITER };
   return generatedValues;
 }
 
