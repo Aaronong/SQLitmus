@@ -139,6 +139,18 @@ function schemaConfig(schemaInfo, onSetField, onSelectField, tableIndex, fieldIn
           onChange={() => onSetField(tableIndex, fieldIndex, 'unique', !configuredField.unique)}
         />
       )}
+      {configuredField.pk ||
+      configuredField.fk ||
+      configuredField.index ||
+      currentType.includes('bool') ? (
+        <div />
+      ) : (
+        <Switch
+          checked={configuredField.sorted}
+          label="is Sorted"
+          onChange={() => onSetField(tableIndex, fieldIndex, 'sorted', !configuredField.sorted)}
+        />
+      )}
     </div>
   );
 }

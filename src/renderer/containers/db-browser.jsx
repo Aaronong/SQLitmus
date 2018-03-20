@@ -271,6 +271,7 @@ class DbBrowserContainer extends Component {
               configuredType: '',
               mappedType: mapTypes(field.dataType, dbType),
               generator: DEFAULT_GENERATOR,
+              sorted: false,
             })
           ),
         ]);

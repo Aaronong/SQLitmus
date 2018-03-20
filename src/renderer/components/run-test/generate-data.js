@@ -522,7 +522,10 @@ async function generateTable([tableName, fields], numRows, tableRNG) {
   for (let j = 0; j < filteredFields.length; j++) {
     const field = filteredFields[j];
     START_TIME = new Date().getTime();
-    const results = generateNumVals(field, numRows, spawnRNG(tableRNG), field.unique);
+    let results = generateNumVals(field, numRows, spawnRNG(tableRNG), field.unique);
+    if (field.sorted === true) {
+      results = results.sort();
+    }
     for (let i = 0; i < numRows; i++) {
       const setObj = {};
       setObj[field.name] = results[i];
