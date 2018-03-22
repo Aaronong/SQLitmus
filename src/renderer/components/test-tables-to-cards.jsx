@@ -117,6 +117,16 @@ function tablesToCards(tables, activeTableIndex, activeFieldIndex, setTableAndFi
             ) : (
               <span />
             )}
+            {!field.index && !field.pk && !field.fk && field.sorted ? (
+              <span
+                style={{ backgroundColor: '#ded6fe', color: '#5642A6' }}
+                className="pt-tag pt-round pt-minimal field-tag"
+              >
+                Sorted
+              </span>
+            ) : (
+              <span />
+            )}
           </div>
         ))}
       </div>

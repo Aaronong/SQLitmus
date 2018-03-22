@@ -15,7 +15,7 @@ function toPrecisionScale(number, precision, scale) {
 }
 
 // input of form [ [val1, weight1], [val2, weight2], ... ]
-function customNumericGenerator(randNum, [input, isInteger, precision, scale]) {
+function customNumericGenerator(randNum, [input, isInteger, precision, scale, min, max]) {
   const reducer = (accumulator, currentValue) => accumulator + currentValue[1];
   const totalWeight = input.reduce(reducer, 0);
   let counter = Math.round(randNum * totalWeight);
@@ -29,7 +29,14 @@ function customNumericGenerator(randNum, [input, isInteger, precision, scale]) {
     }
   });
   result = toPrecisionScale(result, precision, scale);
-  return isInteger ? parseInt(result, 10) : Number(result);
+  result = isInteger ? parseInt(result, 10) : Number(result);
+  if (result < min) {
+    result = min;
+  }
+  if (result > max) {
+    result = max;
+  }
+  return result;
 }
 
 const CUSTOM_NUMERIC = 'Custom Numeric';
@@ -77,14 +84,16 @@ class CustomNumeric extends Component {
     super(props, context);
     const { schemaInfo, tableIndex, fieldIndex } = props;
     let defaultInput = schemaInfo[tableIndex][1][fieldIndex].generator.inputs;
-    if (defaultInput.length !== 4) {
+    if (defaultInput.length !== 6) {
       const defaultScale = props.isInteger ? 0 : 2;
-      defaultInput = [[], null, 10, defaultScale];
+      defaultInput = [[], null, 10, defaultScale, -100, 100];
     }
     this.state = {
       inputs: defaultInput[0],
       precision: defaultInput[2],
       scale: defaultInput[3],
+      min: defaultInput[4],
+      max: defaultInput[5],
     };
   }
 
@@ -94,6 +103,14 @@ class CustomNumeric extends Component {
 
   setScale(scale) {
     this.setState({ scale });
+  }
+
+  setMin(min) {
+    this.setState({ min });
+  }
+
+  setMax(max) {
+    this.setState({ max });
   }
 
   setValueAtRow(rowIndex, value) {
@@ -120,31 +137,55 @@ class CustomNumeric extends Component {
 
   render() {
     const { onSetField, tableIndex, fieldIndex, handleClose, isInteger } = this.props;
-    const { inputs, precision, scale } = this.state;
-    const combinedInput = [inputs, isInteger, precision, scale];
+    const { inputs, precision, scale, min, max } = this.state;
+    const combinedInput = [inputs, isInteger, precision, scale, min, max];
     return (
       <div>
         <Modal.Body>
-          <label className="pt-label">
-            Set Precision
-            <input
-              type="number"
-              style={{ marginRight: '13px' }}
-              className="pt-input pt-numeric-input"
-              onChange={e => this.setPrecision(parseInt(e.target.value, 10))}
-              value={precision}
-            />
-          </label>
-          <label className="pt-label">
-            Set Scale
-            <input
-              type="number"
-              style={{ marginRight: '13px' }}
-              className="pt-input pt-numeric-input"
-              onChange={e => this.setScale(parseInt(e.target.value, 10))}
-              value={scale}
-            />
-          </label>
+          <div className="pair-label-switch-container">
+            <label className="pt-label">
+              Set Min
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => this.setMin(parseFloat(e.target.value, 10))}
+                value={min}
+              />
+            </label>
+            <label className="pt-label">
+              Set Max
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => this.setMax(parseFloat(e.target.value, 10))}
+                value={max}
+              />
+            </label>
+          </div>
+          <div className="pair-label-switch-container">
+            <label className="pt-label">
+              Set Precision
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => this.setPrecision(parseInt(e.target.value, 10))}
+                value={precision}
+              />
+            </label>
+            <label className="pt-label">
+              Set Scale
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => this.setScale(parseInt(e.target.value, 10))}
+                value={scale}
+              />
+            </label>
+          </div>
           <div className="pair-label-switch-container">
             <span className="modal-subheader">Value</span>
             <span className="modal-subheader">Weight</span>

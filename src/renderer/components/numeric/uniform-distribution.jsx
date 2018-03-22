@@ -3,9 +3,19 @@ import { Modal } from 'react-bootstrap';
 import { jStat } from 'jStat';
 import { toPrecisionScale } from './custom-numeric.jsx';
 
-function uniformDistributionGenerator(randNum, [start, end, isInteger, precision, scale]) {
-  const ans = toPrecisionScale(jStat.uniform.inv(randNum, start, end), precision, scale);
-  return isInteger ? parseInt(ans, 10) : Number(ans);
+function uniformDistributionGenerator(
+  randNum,
+  [start, end, isInteger, precision, scale, min, max]
+) {
+  let result = toPrecisionScale(jStat.uniform.inv(randNum, start, end), precision, scale);
+  result = isInteger ? parseInt(result, 10) : Number(result);
+  if (result < min) {
+    result = min;
+  }
+  if (result > max) {
+    result = max;
+  }
+  return result;
 }
 
 const UNIFORM_DISTRIBUTION = 'Uniform Distribution';
@@ -24,14 +34,16 @@ class UniformDistribution extends Component {
     super(props, context);
     const { schemaInfo, tableIndex, fieldIndex, isInteger } = props;
     let defaultInput = schemaInfo[tableIndex][1][fieldIndex].generator.inputs;
-    if (defaultInput.length !== 5) {
+    if (defaultInput.length !== 7) {
       const defaultScale = props.isInteger ? 0 : 2;
-      defaultInput = [0, 1, isInteger, 10, defaultScale];
+      defaultInput = [0, 1, isInteger, 10, defaultScale, -100, 100];
     }
     this.state = {
       inputs: defaultInput.slice(0, 3),
       precision: defaultInput[3],
       scale: defaultInput[4],
+      min: defaultInput[5],
+      max: defaultInput[6],
     };
   }
 
@@ -57,11 +69,33 @@ class UniformDistribution extends Component {
 
   render() {
     const { onSetField, tableIndex, fieldIndex, handleClose } = this.props;
-    const { inputs, precision, scale } = this.state;
-    const combinedInput = [...inputs, precision, scale];
+    const { inputs, precision, scale, min, max } = this.state;
+    const combinedInput = [...inputs, precision, scale, min, max];
     return (
       <div>
         <Modal.Body>
+          <div className="pair-label-switch-container">
+            <label className="pt-label">
+              Set Min
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => this.setMin(parseFloat(e.target.value, 10))}
+                value={min}
+              />
+            </label>
+            <label className="pt-label">
+              Set Max
+              <input
+                type="number"
+                style={{ marginRight: '13px' }}
+                className="pt-input pt-numeric-input"
+                onChange={e => this.setMax(parseFloat(e.target.value, 10))}
+                value={max}
+              />
+            </label>
+          </div>
           <div className="pair-label-switch-container">
             <label className="pt-label">
               Set Precision
