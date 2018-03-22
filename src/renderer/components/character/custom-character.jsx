@@ -3,7 +3,7 @@ import { Modal } from 'react-bootstrap';
 import { Slider } from '@blueprintjs/core';
 
 function doubleQuote(str) {
-  return str.replace("'", "''");
+  return str.replace(/'/g, "''");
 }
 
 // input of form [ [val1, weight1], [val2, weight2], ... ]

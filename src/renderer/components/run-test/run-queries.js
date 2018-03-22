@@ -1,4 +1,5 @@
 import shuffle from 'shuffle-array';
+import Sequelize from 'sequelize';
 import { QUERY_RESULTS_PATH, getPersistentStore } from './persistant-storage.js';
 import { SETUP_DELIMITER } from '../generic/parse-query.js';
 
@@ -16,6 +17,30 @@ function sumVals(obj) {
     sum += value[1];
   });
   return sum;
+}
+
+function createSequelizeConnection(s, maxPoolSize) {
+  const client = s.client === 'postgresql' ? 'postgres' : s.client;
+  const connString = `${client}://${s.user}:${s.password}@${s.host}:${s.port}/${s.database}`;
+  console.log(connString);
+
+  const sequelize = new Sequelize(connString, {
+    pool: {
+      max: maxPoolSize,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+  });
+  sequelize
+    .authenticate()
+    .then(() => {
+      console.log('Connection has been established successfully.');
+    })
+    .catch(err => {
+      console.error('Unable to connect to the database:', err);
+    });
+  return sequelize;
 }
 
 async function testQuery(sequelize, queryObj, TestId, record, queryStore) {
@@ -74,7 +99,7 @@ async function testQuery(sequelize, queryObj, TestId, record, queryStore) {
   return queryStore.insert({ ...record, TemplateName, TimeTaken, Query: testedQuery });
 }
 
-async function runQueries(TestId, sequelize, queryList, connInfo, currRowInfo, queryRNG) {
+async function runQueries(TestId, server, queryList, connInfo, currRowInfo, queryRNG) {
   const genericRecord = {
     TestId,
     ...postfixObjName(currRowInfo, '-Rows'),
@@ -83,7 +108,8 @@ async function runQueries(TestId, sequelize, queryList, connInfo, currRowInfo, q
   const queryStore = await getPersistentStore(`${QUERY_RESULTS_PATH}/${TestId}`);
   for (let i = 0; i < connInfo.length; i++) {
     const MaxConnPool = connInfo[i];
-    sequelize.config.pool.max = MaxConnPool;
+    const sequelize = createSequelizeConnection(server, MaxConnPool);
+    // sequelize.config.pool.max = MaxConnPool;
     await new Promise((resolve, reject) => {
       setTimeout(() => {
         resolve('Sleep for one second');
@@ -94,6 +120,7 @@ async function runQueries(TestId, sequelize, queryList, connInfo, currRowInfo, q
       return testQuery(sequelize, Query, TestId, specificRecord, queryStore);
     });
     await Promise.all(queryPromises);
+    sequelize.close();
     // for (let j = 0; j < queryList.length; j++) {
     //   const Query = queryList[j];
     //   const specificRecord = { MaxConnPool, ...genericRecord };

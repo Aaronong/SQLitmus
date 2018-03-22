@@ -93,7 +93,7 @@
     "react-graph-vis": "^1.0.2",
     "react-table": "^6.8.0",
     "rng-js": "^1.0.1",
-    "rng.js": "^1.0.0",
+    "rng.js": "^1.0.1",
     "sequelize": "^3.32.1",
     "shuffle-array": "^1.0.1",
     "sqlectron-core": "^8.0.0",
