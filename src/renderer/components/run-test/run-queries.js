@@ -43,6 +43,13 @@ function createSequelizeConnection(s, maxPoolSize) {
   return sequelize;
 }
 
+async function controlQuery(sequelize) {
+  const timeStart = Date.now();
+  await sequelize.query('Select 1;').catch(err => console.log(err));
+  const timeEnd = Date.now();
+  return timeEnd - timeStart;
+}
+
 async function testQuery(sequelize, queryObj, TestId, record, queryStore) {
   const TemplateName = queryObj[0];
   const query = queryObj[1];
@@ -52,46 +59,33 @@ async function testQuery(sequelize, queryObj, TestId, record, queryStore) {
     // [?setup, test, ?setup]
     testedQuery = setup[1];
   }
-  // console.log(`testing query - ${testedQuery}`);
-  let Command = null;
   if (setup.length > 1) {
-    // First chunk is setup, speed not recorded
     const chunk1 = setup[0].split(';');
     for (let k = 0; k < chunk1.length; k++) {
       if (chunk1[k].trim() !== '') {
-        await sequelize.query(chunk1[k]).catch(err => {
-          console.log(err);
-        });
+        await sequelize.query(chunk1[k]).catch(() => console.log('err'));
       }
     }
   }
+  // Setup a control test to eliminate network instability
+  let controlTime = await controlQuery(sequelize);
   const chunk2 = testedQuery.split(';');
   const TimeStart = Date.now();
   for (let k = 0; k < chunk2.length; k++) {
     if (chunk2[k].trim() !== '') {
-      await sequelize
-        .query(chunk2[k])
-        .spread((results, metadata) => {
-          console.log(metadata);
-          if (metadata && metadata.command) {
-            Command = metadata.command;
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      // Empty catch statement to speed up query processing
+      await sequelize.query(chunk2[k]).catch(() => console.log('err'));
     }
   }
   const TimeEnd = Date.now();
-  const TimeTaken = Math.round(TimeEnd - TimeStart);
+  controlTime = (controlTime + (await controlQuery(sequelize))) / 2;
+  const TimeTaken = Math.round(TimeEnd - TimeStart - controlTime);
   if (setup.length > 2) {
     // Last chunk is reset, speed not recorded
     const chunk3 = setup[2].split(';');
     for (let k = 0; k < chunk3.length; k++) {
       if (chunk3[k].trim() !== '') {
-        await sequelize.query(chunk3[k]).catch(err => {
-          console.log(err);
-        });
+        await sequelize.query(chunk3[k]).catch(() => console.log('err'));
       }
     }
   }
@@ -121,12 +115,37 @@ async function runQueries(TestId, server, queryList, connInfo, currRowInfo, quer
     });
     await Promise.all(queryPromises);
     sequelize.close();
-    // for (let j = 0; j < queryList.length; j++) {
-    //   const Query = queryList[j];
-    //   const specificRecord = { MaxConnPool, ...genericRecord };
-    //   await testQuery(sequelize, Query, TestId, specificRecord, queryStore);
-    // }
   }
+  // We re-calibrate each query ran in the particular test
+  const retrievedRecords = await new Promise((resolve, reject) => {
+    // Find all documents in the collection
+    queryStore.find({ TotalRows: sumVals(currRowInfo) }, (err, docs) => {
+      if (err) {
+        reject(err);
+      }
+      resolve(docs);
+    });
+  });
+  let minTime = 0;
+  for (let i = 0; i < retrievedRecords.length; i++) {
+    if (retrievedRecords[i].TimeTaken < minTime) {
+      minTime = retrievedRecords[i].TimeTaken;
+    }
+  }
+  await new Promise((resolve, reject) => {
+    // Find all documents with same max conn pool
+    queryStore.update(
+      { TotalRows: sumVals(currRowInfo) },
+      { $inc: { TimeTaken: -minTime + 50 } },
+      { multi: true },
+      (err, docs) => {
+        if (err) {
+          reject(err);
+        }
+        resolve(docs);
+      }
+    );
+  });
 }
 
 export default runQueries;

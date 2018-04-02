@@ -99,10 +99,7 @@ async function runTest(
   const TEST_START = new Date().getTime();
   const sortedSchema = sortSchemaInfo(schemaInfo);
   const numTests = rowInfo[0][1].length;
-  // const indexOfMaxConn = connInfo.reduce((iMax, x, i, arr) => (x > arr[iMax] ? i : iMax), 0);
   const maxPoolSize = Math.max(connInfo);
-  // const sequelizeArr = connInfo.map(maxPoolSize => createSequelizeConnection(server, maxPoolSize));
-  // const sequelize = createSequelizeConnection(server, maxPoolSize);
   const queryRNG = new Random(0xf02385, querySeed);
 
   //   Perform upsert operation.
@@ -159,12 +156,7 @@ async function runTest(
     const sequelize = createSequelizeConnection(server, maxPoolSize);
     await populateData(sortedSchema, sequelize, data, currRowInfo);
     sequelize.close();
-    // Split running the queries into 3 batches so that we can minimize network impact
-    for (let j = 0; j < 3; j++) {
-      const aThird = Math.floor(queryList.length / 3);
-      const currQueryList = queryList.slice(j * aThird, (j + 1) * aThird);
-      await runQueries(testId, server, currQueryList, connInfo, currRowInfo, queryRNG);
-    }
+    await runQueries(testId, server, queryList, connInfo, currRowInfo, queryRNG);
   }
   const TEST_END = new Date().getTime();
   console.log(`The test took ${TEST_END - TEST_START} miliseconds`);
