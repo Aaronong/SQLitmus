@@ -65,23 +65,33 @@ function recordIntoBatches(records) {
   return batches;
 }
 
-async function populateData(sortedSchema, sequelize, db, currRowInfo) {
+async function populateData(
+  sortedSchema,
+  sequelize,
+  db,
+  currRowInfo,
+  totalTasks,
+  currentTasks,
+  populateWeight,
+  setMessage,
+  setPercentage
+) {
   console.log(sequelize);
   const dialect = sequelize.dialect.connectionManager.dialectName;
+  let currTasks = currentTasks;
   // Truncate tables first
   for (let i = sortedSchema.length - 1; i >= 0; i--) {
     const tableName = sortedSchema[i][0];
     const tableNum = currRowInfo.find(row => row[0] === tableName)[1];
-    console.log(tableName);
     const tableStr = tableInDialect(tableName, dialect);
+    setMessage(`Deleting ${tableName} data to prepare for data population`);
     await resetTableStr(sequelize, tableStr, dialect, tableName, tableNum);
   }
+
   for (let i = 0; i < sortedSchema.length; i++) {
     const [tableName, fields] = sortedSchema[i];
-    console.log(tableName);
     const fieldNames = fields.map(field => field.name);
     const fieldTypes = fields.map(field => field.mappedType);
-    console.log(fieldNames);
     const tableStr = tableInDialect(tableName, dialect);
 
     const retrievedRecords = await new Promise((resolve, reject) => {
@@ -93,6 +103,7 @@ async function populateData(sortedSchema, sequelize, db, currRowInfo) {
         resolve(docs);
       });
     });
+    setMessage(`Populating ${retrievedRecords.length} rows of data into ${tableName} table`);
     const recordBatches = recordIntoBatches(retrievedRecords);
     for (let j = 0; j < recordBatches.length; j++) {
       const currBatch = recordBatches[j];
@@ -120,7 +131,10 @@ async function populateData(sortedSchema, sequelize, db, currRowInfo) {
         // Results will be an empty array and metadata will contain the number of affected rows.
       });
     }
+    currTasks += retrievedRecords.length * populateWeight;
+    setPercentage(currTasks / totalTasks);
   }
+  return currTasks;
 }
 
 // POSTGRES

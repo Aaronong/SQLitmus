@@ -94,13 +94,28 @@ async function runTest(
   queries,
   connInfo,
   dataSeed,
-  querySeed
+  querySeed,
+  setIsTesting,
+  setMessage,
+  setPercentage,
+  setTrialNum
 ) {
+  setPercentage(0.0001);
+  setMessage('Setting up test configurations');
+
   const TEST_START = new Date().getTime();
   const sortedSchema = sortSchemaInfo(schemaInfo);
   const numTests = rowInfo[0][1].length;
   const maxPoolSize = Math.max(connInfo);
   const queryRNG = new Random(0xf02385, querySeed);
+  const populateWeight = 1;
+  const generateWeight = 100;
+  const queryWeight = 200;
+  const totalToPopulate = rowInfo.reduce((acc, rows) => acc + rows[1].reduce((a, c) => a + c), 0);
+  const totalQueries = queries.queryIds.length * 30 * rowInfo[0][1].length * connInfo.length;
+  const totalTasks =
+    totalToPopulate * (populateWeight + generateWeight) + totalQueries * queryWeight;
+  let currentTasks = 0;
 
   //   Perform upsert operation.
   //   Find if a record of the current database already exists, if not create
@@ -140,26 +155,61 @@ async function runTest(
   let rawQueryList = Object.entries(queries.queriesById).map(qObj => qObj[1].query);
   rawQueryList = rawQueryList.map(q => q.replace(/\n/gi, ' '));
   for (let testNum = 0; testNum < numTests; testNum++) {
+    setTrialNum(testNum + 1);
     const currRowInfo = rowInfo.map(([tName, rows]) => [tName, rows[testNum]]);
     // Generate list of queries we will use
     let queryList = [];
     for (let i = 0; i < 30; i++) {
       const generatedQueries = parseQueryList(rawQueryList, schemaInfo, currRowInfo, queryRNG);
-      generatedQueries.forEach((genQ, i) => (nameQueryMap[genQ] = rawQueryNames[i]));
+      generatedQueries.forEach((genQ, j) => (nameQueryMap[genQ] = rawQueryNames[j]));
       queryList = [...queryList, ...generatedQueries];
     }
     queryList = [...new Set(queryList)];
     queryList = queryList.map(q => [nameQueryMap[q], q]);
     // Create sequelize connection
 
-    const data = await generateData(sortedSchema, currRowInfo, dataSeed);
+    const [data, currTasks] = await generateData(
+      sortedSchema,
+      currRowInfo,
+      dataSeed,
+      totalTasks,
+      currentTasks,
+      generateWeight,
+      setMessage,
+      setPercentage
+    );
+    currentTasks = currTasks;
     const sequelize = createSequelizeConnection(server, maxPoolSize);
-    await populateData(sortedSchema, sequelize, data, currRowInfo);
+    currentTasks = await populateData(
+      sortedSchema,
+      sequelize,
+      data,
+      currRowInfo,
+      totalTasks,
+      currentTasks,
+      populateWeight,
+      setMessage,
+      setPercentage
+    );
     sequelize.close();
-    await runQueries(testId, server, queryList, connInfo, currRowInfo, queryRNG);
+    currentTasks = await runQueries(
+      testId,
+      server,
+      queryList,
+      connInfo,
+      currRowInfo,
+      queryRNG,
+      totalTasks,
+      currentTasks,
+      queryWeight,
+      setMessage,
+      setPercentage
+    );
   }
   const TEST_END = new Date().getTime();
-  console.log(`The test took ${TEST_END - TEST_START} miliseconds`);
+  setPercentage(1);
+  setMessage(`The test took ${TEST_END - TEST_START} miliseconds`);
+  setIsTesting(false);
 }
 
 export default runTest;

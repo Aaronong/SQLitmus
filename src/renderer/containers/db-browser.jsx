@@ -192,6 +192,12 @@ class DbBrowserContainer extends Component {
       connPoolInfo: [5],
       runModalOpen: false,
       loadedQueries: false,
+      isTesting: false,
+      message: '',
+      percentage: 0,
+      trialNum: 0,
+      log: [],
+      logTimer: 0,
     };
     this.menuHandler = new MenuHandler();
   }
@@ -514,6 +520,32 @@ class DbBrowserContainer extends Component {
     this.setState({ runModalOpen: true });
   }
 
+  // Run Modal events
+  setIsTesting(isTesting) {
+    this.setState({ isTesting, logTimer: Date.now() });
+  }
+
+  setMessage(message) {
+    // Also add to log [message, percentage, timeElapsed]
+    const logTimer = this.state.logTimer === 0 ? Date.now() : this.state.logTimer;
+    const newLog = [
+      `Test ${this.state.trialNum}: ${message}`,
+      this.state.percentage,
+      Date.now() - logTimer,
+    ];
+    this.setState({ message, log: [...this.state.log, newLog] });
+  }
+
+  setPercentage(rawPercentage) {
+    const percentage = Math.round(rawPercentage * 10000) / 100;
+    this.setState({ percentage });
+  }
+
+  setTrialNum(trialNum) {
+    this.setState({ trialNum });
+  }
+
+  // Render
   renderTabQueries() {
     const {
       dispatch,
@@ -698,7 +730,17 @@ class DbBrowserContainer extends Component {
   }
 
   render() {
-    const { schemaInfo, rowInfo, connPoolInfo, runModalOpen } = this.state;
+    const {
+      schemaInfo,
+      rowInfo,
+      connPoolInfo,
+      runModalOpen,
+      isTesting,
+      message,
+      percentage,
+      trialNum,
+      log,
+    } = this.state;
     const { status, connections, queries } = this.props;
 
     if (connections.waitingPrivateKeyPassphrase) {
@@ -810,7 +852,7 @@ class DbBrowserContainer extends Component {
             onReConnectionClick={::this.onReConnectionClick}
           />
         </div>
-        <Modal show={runModalOpen} onHide={::this.hideRunModal}>
+        <Modal show={runModalOpen} onHide={::this.hideRunModal} dialogClassName="full-screen-modal">
           <RunModal
             server={connections.server}
             schemaInfo={schemaInfo}
@@ -818,6 +860,15 @@ class DbBrowserContainer extends Component {
             queries={queries}
             connInfo={connPoolInfo}
             handleClose={::this.hideRunModal}
+            isTesting={isTesting}
+            message={message}
+            percentage={percentage}
+            trialNum={trialNum}
+            log={log}
+            setIsTesting={::this.setIsTesting}
+            setMessage={::this.setMessage}
+            setPercentage={::this.setPercentage}
+            setTrialNum={::this.setTrialNum}
           />
         </Modal>
         <div style={{ padding: '100px' }}>{MainDisplay}</div>

@@ -476,10 +476,12 @@ async function generateSelfReference(fields, numRows, fieldRNG, tableName) {
   }
 }
 
-async function generateTable([tableName, fields], numRows, tableRNG) {
-  console.log(`Generating ${numRows} rows of ${tableName}`);
+async function generateTable([tableName, fields], numRows, tableRNG, totalTasks, currentTasks, generateWeight, setMessage, setPercentage) {
+  setMessage(`Generating ${numRows} rows of ${tableName}`);
   db[tableName] = getMemoryStore();
-
+  const totalFields = fields.length;
+  let generatedFields = 0;
+  let currTasks = currentTasks;
   // Insert a record for each row we are required to generate
   for (let i = 0; i < numRows; i++) {
     await new Promise((resolve, reject) => {
@@ -497,7 +499,10 @@ async function generateTable([tableName, fields], numRows, tableRNG) {
   START_TIME = new Date().getTime();
   await generateIndexes(tableName, indexFields, numRows);
   END_TIME = new Date().getTime();
-  console.log(`Generating index rows for ${tableName} took ${END_TIME - START_TIME} miliseconds`);
+  setMessage(`Generating index rows for ${tableName} took ${END_TIME - START_TIME} miliseconds`);
+  generatedFields += indexFields.length;
+  currTasks += numRows * generateWeight * generatedFields / totalFields;
+  setPercentage(currTasks / totalTasks);
   // if a PK element is found in index, we can skip processing PKs
   const skipPK = indexFields.findIndex(field => field.pk) !== -1;
   if (!skipPK) {
@@ -507,9 +512,12 @@ async function generateTable([tableName, fields], numRows, tableRNG) {
     START_TIME = new Date().getTime();
     await generatePKs(tableName, pkFields, numRows, spawnRNG(tableRNG));
     END_TIME = new Date().getTime();
-    console.log(
+    setMessage(
       `Generating Primary keys for ${tableName} took ${END_TIME - START_TIME} miliseconds`
     );
+    generatedFields += pkFields.length;
+    currTasks += numRows * generateWeight * generatedFields / totalFields;
+    setPercentage(currTasks / totalTasks);
   }
   // Generate Foreign keys
   const fkFields = filteredFields.filter(field => field.fk && field.foreignTarget);
@@ -517,7 +525,10 @@ async function generateTable([tableName, fields], numRows, tableRNG) {
   START_TIME = new Date().getTime();
   await generateFKs(tableName, fkFields, numRows, spawnRNG(tableRNG));
   END_TIME = new Date().getTime();
-  console.log(`Generating Foreign keys for ${tableName} took ${END_TIME - START_TIME} miliseconds`);
+  setMessage(`Generating Foreign keys for ${tableName} took ${END_TIME - START_TIME} miliseconds`);
+  generatedFields += fkFields.length;
+  currTasks += numRows * generateWeight * generatedFields / totalFields;
+  setPercentage(currTasks / totalTasks);
   // Generate remaining fields
   for (let j = 0; j < filteredFields.length; j++) {
     const field = filteredFields[j];
@@ -539,9 +550,12 @@ async function generateTable([tableName, fields], numRows, tableRNG) {
       });
     }
     END_TIME = new Date().getTime();
-    console.log(
+    setMessage(
       `Generating ${field.name} for ${tableName} took ${END_TIME - START_TIME} miliseconds`
     );
+    generatedFields += 1;
+    currTasks += numRows * generateWeight * generatedFields / totalFields;
+    setPercentage(currTasks / totalTasks);
   }
   // Generate self referencing fields
   if (selfReferenceFields.length > 0) {
@@ -549,14 +563,26 @@ async function generateTable([tableName, fields], numRows, tableRNG) {
   }
 }
 
-async function generateData(schemaInfo, rowInfo, dataSeed) {
+async function generateData(
+  schemaInfo,
+  rowInfo,
+  dataSeed,
+  totalTasks,
+  currentTasks,
+  generateWeight,
+  setMessage,
+  setPercentage
+) {
   const rootRNG = new Random(-23920393, dataSeed);
+  let currTasks = currentTasks;
   for (let i = 0; i < schemaInfo.length; i++) {
     const table = schemaInfo[i];
     const tIndex = rowInfo.findIndex(row => row[0] === table[0]);
-    await Promise.resolve(generateTable(table, rowInfo[tIndex][1], spawnRNG(rootRNG)));
+    await Promise.resolve(generateTable(table, rowInfo[tIndex][1], spawnRNG(rootRNG), totalTasks, currTasks, generateWeight, setMessage, setPercentage));
+    currTasks += rowInfo[tIndex][1] * generateWeight;
+    setPercentage(currTasks / totalTasks);
   }
-  return db;
+  return [db, currTasks];
 }
 
 export default generateData;

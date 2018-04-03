@@ -93,15 +93,29 @@ async function testQuery(sequelize, queryObj, TestId, record, queryStore) {
   return queryStore.insert({ ...record, TemplateName, TimeTaken, Query: testedQuery });
 }
 
-async function runQueries(TestId, server, queryList, connInfo, currRowInfo, queryRNG) {
+async function runQueries(
+  TestId,
+  server,
+  queryList,
+  connInfo,
+  currRowInfo,
+  queryRNG,
+  totalTasks,
+  currentTasks,
+  queryWeight,
+  setMessage,
+  setPercentage
+) {
   const genericRecord = {
     TestId,
     ...postfixObjName(currRowInfo, '-Rows'),
     TotalRows: sumVals(currRowInfo),
   };
+  let currTasks = currentTasks;
   const queryStore = await getPersistentStore(`${QUERY_RESULTS_PATH}/${TestId}`);
   for (let i = 0; i < connInfo.length; i++) {
     const MaxConnPool = connInfo[i];
+    setMessage(`Measuring database performance with Max Connection Pool = ${MaxConnPool}`);
     const sequelize = createSequelizeConnection(server, MaxConnPool);
     // sequelize.config.pool.max = MaxConnPool;
     await new Promise((resolve, reject) => {
@@ -115,6 +129,8 @@ async function runQueries(TestId, server, queryList, connInfo, currRowInfo, quer
     });
     await Promise.all(queryPromises);
     sequelize.close();
+    currTasks += queryList.length * queryWeight;
+    setPercentage(currTasks / totalTasks);
   }
   // We re-calibrate each query ran in the particular test
   const retrievedRecords = await new Promise((resolve, reject) => {
@@ -146,6 +162,7 @@ async function runQueries(TestId, server, queryList, connInfo, currRowInfo, quer
       }
     );
   });
+  return currTasks;
 }
 
 export default runQueries;
