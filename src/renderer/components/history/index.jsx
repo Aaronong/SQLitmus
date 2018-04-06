@@ -154,7 +154,7 @@ class HistoryDisplay extends Component {
       queries: [],
       filters: [],
       xAxisKey: 'TotalRows',
-      groupBy: 'MaxConnPool',
+      groupBy: 'TemplateName',
     };
   }
 

@@ -476,11 +476,19 @@ async function generateSelfReference(fields, numRows, fieldRNG, tableName) {
   }
 }
 
-async function generateTable([tableName, fields], numRows, tableRNG, totalTasks, currentTasks, generateWeight, setMessage, setPercentage) {
+async function generateTable(
+  [tableName, fields],
+  numRows,
+  tableRNG,
+  totalTasks,
+  currentTasks,
+  generateWeight,
+  setMessage,
+  setPercentage
+) {
   setMessage(`Generating ${numRows} rows of ${tableName}`);
   db[tableName] = getMemoryStore();
   const totalFields = fields.length;
-  let generatedFields = 0;
   let currTasks = currentTasks;
   // Insert a record for each row we are required to generate
   for (let i = 0; i < numRows; i++) {
@@ -500,8 +508,7 @@ async function generateTable([tableName, fields], numRows, tableRNG, totalTasks,
   await generateIndexes(tableName, indexFields, numRows);
   END_TIME = new Date().getTime();
   setMessage(`Generating index rows for ${tableName} took ${END_TIME - START_TIME} miliseconds`);
-  generatedFields += indexFields.length;
-  currTasks += numRows * generateWeight * generatedFields / totalFields;
+  currTasks += numRows * generateWeight * indexFields.length / totalFields;
   setPercentage(currTasks / totalTasks);
   // if a PK element is found in index, we can skip processing PKs
   const skipPK = indexFields.findIndex(field => field.pk) !== -1;
@@ -515,8 +522,7 @@ async function generateTable([tableName, fields], numRows, tableRNG, totalTasks,
     setMessage(
       `Generating Primary keys for ${tableName} took ${END_TIME - START_TIME} miliseconds`
     );
-    generatedFields += pkFields.length;
-    currTasks += numRows * generateWeight * generatedFields / totalFields;
+    currTasks += numRows * generateWeight * pkFields.length / totalFields;
     setPercentage(currTasks / totalTasks);
   }
   // Generate Foreign keys
@@ -526,8 +532,7 @@ async function generateTable([tableName, fields], numRows, tableRNG, totalTasks,
   await generateFKs(tableName, fkFields, numRows, spawnRNG(tableRNG));
   END_TIME = new Date().getTime();
   setMessage(`Generating Foreign keys for ${tableName} took ${END_TIME - START_TIME} miliseconds`);
-  generatedFields += fkFields.length;
-  currTasks += numRows * generateWeight * generatedFields / totalFields;
+  currTasks += numRows * generateWeight * fkFields.length / totalFields;
   setPercentage(currTasks / totalTasks);
   // Generate remaining fields
   for (let j = 0; j < filteredFields.length; j++) {
@@ -553,13 +558,17 @@ async function generateTable([tableName, fields], numRows, tableRNG, totalTasks,
     setMessage(
       `Generating ${field.name} for ${tableName} took ${END_TIME - START_TIME} miliseconds`
     );
-    generatedFields += 1;
-    currTasks += numRows * generateWeight * generatedFields / totalFields;
+    currTasks += numRows * generateWeight / totalFields;
     setPercentage(currTasks / totalTasks);
   }
   // Generate self referencing fields
   if (selfReferenceFields.length > 0) {
-    generateSelfReference(selfReferenceFields, numRows, spawnRNG(tableRNG), tableName);
+    await generateSelfReference(selfReferenceFields, numRows, spawnRNG(tableRNG), tableName);
+    setMessage(
+      `Generating self-reference fields for ${tableName} took ${END_TIME - START_TIME} miliseconds`
+    );
+    currTasks += numRows * generateWeight * selfReferenceFields.length / totalFields;
+    setPercentage(currTasks / totalTasks);
   }
 }
 
@@ -578,7 +587,18 @@ async function generateData(
   for (let i = 0; i < schemaInfo.length; i++) {
     const table = schemaInfo[i];
     const tIndex = rowInfo.findIndex(row => row[0] === table[0]);
-    await Promise.resolve(generateTable(table, rowInfo[tIndex][1], spawnRNG(rootRNG), totalTasks, currTasks, generateWeight, setMessage, setPercentage));
+    await Promise.resolve(
+      generateTable(
+        table,
+        rowInfo[tIndex][1],
+        spawnRNG(rootRNG),
+        totalTasks,
+        currTasks,
+        generateWeight,
+        setMessage,
+        setPercentage
+      )
+    );
     currTasks += rowInfo[tIndex][1] * generateWeight;
     setPercentage(currTasks / totalTasks);
   }
