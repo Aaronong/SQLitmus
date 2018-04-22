@@ -1,0 +1,553 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 2.8 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated as
+% required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+\sortlist[entry]{nty/global/}
+  \entry{Alexandrov:2012}{article}{}
+    \name{author}{3}{}{%
+      {{hash=AA}{%
+         family={Alexandrov},
+         familyi={A\bibinitperiod},
+         given={Alexander},
+         giveni={A\bibinitperiod},
+      }}%
+      {{hash=TK}{%
+         family={Tzoumas},
+         familyi={T\bibinitperiod},
+         given={Kostas},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=MV}{%
+         family={Markl},
+         familyi={M\bibinitperiod},
+         given={Volker},
+         giveni={V\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {VLDB Endowment}%
+    }
+    \strng{namehash}{AATKMV1}
+    \strng{fullhash}{AATKMV1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{A}
+    \field{sortinithash}{A}
+    \verb{doi}
+    \verb 10.14778/2367502.2367530
+    \endverb
+    \field{issn}{2150-8097}
+    \field{number}{12}
+    \field{pages}{1890\bibrangedash 1893}
+    \field{title}{Myriad: Scalable and Expressive Data Generation}
+    \verb{url}
+    \verb http://dx.doi.org/10.14778/2367502.2367530
+    \endverb
+    \field{volume}{5}
+    \field{journaltitle}{Proc. VLDB Endow.}
+    \field{month}{08}
+    \field{year}{2012}
+  \endentry
+
+  \entry{Bruno:2005}{inproceedings}{}
+    \name{author}{2}{}{%
+      {{hash=BN}{%
+         family={Bruno},
+         familyi={B\bibinitperiod},
+         given={Nicolas},
+         giveni={N\bibinitperiod},
+      }}%
+      {{hash=CS}{%
+         family={Chaudhuri},
+         familyi={C\bibinitperiod},
+         given={Surajit},
+         giveni={S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {VLDB Endowment}%
+    }
+    \strng{namehash}{BNCS1}
+    \strng{fullhash}{BNCS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{B}
+    \field{sortinithash}{B}
+    \field{booktitle}{Proceedings of the 31st International Conference on Very
+  Large Data Bases}
+    \field{isbn}{1-59593-154-6}
+    \field{pages}{1097\bibrangedash 1107}
+    \field{series}{VLDB '05}
+    \field{title}{Flexible Database Generators}
+    \verb{url}
+    \verb http://dl.acm.org/citation.cfm?id=1083592.1083719
+    \endverb
+    \list{location}{1}{%
+      {Trondheim, Norway}%
+    }
+    \field{year}{2005}
+  \endentry
+
+  \entry{Gray:1994}{article}{}
+    \name{author}{5}{}{%
+      {{hash=GJ}{%
+         family={Gray},
+         familyi={G\bibinitperiod},
+         given={Jim},
+         giveni={J\bibinitperiod},
+      }}%
+      {{hash=SP}{%
+         family={Sundaresan},
+         familyi={S\bibinitperiod},
+         given={Prakash},
+         giveni={P\bibinitperiod},
+      }}%
+      {{hash=ES}{%
+         family={Englert},
+         familyi={E\bibinitperiod},
+         given={Susanne},
+         giveni={S\bibinitperiod},
+      }}%
+      {{hash=BK}{%
+         family={Baclawski},
+         familyi={B\bibinitperiod},
+         given={Ken},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=WPJ}{%
+         family={Weinberger},
+         familyi={W\bibinitperiod},
+         given={Peter\bibnamedelima J.},
+         giveni={P\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {ACM}%
+    }
+    \strng{namehash}{GJ+1}
+    \strng{fullhash}{GJSPESBKWPJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{G}
+    \field{sortinithash}{G}
+    \verb{doi}
+    \verb 10.1145/191843.191886
+    \endverb
+    \field{issn}{0163-5808}
+    \field{number}{2}
+    \field{pages}{243\bibrangedash 252}
+    \field{title}{Quickly Generating Billion-record Synthetic Databases}
+    \verb{url}
+    \verb http://doi.acm.org/10.1145/191843.191886
+    \endverb
+    \field{volume}{23}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{journaltitle}{SIGMOD Rec.}
+    \field{month}{05}
+    \field{year}{1994}
+  \endentry
+
+  \entry{Houkjaer:2006}{inproceedings}{}
+    \name{author}{3}{}{%
+      {{hash=HK}{%
+         family={Houkj{\ae}r},
+         familyi={H\bibinitperiod},
+         given={Kenneth},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=TK}{%
+         family={Torp},
+         familyi={T\bibinitperiod},
+         given={Kristian},
+         giveni={K\bibinitperiod},
+      }}%
+      {{hash=WR}{%
+         family={Wind},
+         familyi={W\bibinitperiod},
+         given={Rico},
+         giveni={R\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {VLDB Endowment}%
+    }
+    \strng{namehash}{HKTKWR1}
+    \strng{fullhash}{HKTKWR1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{H}
+    \field{sortinithash}{H}
+    \field{booktitle}{Proceedings of the 32Nd International Conference on Very
+  Large Data Bases}
+    \field{pages}{1243\bibrangedash 1246}
+    \field{series}{VLDB '06}
+    \field{title}{Simple and Realistic Data Generation}
+    \verb{url}
+    \verb http://dl.acm.org/citation.cfm?id=1182635.1164254
+    \endverb
+    \list{location}{1}{%
+      {Seoul, Korea}%
+    }
+    \field{year}{2006}
+  \endentry
+
+  \entry{Jacobs:2009}{article}{}
+    \name{author}{1}{}{%
+      {{hash=JA}{%
+         family={Jacobs},
+         familyi={J\bibinitperiod},
+         given={Adam},
+         giveni={A\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {ACM}%
+    }
+    \strng{namehash}{JA1}
+    \strng{fullhash}{JA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{J}
+    \field{sortinithash}{J}
+    \verb{doi}
+    \verb 10.1145/1563821.1563874
+    \endverb
+    \field{issn}{1542-7730}
+    \field{number}{6}
+    \field{pages}{10:10\bibrangedash 10:19}
+    \field{title}{The Pathologies of Big Data}
+    \verb{url}
+    \verb http://doi.acm.org/10.1145/1563821.1563874
+    \endverb
+    \field{volume}{7}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{journaltitle}{Queue}
+    \field{month}{07}
+    \field{year}{2009}
+  \endentry
+
+  \entry{LEcuyer:1999}{article}{}
+    \name{author}{1}{}{%
+      {{hash=LP}{%
+         family={LEcuyer},
+         familyi={L\bibinitperiod},
+         given={Pierre},
+         giveni={P\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {American Mathematical Society}%
+    }
+    \keyw{lattice structure, linear congruential, random number generation,
+  spectral test}
+    \strng{namehash}{LP1}
+    \strng{fullhash}{LP1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{L}
+    \field{sortinithash}{L}
+    \verb{doi}
+    \verb 10.1090/S0025-5718-99-00996-5
+    \endverb
+    \field{issn}{0025-5718}
+    \field{number}{225}
+    \field{pages}{249\bibrangedash 260}
+    \field{title}{Tables of Linear Congruential Generators of Different Sizes
+  and Good Lattice Structure}
+    \verb{url}
+    \verb http://dx.doi.org/10.1090/S0025-5718-99-00996-5
+    \endverb
+    \field{volume}{68}
+    \list{location}{1}{%
+      {Boston, MA, USA}%
+    }
+    \field{journaltitle}{Math. Comput.}
+    \field{month}{01}
+    \field{year}{1999}
+  \endentry
+
+  \entry{oneill:pcg2014}{report}{}
+    \name{author}{1}{}{%
+      {{hash=OME}{%
+         family={O'Neill},
+         familyi={O\bibinitperiod},
+         given={Melissa\bibnamedelima E.},
+         giveni={M\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{OME1}
+    \strng{fullhash}{OME1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{O}
+    \field{sortinithash}{O}
+    \field{number}{HMC-CS-2014-0905}
+    \field{title}{PCG: A Family of Simple Fast Space-Efficient Statistically
+  Good Algorithms for Random Number Generation}
+    \list{location}{1}{%
+      {Claremont, CA}%
+    }
+    \list{institution}{1}{%
+      {Harvey Mudd College}%
+    }
+    \field{type}{techreport}
+    \field{month}{09}
+    \field{year}{2014}
+  \endentry
+
+  \entry{Poess:2000}{article}{}
+    \name{author}{2}{}{%
+      {{hash=PM}{%
+         family={Poess},
+         familyi={P\bibinitperiod},
+         given={Meikel},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=FC}{%
+         family={Floyd},
+         familyi={F\bibinitperiod},
+         given={Chris},
+         giveni={C\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {ACM}%
+    }
+    \strng{namehash}{PMFC1}
+    \strng{fullhash}{PMFC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{P}
+    \field{sortinithash}{P}
+    \verb{doi}
+    \verb 10.1145/369275.369291
+    \endverb
+    \field{issn}{0163-5808}
+    \field{number}{4}
+    \field{pages}{64\bibrangedash 71}
+    \field{title}{New TPC Benchmarks for Decision Support and Web Commerce}
+    \verb{url}
+    \verb http://doi.acm.org/10.1145/369275.369291
+    \endverb
+    \field{volume}{29}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{journaltitle}{SIGMOD Rec.}
+    \field{month}{12}
+    \field{year}{2000}
+  \endentry
+
+  \entry{Poess:2004}{inproceedings}{}
+    \name{author}{2}{}{%
+      {{hash=PM}{%
+         family={Poess},
+         familyi={P\bibinitperiod},
+         given={Meikel},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=SJMJ}{%
+         family={Stephens},
+         familyi={S\bibinitperiod},
+         suffix={Jr.},
+         suffixi={J\bibinitperiod},
+         given={John\bibnamedelima M.},
+         giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {VLDB Endowment}%
+    }
+    \strng{namehash}{PMSJJM1}
+    \strng{fullhash}{PMSJJM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{P}
+    \field{sortinithash}{P}
+    \field{booktitle}{Proceedings of the Thirtieth International Conference on
+  Very Large Data Bases - Volume 30}
+    \field{isbn}{0-12-088469-0}
+    \field{pages}{1045\bibrangedash 1053}
+    \field{series}{VLDB '04}
+    \field{title}{Generating Thousand Benchmark Queries in Seconds}
+    \verb{url}
+    \verb http://dl.acm.org/citation.cfm?id=1316689.1316779
+    \endverb
+    \list{location}{1}{%
+      {Toronto, Canada}%
+    }
+    \field{year}{2004}
+  \endentry
+
+  \entry{Rabl:2010}{inproceedings}{}
+    \name{author}{4}{}{%
+      {{hash=RT}{%
+         family={Rabl},
+         familyi={R\bibinitperiod},
+         given={Tilmann},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=FM}{%
+         family={Frank},
+         familyi={F\bibinitperiod},
+         given={Michael},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=SHM}{%
+         family={Sergieh},
+         familyi={S\bibinitperiod},
+         given={Hatem\bibnamedelima Mousselly},
+         giveni={H\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+      {{hash=KH}{%
+         family={Kosch},
+         familyi={K\bibinitperiod},
+         given={Harald},
+         giveni={H\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {Springer-Verlag}%
+    }
+    \strng{namehash}{RT+1}
+    \strng{fullhash}{RTFMSHMKH1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{R}
+    \field{sortinithash}{R}
+    \field{booktitle}{Proceedings of the Second TPC Technology Conference on
+  Performance Evaluation, Measurement and Characterization of Complex Systems}
+    \field{isbn}{978-3-642-18205-1}
+    \field{pages}{41\bibrangedash 56}
+    \field{series}{TPCTC'10}
+    \field{title}{A Data Generator for Cloud-scale Benchmarking}
+    \verb{url}
+    \verb http://dl.acm.org/citation.cfm?id=1946050.1946054
+    \endverb
+    \list{location}{1}{%
+      {Singapore}%
+    }
+    \field{year}{2011}
+    \warn{\item Can't use 'location' + 'address'}
+  \endentry
+
+  \entry{Rabl:2013}{inproceedings}{}
+    \name{author}{4}{}{%
+      {{hash=RT}{%
+         family={Rabl},
+         familyi={R\bibinitperiod},
+         given={Tilmann},
+         giveni={T\bibinitperiod},
+      }}%
+      {{hash=PM}{%
+         family={Poess},
+         familyi={P\bibinitperiod},
+         given={Meikel},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=DM}{%
+         family={Danisch},
+         familyi={D\bibinitperiod},
+         given={Manuel},
+         giveni={M\bibinitperiod},
+      }}%
+      {{hash=JHA}{%
+         family={Jacobsen},
+         familyi={J\bibinitperiod},
+         given={Hans-Arno},
+         giveni={H\bibinitperiod-A\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {ACM}%
+    }
+    \keyw{PDGF, data generation, meta generators}
+    \strng{namehash}{RT+1}
+    \strng{fullhash}{RTPMDMJHA1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{R}
+    \field{sortinithash}{R}
+    \field{booktitle}{Proceedings of the Sixth International Workshop on
+  Testing Database Systems}
+    \verb{doi}
+    \verb 10.1145/2479440.2479441
+    \endverb
+    \field{isbn}{978-1-4503-2151-8}
+    \field{pages}{5:1\bibrangedash 5:6}
+    \field{series}{DBTest '13}
+    \field{title}{Rapid Development of Data Generators Using Meta Generators in
+  PDGF}
+    \verb{url}
+    \verb http://doi.acm.org/10.1145/2479440.2479441
+    \endverb
+    \list{location}{1}{%
+      {New York, New York}%
+    }
+    \field{year}{2013}
+    \warn{\item Can't use 'location' + 'address'}
+  \endentry
+
+  \entry{Stephens:2004}{article}{}
+    \name{author}{2}{}{%
+      {{hash=SJM}{%
+         family={Stephens},
+         familyi={S\bibinitperiod},
+         given={John\bibnamedelima M.},
+         giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod},
+      }}%
+      {{hash=PM}{%
+         family={Poess},
+         familyi={P\bibinitperiod},
+         given={Meikel},
+         giveni={M\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {ACM}%
+    }
+    \keyw{TPC-DS, decision support, performance analysis}
+    \strng{namehash}{SJMPM1}
+    \strng{fullhash}{SJMPM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{S}
+    \field{sortinithash}{S}
+    \verb{doi}
+    \verb 10.1145/974043.974060
+    \endverb
+    \field{issn}{0163-5948}
+    \field{number}{1}
+    \field{pages}{104\bibrangedash 109}
+    \field{title}{MUDD: A Multi-dimensional Data Generator}
+    \verb{url}
+    \verb http://doi.acm.org/10.1145/974043.974060
+    \endverb
+    \field{volume}{29}
+    \list{location}{1}{%
+      {New York, NY, USA}%
+    }
+    \field{journaltitle}{SIGSOFT Softw. Eng. Notes}
+    \field{month}{01}
+    \field{year}{2004}
+  \endentry
+\endsortlist
+\endinput

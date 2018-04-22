@@ -1,0 +1,83 @@
+\boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {1}Introduction}{9}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {1.1}A Case for using test data generation tools}{9}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {1.2}Claims and Contributions}{11}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {1.3}Report Outline}{12}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2}Related Work}{12}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.1}Test Data Generation}{12}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.2}Test Query Generation}{15}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.3}Implications on SQLitmus}{16}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {2.3.1} Data generation implications}{18}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {2.3.2}Query generation implications}{19}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {2.3.3}Random Number Generator (RNG)}{20}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.4}Trade Offs}{22}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {3}SQLitmus Features}{23}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.1}Database Connection Management}{26}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.2}Data Generation}{27}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.2.1} Configuring field constraints}{28}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.2.2}Configuring Data Generators}{31}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.3}Query Generation}{35}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.3.1}Query Templating}{36}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.4} Query Template GUI}{40}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.5}Test Configurations}{42}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.5.1}Row Configurations}{43}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.5.2} Max Connection Pool Configurations}{44}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.6} Running a test}{45}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {3.7} Data Management}{46}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.7.1}History of test records}{46}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.7.2} Data Visualization}{47}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{\numberline {3.7.3} Data filtering}{48}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {4} Designing a robust test for SQLitmus }{50}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.1} Test Schema}{50}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.2} Test Queries}{52}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {4.3} Test Configurations}{53}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {5} Pilot Study}{54}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.1} Results}{55}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {5.2}Discussion}{58}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {6}Summary}{60}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {6.1} Limitations}{60}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {6.2} Future work}{61}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {6.3} Conclusion}{62}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {A} Query Templates}{65}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {B} Excluded MariaDB Trial 2 results }{70}

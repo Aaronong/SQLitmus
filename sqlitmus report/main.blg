@@ -1,0 +1,64 @@
+This is BibTeX, Version 0.99d (TeX Live 2017)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: main.aux
+The style file: biblatex.bst
+Reallocated glb_str_ptr (elt_size=4) to 20 items from 10.
+Reallocated global_strs (elt_size=20001) to 20 items from 10.
+Reallocated glb_str_end (elt_size=4) to 20 items from 10.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: main-blx.bib
+Database file #2: aaroncapstonebiblio.bib
+Biblatex version: 3.3
+Reallocated wiz_functions (elt_size=4) to 9000 items from 6000.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+You've used 13 entries,
+            6256 wiz_defined-function locations,
+            1310 strings with 11830 characters,
+and the built_in function-call counts, 79168 in all, are:
+= -- 5479
+> -- 1709
+< -- 642
++ -- 1926
+- -- 564
+* -- 5650
+:= -- 7316
+add.period$ -- 0
+call.type$ -- 13
+change.case$ -- 423
+chr.to.int$ -- 72
+cite$ -- 24
+duplicate$ -- 8508
+empty$ -- 7149
+format.name$ -- 861
+if$ -- 16590
+int.to.chr$ -- 0
+int.to.str$ -- 48
+missing$ -- 0
+newline$ -- 544
+num.names$ -- 850
+pop$ -- 4039
+preamble$ -- 1
+purify$ -- 491
+quote$ -- 0
+skip$ -- 2933
+stack$ -- 0
+substring$ -- 8570
+swap$ -- 2473
+text.length$ -- 373
+text.prefix$ -- 12
+top$ -- 1
+type$ -- 429
+warning$ -- 0
+while$ -- 946
+width$ -- 0
+write$ -- 532
