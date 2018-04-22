@@ -1,65 +1,81 @@
 \boolfalse {citerequest}\boolfalse {citetracker}\boolfalse {pagetracker}\boolfalse {backtracker}\relax 
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {1}{\ignorespaces Table of graph models}}{18}
+\addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {2}{\ignorespaces Performance of RAM, SSD, and HDD \cite {Jacobs:2009}}}{22}
+\addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {3}{\ignorespaces SQLitmus landing page }}{26}
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Table of graph models}}{20}{figure.2.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {4}{\ignorespaces SQLitmus automatically populating tables and fields}}{27}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Performance of RAM, SSD, and HDD \cite {Jacobs:2009}}}{24}{figure.2.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {5}{\ignorespaces Field constraint configurations }}{28}
+\addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {6}{\ignorespaces Selecting upstream constraints disable invalid downstream configurations}}{29}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces SQLitmus landing page}}{28}{figure.3.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {7}{\ignorespaces Unsupported data type configuration}}{30}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces SQLitmus automatically populating tables and fields}}{29}{figure.3.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {8}{\ignorespaces Visualization of schema diagram }}{31}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Field constraint configurations}}{30}{figure.3.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {9}{\ignorespaces Automatically generated primary and foreign keys }}{32}
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Selecting upstream constraints disable invalid downstream configurations}}{31}{figure.3.4}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {10}{\ignorespaces Configuring null rates }}{33}
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Unsupported data type configuration}}{32}{figure.3.5}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {11}{\ignorespaces Data generator configurations }}{34}
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Visualization of schema diagram}}{33}{figure.3.6}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {12}{\ignorespaces Sampling data from configured generators }}{35}
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Automatically generated primary and foreign keys}}{34}{figure.3.7}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {13}{\ignorespaces Full set of Query templating options available in SQLitmus }}{39}
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Configuring null rates}}{35}{figure.3.8}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {14}{\ignorespaces Query Template GUI }}{41}
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Data generator configurations}}{36}{figure.3.9}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {15}{\ignorespaces Row Configuration GUI }}{43}
+\contentsline {figure}{\numberline {3.10}{\ignorespaces Sampling data from configured generators}}{37}{figure.3.10}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {16}{\ignorespaces Bypassing data generation through invalid row configurations }}{43}
+\contentsline {figure}{\numberline {3.11}{\ignorespaces Full set of Query templating options available in SQLitmus}}{41}{figure.3.11}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {17}{\ignorespaces Max connection pool GUI }}{44}
+\contentsline {figure}{\numberline {3.12}{\ignorespaces Query Template GUI}}{43}{figure.3.12}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {18}{\ignorespaces Test running modal and its available parameters }}{45}
+\contentsline {figure}{\numberline {3.13}{\ignorespaces Row Configuration GUI}}{45}{figure.3.13}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {19}{\ignorespaces History of test records }}{46}
+\contentsline {figure}{\numberline {3.14}{\ignorespaces Bypassing data generation through invalid row configurations}}{45}{figure.3.14}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {20}{\ignorespaces Data visualization module }}{47}
+\contentsline {figure}{\numberline {3.15}{\ignorespaces Max connection pool GUI}}{46}{figure.3.15}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {21}{\ignorespaces Data filtering module }}{48}
+\contentsline {figure}{\numberline {3.16}{\ignorespaces Test running modal and its available parameters}}{47}{figure.3.16}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {22}{\ignorespaces Test Schema for pilot study }}{50}
+\contentsline {figure}{\numberline {3.17}{\ignorespaces History of test records}}{48}{figure.3.17}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {23}{\ignorespaces Table of modifications and rationale }}{51}
+\contentsline {figure}{\numberline {3.18}{\ignorespaces Data visualization module}}{49}{figure.3.18}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {24}{\ignorespaces Test Schema for pilot study }}{53}
+\contentsline {figure}{\numberline {3.19}{\ignorespaces Data filtering module}}{50}{figure.3.19}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {25}{\ignorespaces Test Schema for pilot study }}{54}
+\addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {26}{\ignorespaces Performance results for MySQL }}{55}
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Test Schema for pilot study}}{53}{figure.4.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {27}{\ignorespaces Performance results for PostgreSQL }}{56}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Table of modifications and rationale}}{54}{figure.4.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {28}{\ignorespaces Performance results for MariaDB }}{57}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Test Schema for pilot study}}{56}{figure.4.3}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {29}{\ignorespaces Using Max Connection Pool as X-axis }}{59}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Test Schema for pilot study}}{57}{figure.4.4}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {30}{\ignorespaces Using Max Connection Pool as X-axis }}{70}
+\addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {31}{\ignorespaces Using Max Connection Pool as X-axis }}{71}
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Performance results for MySQL}}{59}{figure.5.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {figure}{\numberline {32}{\ignorespaces Using Max Connection Pool as X-axis }}{71}
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Performance results for PostgreSQL}}{60}{figure.5.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Performance results for MariaDB}}{61}{figure.5.3}
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Using Max Connection Pool as X-axis}}{63}{figure.5.4}
+\defcounter {refsection}{0}\relax 
+\addvspace {10\p@ }
+\defcounter {refsection}{0}\relax 
+\addvspace {10\p@ }
+\defcounter {refsection}{0}\relax 
+\addvspace {10\p@ }
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {B.1}{\ignorespaces Using Total Rows as X-axis, group by Template Name}}{77}{figure.B.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {B.2}{\ignorespaces Using Total Rows as X-axis, group by Max Connection Pool}}{78}{figure.B.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {figure}{\numberline {B.3}{\ignorespaces Using Max Connection Pool as X-axis, group by Template Name}}{78}{figure.B.3}

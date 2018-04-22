@@ -1,0 +1,41 @@
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 1
+\BOOKMARK [1][-]{section.1.1}{A Case for Using Test Data Generation Tools}{chapter.1}% 2
+\BOOKMARK [1][-]{section.1.2}{Claims and Contributions}{chapter.1}% 3
+\BOOKMARK [1][-]{section.1.3}{Report Outline}{chapter.1}% 4
+\BOOKMARK [0][-]{chapter.2}{Related Work}{}% 5
+\BOOKMARK [1][-]{section.2.1}{Test Data Generation}{chapter.2}% 6
+\BOOKMARK [1][-]{section.2.2}{Test Query Generation}{chapter.2}% 7
+\BOOKMARK [1][-]{section.2.3}{Implications on SQLitmus}{chapter.2}% 8
+\BOOKMARK [2][-]{subsection.2.3.1}{Data Generation Implications}{section.2.3}% 9
+\BOOKMARK [2][-]{subsection.2.3.2}{Query Generation Implications}{section.2.3}% 10
+\BOOKMARK [2][-]{subsection.2.3.3}{Random Number Generator \(RNG\)}{section.2.3}% 11
+\BOOKMARK [1][-]{section.2.4}{Trade Offs}{chapter.2}% 12
+\BOOKMARK [0][-]{chapter.3}{SQLitmus Features}{}% 13
+\BOOKMARK [1][-]{section.3.1}{Database Connection Management}{chapter.3}% 14
+\BOOKMARK [1][-]{section.3.2}{Data Generation}{chapter.3}% 15
+\BOOKMARK [2][-]{subsection.3.2.1}{Configuring Field Constraints}{section.3.2}% 16
+\BOOKMARK [2][-]{subsection.3.2.2}{Configuring Data Generators}{section.3.2}% 17
+\BOOKMARK [1][-]{section.3.3}{Query Generation}{chapter.3}% 18
+\BOOKMARK [2][-]{subsection.3.3.1}{Query Templating}{section.3.3}% 19
+\BOOKMARK [1][-]{section.3.4}{Query Template GUI}{chapter.3}% 20
+\BOOKMARK [1][-]{section.3.5}{Test Configurations}{chapter.3}% 21
+\BOOKMARK [2][-]{subsection.3.5.1}{Row Configurations}{section.3.5}% 22
+\BOOKMARK [2][-]{subsection.3.5.2}{Max Connection Pool Configurations}{section.3.5}% 23
+\BOOKMARK [1][-]{section.3.6}{Running a Test}{chapter.3}% 24
+\BOOKMARK [1][-]{section.3.7}{Data Management}{chapter.3}% 25
+\BOOKMARK [2][-]{subsection.3.7.1}{History of Test Records}{section.3.7}% 26
+\BOOKMARK [2][-]{subsection.3.7.2}{Data Visualization}{section.3.7}% 27
+\BOOKMARK [2][-]{subsection.3.7.3}{Data Filtering}{section.3.7}% 28
+\BOOKMARK [0][-]{chapter.4}{Designing a Robust Test for SQLitmus}{}% 29
+\BOOKMARK [1][-]{section.4.1}{Test Schema}{chapter.4}% 30
+\BOOKMARK [1][-]{section.4.2}{Test Queries}{chapter.4}% 31
+\BOOKMARK [1][-]{section.4.3}{Test Configurations}{chapter.4}% 32
+\BOOKMARK [0][-]{chapter.5}{Pilot Study}{}% 33
+\BOOKMARK [1][-]{section.5.1}{Results}{chapter.5}% 34
+\BOOKMARK [1][-]{section.5.2}{Discussion}{chapter.5}% 35
+\BOOKMARK [0][-]{chapter.6}{Summary}{}% 36
+\BOOKMARK [1][-]{section.6.1}{Limitations}{chapter.6}% 37
+\BOOKMARK [1][-]{section.6.2}{Future Work}{chapter.6}% 38
+\BOOKMARK [1][-]{section.6.3}{Conclusion}{chapter.6}% 39
+\BOOKMARK [0][-]{appendix.A}{Query Templates}{}% 40
+\BOOKMARK [0][-]{appendix.B}{Excluded MariaDB Trial 2 results}{}% 41

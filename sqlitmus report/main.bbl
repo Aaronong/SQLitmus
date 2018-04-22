@@ -244,10 +244,10 @@
     \field{year}{2009}
   \endentry
 
-  \entry{LEcuyer:1999}{article}{}
+  \entry{L'Ecuyer:1999}{article}{}
     \name{author}{1}{}{%
       {{hash=LP}{%
-         family={LEcuyer},
+         family={L'Ecuyer},
          familyi={L\bibinitperiod},
          given={Pierre},
          giveni={P\bibinitperiod},
@@ -443,10 +443,9 @@
     \verb http://dl.acm.org/citation.cfm?id=1946050.1946054
     \endverb
     \list{location}{1}{%
-      {Singapore}%
+      {Berlin, Heidelberg}%
     }
     \field{year}{2011}
-    \warn{\item Can't use 'location' + 'address'}
   \endentry
 
   \entry{Rabl:2013}{inproceedings}{}
@@ -500,10 +499,9 @@
     \verb http://doi.acm.org/10.1145/2479440.2479441
     \endverb
     \list{location}{1}{%
-      {New York, New York}%
+      {New York, NY, USA}%
     }
     \field{year}{2013}
-    \warn{\item Can't use 'location' + 'address'}
   \endentry
 
   \entry{Stephens:2004}{article}{}
