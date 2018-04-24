@@ -2,7 +2,7 @@
 \usepackage{blindtext}
 \usepackage{titlesec}
 \usepackage[utf8]{inputenc}
-\usepackage[a4paper, margin=3cm]{geometry}
+\usepackage[a4paper, left=4cm, right=2cm, top=3cm, bottom=3cm]{geometry}
 % \setcounter{section}{-1}
 \usepackage{setspace}
 \usepackage{amsmath}
@@ -37,13 +37,14 @@
 
 \pagestyle{headings}
 
+\usepackage[final]{pdfpages}
+
 % ---------- DOCUMENT ------------
 \begin{document}
 	\begin{spacing}{1.9}
 		
-		\maketitle
-		
-		\clearpage
+		\includepdf[pages={1},offset=1cm 0cm]{titlePage.pdf}
+		\includepdf[pages={1},offset=1cm 0cm]{consent.pdf}
 		
 		\chapter*{Acknowledgements}
 		
@@ -456,18 +457,18 @@
 		
 		
 		\begin{minted}[bgcolor=light-gray,fontsize=\footnotesize,baselinestretch=1.2,linenos]{sql}
-		-- WorksFor targets the index of another row in the Employees table and
-		-- specifies a supervisor-subordinate relationship
-		SELECT * FROM Employees WHERE WorksFor=${Employees.RANDROW};
+-- WorksFor targets the index of another row in the Employees table and
+-- specifies a supervisor-subordinate relationship
+SELECT * FROM Employees WHERE WorksFor=${Employees.RANDROW};
 		\end{minted}
 		
 		
 		For instance, the above code snippet demonstrates how a simple query template in SQLitmus allows developers to test for their database's ability to retrieve all subordinates of a randomized Employee. Compare this to having the developers specify a static list of queries.
 		
 		\begin{minted}[bgcolor=light-gray,fontsize=\footnotesize,baselinestretch=1.2,linenos]{mysql}
-		SELECT * FROM Employees WHERE WorksFor=1;
-		SELECT * FROM Employees WHERE WorksFor=2304;
-		SELECT * FROM Employees WHERE WorksFor=3520392;
+SELECT * FROM Employees WHERE WorksFor=1;
+SELECT * FROM Employees WHERE WorksFor=2304;
+SELECT * FROM Employees WHERE WorksFor=3520392;
 		\end{minted}
 		
 		
@@ -480,23 +481,23 @@
 		Beyond generating substitution rules, SQLitmus's query templates affords developers with the ability to setup their queries (to ensure that an actual workload is being measured) and perform clean-ups (to ensure that INSERT or DELETE queries do not cause a substantial cardinality drift) through the use of special delimiters.
 		
 		\begin{minted}[bgcolor=light-gray,fontsize=\footnotesize,baselinestretch=1.2,linenos]{mysql}
-		-- Insert new employee (MySQL)
-		-- Values are (id, EmploymentDate, FirstName, LastName, SSN, WorksFor)
-		-- SSN is the primary key
-		-- Only queries specified between the begin and end delimiters will
-		-- have their response time measured.
-		DELETE FROM Employees WHERE SSN = ${Employees.SSN};
-		
-		${BEGIN.DELIMITER}
-		
-		INSERT INTO Employees VALUES 
-		(null,FROM_UNIXTIME(CEIL(${Employees.EmploymentDate}/1000)),
-		${Employees.FirstName},${Employees.LastName}, 
-		${Employees.SSN}, ${Employees.RANDROW});
-		
-		${END.DELIMITER}
-		
-		DELETE FROM Employees WHERE SSN = ${Employees.SSN};
+-- Insert new employee (MySQL)
+-- Values are (id, EmploymentDate, FirstName, LastName, SSN, WorksFor)
+-- SSN is the primary key
+-- Only queries specified between the begin and end delimiters will
+-- have their response time measured.
+DELETE FROM Employees WHERE SSN = ${Employees.SSN};
+	
+${BEGIN.DELIMITER}
+	
+INSERT INTO Employees VALUES 
+(null,FROM_UNIXTIME(CEIL(${Employees.EmploymentDate}/1000)),
+${Employees.FirstName},${Employees.LastName}, 
+${Employees.SSN}, ${Employees.RANDROW});
+	
+${END.DELIMITER}
+	
+DELETE FROM Employees WHERE SSN = ${Employees.SSN};
 	\end{minted}
 	
 	
@@ -526,16 +527,16 @@
 	
 	
 	\begin{minted}[bgcolor=light-gray,fontsize=\footnotesize,baselinestretch=1.2,linenos]{mysql}
-	-- Staffing an employee on a project (PostgreSQL)
-	-- (id, StartDate, EndDate, ProjectName, ProjectLocation, EmployeeId, ProjectId)
-	-- ProjectName, ProjectLocation, and ProjectId addresses the 
-	-- Name, Location, and id fields of the Projects table respectively.
-	-- EmployeeId addresses the id field of the Employees table.
-	INSERT INTO "WorksOns" VALUES (DEFAULT, 
-	to_timestamp(CEIL(${WorksOns.StartDate}/1000)), 
-	to_timestamp(CEIL(${WorksOns.EndDate}/1000)),
-	${Projects.Name},${Projects.Location},
-	${Employees.RANDROW},${Projects.RANDROW});
+-- Staffing an employee on a project (PostgreSQL)
+-- (id, StartDate, EndDate, ProjectName, ProjectLocation, EmployeeId, ProjectId)
+-- ProjectName, ProjectLocation, and ProjectId addresses the 
+-- Name, Location, and id fields of the Projects table respectively.
+-- EmployeeId addresses the id field of the Employees table.
+INSERT INTO "WorksOns" VALUES (DEFAULT, 
+to_timestamp(CEIL(${WorksOns.StartDate}/1000)), 
+to_timestamp(CEIL(${WorksOns.EndDate}/1000)),
+${Projects.Name},${Projects.Location},
+${Employees.RANDROW},${Projects.RANDROW});
 	\end{minted}
 	
 	\begin{itemize}
@@ -832,9 +833,9 @@
 	
 	Network instability is a confounding variable that SQLitmus has not been able to completely account for. To minimize the impact of network instability, SQLitmus uses a control query to calibrate query response time measurements. 
 	\begin{minted}[bgcolor=light-gray,fontsize=\footnotesize,baselinestretch=1.2,linenos]{mysql}
-	SELECT 1;
-	--------- Query Response Time Measurement ----
-	SELECT 1;
+SELECT 1;
+--------- Query Response Time Measurement ----
+SELECT 1;
 	\end{minted}
 	The control query is run before and after measuring any query response time, and the average time taken to run the two control queries is taken as the baseline network instability. SQLitmus then subtracts this baseline value from its respective query response time measurement to minimize the impact of network instability on the recorded results. While it is a simple mechanism, it has drastically improved the quality of performance analyses conducted by SQLitmus.
 	
@@ -874,224 +875,224 @@
 	
 	\begin{minted}[bgcolor=light-gray,fontsize=\footnotesize,baselinestretch=1.2,linenos]{mysql}
 	
-	# Insert new employee (MySQL)
-	DELETE FROM Employees WHERE SSN = ${Employees.SSN};
-	${BEGIN.DELIMITER}
-	INSERT INTO Employees VALUES 
-	(null,FROM_UNIXTIME(CEIL(${Employees.EmploymentDate}/1000)),
-	${Employees.FirstName},${Employees.LastName}, 
-	${Employees.SSN}, ${Employees.RANDROW});
-	${END.DELIMITER}
-	DELETE FROM Employees WHERE SSN = ${Employees.SSN};
-	
-	# Insert new employee (PostgreSQL)
-	DELETE FROM "Employees" WHERE "SSN" = ${Employees.SSN};
-	${BEGIN.DELIMITER}
-	INSERT INTO "Employees"  VALUES 
-	(DEFAULT, to_timestamp(CEIL(${Employees.EmploymentDate}/1000)),
-	${Employees.FirstName},${Employees.LastName}, ${Employees.SSN}, 
-	${Employees.RANDROW});
-	${END.DELIMITER}
-	DELETE FROM "Employees" WHERE "SSN" = ${Employees.SSN};
-	
-	# Insert new project and details (MySQL)
-	DELETE FROM Projects WHERE 
-	Name = ${Projects.Name} AND Location = ${Projects.Location};
-	DELETE FROM ProjectDetails WHERE 
-	ProjectName = ${Projects.Name} AND ProjectLocation = ${Projects.Location};
-	${BEGIN.DELIMITER}
-	INSERT INTO Projects VALUES 
-	(null,${Projects.Name},${Projects.Location}, ${Projects.Priority});
-	INSERT INTO ProjectDetails Values (null, 
-	FROM_UNIXTIME(CEIL(${ProjectDetails.StartDate}/1000)), 
-	FROM_UNIXTIME(CEIL(${ProjectDetails.EndDate}/1000)),
-	${ProjectDetails.Price}, ${ProjectDetails.ManHours}, 
-	${Projects.Name}, ${Projects.Location},
-	(SELECT max(id) id FROM Projects));
-	
-	
-	# Insert new project and details (PostgreSQL)
-	DELETE FROM "Projects" WHERE 
-	"Name" = ${Projects.Name} AND "Location" = ${Projects.Location};
-	DELETE FROM "ProjectDetails" WHERE 
-	"ProjectName" = ${Projects.Name} AND "ProjectLocation" = ${Projects.Location};
-	${BEGIN.DELIMITER}
-	INSERT INTO "Projects" VALUES 
-	(default,${Projects.Name},${Projects.Location}, ${Projects.Priority});
-	INSERT INTO "ProjectDetails" Values (DEFAULT, 
-	to_timestamp(CEIL(${ProjectDetails.StartDate}/1000)), 
-	to_timestamp(CEIL(${ProjectDetails.EndDate}/1000)),
-	${ProjectDetails.Price}, ${ProjectDetails.ManHours}, 
-	${Projects.Name},${Projects.Location}, 
-	(SELECT "id" FROM "Projects" ORDER BY id DESC LIMIT 1));
-	
-	#Staff an employee on a project (MySQL)
-	DELETE FROM WorksOns WHERE 
-	ProjectName = ${Projects.Name} AND ProjectLocation = ${Projects.Location};
-	${BEGIN.DELIMITER}
-	INSERT INTO WorksOns VALUES (null,
-	FROM_UNIXTIME(CEIL(${WorksOns.StartDate}/1000)),
-	FROM_UNIXTIME(CEIL(${WorksOns.EndDate}/1000)),
-	${Projects.Name}, ${Projects.Location},
-	${Employees.RANDROW},${Projects.RANDROW});
-	
-	#Staff an employee on a project (PostgreSQL)
-	INSERT INTO "WorksOns" VALUES (DEFAULT,
-	to_timestamp(CEIL(${WorksOns.StartDate}/1000)),
-	to_timestamp(CEIL(${WorksOns.EndDate}/1000)),
-	${Projects.Name}, ${Projects.Location},
-	CEIL(random()*${Employees.numRows}),
-	CEIL(random()*${Projects.numRows}));
-	
-	#View all active projects at date (MySQL)
-	SELECT Name, Location, StartDate, EndDate, Price, ManHours 
-	FROM ProjectDetails JOIN Projects 
-	ON Projects.Name=ProjectDetails.ProjectName 
-	AND Projects.Location=ProjectDetails.ProjectLocation
-	WHERE StartDate < FROM_UNIXTIME(CEIL(${ProjectDetails.StartDate}/1000)) 
-	AND EndDate > FROM_UNIXTIME(CEIL(${ProjectDetails.StartDate}/1000));
-	
-	#View all active projects at date (PostgreSQL)
-	SELECT "Name", "Location", "StartDate", "EndDate", "Price", "ManHours" 
-	FROM "ProjectDetails" , "Projects"
-	WHERE "ProjectName" = "Name" 
-	AND "ProjectLocation" = "Location"
-	AND "StartDate" < to_timestamp(CEIL(${ProjectDetails.StartDate}/1000))
-	AND "EndDate" > to_timestamp(CEIL(${ProjectDetails.StartDate}/1000));
-	
-	#All employees working on project X (MySQL)
-	SELECT Employees.id, FirstName, LastName, 
-	Employees.SSN, ProjectName, ProjectLocation 
-	FROM Employees, WorksOns, Projects 
-	WHERE WorksOns.EmployeeId = Employees.id 
-	AND WorksOns.ProjectName LIKE Projects.Name 
-	AND WorksOns.ProjectLocation LIKE Projects.Location
-	AND Projects.id = ${Projects.RANDROW};
-	
-	#All employees working on project X (PostgreSQL)
-	SELECT "Employees".id, "FirstName", "LastName", 
-	"SSN", "ProjectName", "ProjectLocation"
-	FROM "Employees" , "WorksOns", "Projects"
-	WHERE "Employees".id = "EmployeeId"
-	AND "WorksOns"."ProjectName" = "Projects"."Name"
-	AND "WorksOns"."ProjectLocation" = "Projects"."Location"
-	AND "Projects".id = ${Projects.RANDROW};
-	
-	#All projects employee x works on (MySQL)
-	SELECT Projects.id, Name, Location, EmployeeId 
-	FROM Projects JOIN WorksOns 
-	ON Name = ProjectName 
-	AND Location = ProjectLocation
-	WHERE WorksOns.EmployeeId=${Employees.RANDROW};
-	
-	#All projects employee x works on (PostgreSQL)
-	SELECT "Projects".id, "Name", "Location", "EmployeeId"
-	FROM "Projects" , "WorksOns"
-	WHERE "Name" = "ProjectName"
-	AND "Location" = "ProjectLocation"
-	AND "WorksOns"."EmployeeId" = ${Employees.RANDROW};
-	
-	# All subordinates of employee x (MySQL)
-	SELECT * FROM Employees WHERE WorksFor=${Employees.RANDROW};
-	
-	# All subordinates of employee x (PostgreSQL)
-	SELECT * FROM "Employees" WHERE "WorksFor" = ${Employees.RANDROW};
-	
-	# Change project location (MySQL)
-	${BEGIN.DELIMITER}
-	UPDATE Projects SET Location = 'NEW RANDOM LOCATION' 
-	WHERE Projects.Name=${Projects.Name} 
-	AND Projects.Location=${Projects.Location};
-	UPDATE WorksOns SET ProjectLocation = 'NEW RANDOM LOCATION' 
-	WHERE WorksOns.ProjectName=${Projects.Name} 
-	AND WorksOns.ProjectLocation=${Projects.Location};
-	UPDATE ProjectDetails SET ProjectLocation = 'NEW RANDOM LOCATION' 
-	WHERE ProjectDetails.ProjectName=${Projects.Name} 
-	AND ProjectDetails.ProjectLocation=${Projects.Location};
-	${END.DELIMITER}
-	UPDATE Projects SET Location = ${Projects.Location} 
-	WHERE Projects.Name=${Projects.Name} 
-	AND Projects.Location='NEW RANDOM LOCATION';
-	UPDATE WorksOns SET ProjectLocation = ${Projects.Location} 
-	WHERE WorksOns.ProjectName=${Projects.Name} 
-	AND WorksOns.ProjectLocation='NEW RANDOM LOCATION';
-	UPDATE ProjectDetails SET ProjectLocation = ${Projects.Location} 
-	WHERE ProjectDetails.ProjectName=${Projects.Name} 
-	AND ProjectDetails.ProjectLocation='NEW RANDOM LOCATION';
-	
-	# Change project location (PostgreSQL)
-	${BEGIN.DELIMITER}
-	UPDATE "Projects" SET "Location" = 'NEW RANDOM LOCATION'
-	WHERE "Projects"."Name"=${Projects.Name} 
-	AND "Projects"."Location"=${Projects.Location};
-	UPDATE "WorksOns" SET "ProjectLocation" = 'NEW RANDOM LOCATION'
-	WHERE "WorksOns"."ProjectName"=${Projects.Name} 
-	AND "WorksOns"."ProjectLocation"=${Projects.Location};
-	UPDATE "ProjectDetails" SET "ProjectLocation" = 'NEW RANDOM LOCATION' 
-	WHERE "ProjectDetails"."ProjectName"=${Projects.Name}
-	AND "ProjectDetails"."ProjectLocation"=${Projects.Location};
-	${END.DELIMITER}
-	UPDATE "Projects" SET "Location" = ${Projects.Location}
-	WHERE "Projects"."Name"=${Projects.Name} 
-	AND "Projects"."Location"='NEW RANDOM LOCATION';
-	UPDATE "WorksOns" SET "ProjectLocation" = ${Projects.Location}
-	WHERE "WorksOns"."ProjectName"=${Projects.Name} 
-	AND "WorksOns"."ProjectLocation"='NEW RANDOM LOCATION';
-	UPDATE "ProjectDetails" SET "ProjectLocation" = ${Projects.Location}
-	WHERE "ProjectDetails"."ProjectName"=${Projects.Name}
-	AND "ProjectDetails"."ProjectLocation"='NEW RANDOM LOCATION';
-	
-	# Delete employee (MySQL)
-	INSERT INTO Employees Values (null,
-	FROM_UNIXTIME(CEIL(${Employees.EmploymentDate}/1000)),
-	${Employees.FirstName},${Employees.LastName}, 
-	${Employees.SSN}, ${Employees.RANDROW});
-	${BEGIN.DELIMITER}
-	DELETE FROM Employees WHERE SSN = ${Employees.SSN};
-	
-	# Delete employee (PostgreSQL)
-	INSERT INTO "Employees" Values (DEFAULT,
-	to_timestamp(CEIL(${Employees.EmploymentDate}/1000)),
-	${Employees.FirstName},${Employees.LastName}, 
-	${Employees.SSN}, ${Employees.RANDROW});
-	${BEGIN.DELIMITER}
-	DELETE FROM "Employees" WHERE "SSN" = ${Employees.SSN};
-	
-	# Unstaff employee x from project y (MySQL)
-	INSERT INTO WorksOns Values (null,
-	FROM_UNIXTIME(CEIL(${WorksOns.StartDate}/1000)),
-	FROM_UNIXTIME(CEIL(${WorksOns.EndDate}/1000)),
-	${Projects.Name},${Projects.Location},
-	${Employees.RANDROW},${Projects.RANDROW});
-	${BEGIN.DELIMITER}
-	DELETE FROM WorksOns WHERE ProjectName=${Projects.Name} 
-	AND ProjectLocation=${Projects.Location} 
-	AND EmployeeId=${Employees.RANDROW};
-	${END.DELIMITER}
-	
-	# Unstaff employee x from project y (PostgreSQL)
-	INSERT INTO "WorksOns" Values (DEFAULT,
-	to_timestamp(${WorksOns.StartDate}),
-	to_timestamp(${WorksOns.EndDate}),
-	${Projects.Name}, ${Projects.Location},
-	${Employees.RANDROW}, ${Projects.RANDROW});
-	${BEGIN.DELIMITER}
-	DELETE FROM "WorksOns" WHERE "ProjectName"=${Projects.Name} 
-	AND "ProjectLocation"=${Projects.Location} 
-	AND "EmployeeId"=${Employees.RANDROW};
-	${END.DELIMITER}
-	
-	
-	# Unstaff all employees of project y (MySQL)
-	DELETE FROM WorksOns 
-	WHERE ProjectName=${Projects.Name} 
-	AND ProjectLocation=${Projects.Location};
-	
-	
-	# Unstaff all employees of project y (PostgreSQL)
-	DELETE FROM "WorksOns" 
-	WHERE "ProjectName"=${Projects.Name}  
-	AND "ProjectLocation"=${Projects.Location};
+# Insert new employee (MySQL)
+DELETE FROM Employees WHERE SSN = ${Employees.SSN};
+${BEGIN.DELIMITER}
+INSERT INTO Employees VALUES 
+(null,FROM_UNIXTIME(CEIL(${Employees.EmploymentDate}/1000)),
+${Employees.FirstName},${Employees.LastName}, 
+${Employees.SSN}, ${Employees.RANDROW});
+${END.DELIMITER}
+DELETE FROM Employees WHERE SSN = ${Employees.SSN};
+
+# Insert new employee (PostgreSQL)
+DELETE FROM "Employees" WHERE "SSN" = ${Employees.SSN};
+${BEGIN.DELIMITER}
+INSERT INTO "Employees"  VALUES 
+(DEFAULT, to_timestamp(CEIL(${Employees.EmploymentDate}/1000)),
+${Employees.FirstName},${Employees.LastName}, ${Employees.SSN}, 
+${Employees.RANDROW});
+${END.DELIMITER}
+DELETE FROM "Employees" WHERE "SSN" = ${Employees.SSN};
+
+# Insert new project and details (MySQL)
+DELETE FROM Projects WHERE 
+Name = ${Projects.Name} AND Location = ${Projects.Location};
+DELETE FROM ProjectDetails WHERE 
+ProjectName = ${Projects.Name} AND ProjectLocation = ${Projects.Location};
+${BEGIN.DELIMITER}
+INSERT INTO Projects VALUES 
+(null,${Projects.Name},${Projects.Location}, ${Projects.Priority});
+INSERT INTO ProjectDetails Values (null, 
+FROM_UNIXTIME(CEIL(${ProjectDetails.StartDate}/1000)), 
+FROM_UNIXTIME(CEIL(${ProjectDetails.EndDate}/1000)),
+${ProjectDetails.Price}, ${ProjectDetails.ManHours}, 
+${Projects.Name}, ${Projects.Location},
+(SELECT max(id) id FROM Projects));
+
+
+# Insert new project and details (PostgreSQL)
+DELETE FROM "Projects" WHERE 
+"Name" = ${Projects.Name} AND "Location" = ${Projects.Location};
+DELETE FROM "ProjectDetails" WHERE 
+"ProjectName" = ${Projects.Name} AND "ProjectLocation" = ${Projects.Location};
+${BEGIN.DELIMITER}
+INSERT INTO "Projects" VALUES 
+(default,${Projects.Name},${Projects.Location}, ${Projects.Priority});
+INSERT INTO "ProjectDetails" Values (DEFAULT, 
+to_timestamp(CEIL(${ProjectDetails.StartDate}/1000)), 
+to_timestamp(CEIL(${ProjectDetails.EndDate}/1000)),
+${ProjectDetails.Price}, ${ProjectDetails.ManHours}, 
+${Projects.Name},${Projects.Location}, 
+(SELECT "id" FROM "Projects" ORDER BY id DESC LIMIT 1));
+
+#Staff an employee on a project (MySQL)
+DELETE FROM WorksOns WHERE 
+ProjectName = ${Projects.Name} AND ProjectLocation = ${Projects.Location};
+${BEGIN.DELIMITER}
+INSERT INTO WorksOns VALUES (null,
+FROM_UNIXTIME(CEIL(${WorksOns.StartDate}/1000)),
+FROM_UNIXTIME(CEIL(${WorksOns.EndDate}/1000)),
+${Projects.Name}, ${Projects.Location},
+${Employees.RANDROW},${Projects.RANDROW});
+
+#Staff an employee on a project (PostgreSQL)
+INSERT INTO "WorksOns" VALUES (DEFAULT,
+to_timestamp(CEIL(${WorksOns.StartDate}/1000)),
+to_timestamp(CEIL(${WorksOns.EndDate}/1000)),
+${Projects.Name}, ${Projects.Location},
+CEIL(random()*${Employees.numRows}),
+CEIL(random()*${Projects.numRows}));
+
+#View all active projects at date (MySQL)
+SELECT Name, Location, StartDate, EndDate, Price, ManHours 
+FROM ProjectDetails JOIN Projects 
+ON Projects.Name=ProjectDetails.ProjectName 
+AND Projects.Location=ProjectDetails.ProjectLocation
+WHERE StartDate < FROM_UNIXTIME(CEIL(${ProjectDetails.StartDate}/1000)) 
+AND EndDate > FROM_UNIXTIME(CEIL(${ProjectDetails.StartDate}/1000));
+
+#View all active projects at date (PostgreSQL)
+SELECT "Name", "Location", "StartDate", "EndDate", "Price", "ManHours" 
+FROM "ProjectDetails" , "Projects"
+WHERE "ProjectName" = "Name" 
+AND "ProjectLocation" = "Location"
+AND "StartDate" < to_timestamp(CEIL(${ProjectDetails.StartDate}/1000))
+AND "EndDate" > to_timestamp(CEIL(${ProjectDetails.StartDate}/1000));
+
+#All employees working on project X (MySQL)
+SELECT Employees.id, FirstName, LastName, 
+Employees.SSN, ProjectName, ProjectLocation 
+FROM Employees, WorksOns, Projects 
+WHERE WorksOns.EmployeeId = Employees.id 
+AND WorksOns.ProjectName LIKE Projects.Name 
+AND WorksOns.ProjectLocation LIKE Projects.Location
+AND Projects.id = ${Projects.RANDROW};
+
+#All employees working on project X (PostgreSQL)
+SELECT "Employees".id, "FirstName", "LastName", 
+"SSN", "ProjectName", "ProjectLocation"
+FROM "Employees" , "WorksOns", "Projects"
+WHERE "Employees".id = "EmployeeId"
+AND "WorksOns"."ProjectName" = "Projects"."Name"
+AND "WorksOns"."ProjectLocation" = "Projects"."Location"
+AND "Projects".id = ${Projects.RANDROW};
+
+#All projects employee x works on (MySQL)
+SELECT Projects.id, Name, Location, EmployeeId 
+FROM Projects JOIN WorksOns 
+ON Name = ProjectName 
+AND Location = ProjectLocation
+WHERE WorksOns.EmployeeId=${Employees.RANDROW};
+
+#All projects employee x works on (PostgreSQL)
+SELECT "Projects".id, "Name", "Location", "EmployeeId"
+FROM "Projects" , "WorksOns"
+WHERE "Name" = "ProjectName"
+AND "Location" = "ProjectLocation"
+AND "WorksOns"."EmployeeId" = ${Employees.RANDROW};
+
+# All subordinates of employee x (MySQL)
+SELECT * FROM Employees WHERE WorksFor=${Employees.RANDROW};
+
+# All subordinates of employee x (PostgreSQL)
+SELECT * FROM "Employees" WHERE "WorksFor" = ${Employees.RANDROW};
+
+# Change project location (MySQL)
+${BEGIN.DELIMITER}
+UPDATE Projects SET Location = 'NEW RANDOM LOCATION' 
+WHERE Projects.Name=${Projects.Name} 
+AND Projects.Location=${Projects.Location};
+UPDATE WorksOns SET ProjectLocation = 'NEW RANDOM LOCATION' 
+WHERE WorksOns.ProjectName=${Projects.Name} 
+AND WorksOns.ProjectLocation=${Projects.Location};
+UPDATE ProjectDetails SET ProjectLocation = 'NEW RANDOM LOCATION' 
+WHERE ProjectDetails.ProjectName=${Projects.Name} 
+AND ProjectDetails.ProjectLocation=${Projects.Location};
+${END.DELIMITER}
+UPDATE Projects SET Location = ${Projects.Location} 
+WHERE Projects.Name=${Projects.Name} 
+AND Projects.Location='NEW RANDOM LOCATION';
+UPDATE WorksOns SET ProjectLocation = ${Projects.Location} 
+WHERE WorksOns.ProjectName=${Projects.Name} 
+AND WorksOns.ProjectLocation='NEW RANDOM LOCATION';
+UPDATE ProjectDetails SET ProjectLocation = ${Projects.Location} 
+WHERE ProjectDetails.ProjectName=${Projects.Name} 
+AND ProjectDetails.ProjectLocation='NEW RANDOM LOCATION';
+
+# Change project location (PostgreSQL)
+${BEGIN.DELIMITER}
+UPDATE "Projects" SET "Location" = 'NEW RANDOM LOCATION'
+WHERE "Projects"."Name"=${Projects.Name} 
+AND "Projects"."Location"=${Projects.Location};
+UPDATE "WorksOns" SET "ProjectLocation" = 'NEW RANDOM LOCATION'
+WHERE "WorksOns"."ProjectName"=${Projects.Name} 
+AND "WorksOns"."ProjectLocation"=${Projects.Location};
+UPDATE "ProjectDetails" SET "ProjectLocation" = 'NEW RANDOM LOCATION' 
+WHERE "ProjectDetails"."ProjectName"=${Projects.Name}
+AND "ProjectDetails"."ProjectLocation"=${Projects.Location};
+${END.DELIMITER}
+UPDATE "Projects" SET "Location" = ${Projects.Location}
+WHERE "Projects"."Name"=${Projects.Name} 
+AND "Projects"."Location"='NEW RANDOM LOCATION';
+UPDATE "WorksOns" SET "ProjectLocation" = ${Projects.Location}
+WHERE "WorksOns"."ProjectName"=${Projects.Name} 
+AND "WorksOns"."ProjectLocation"='NEW RANDOM LOCATION';
+UPDATE "ProjectDetails" SET "ProjectLocation" = ${Projects.Location}
+WHERE "ProjectDetails"."ProjectName"=${Projects.Name}
+AND "ProjectDetails"."ProjectLocation"='NEW RANDOM LOCATION';
+
+# Delete employee (MySQL)
+INSERT INTO Employees Values (null,
+FROM_UNIXTIME(CEIL(${Employees.EmploymentDate}/1000)),
+${Employees.FirstName},${Employees.LastName}, 
+${Employees.SSN}, ${Employees.RANDROW});
+${BEGIN.DELIMITER}
+DELETE FROM Employees WHERE SSN = ${Employees.SSN};
+
+# Delete employee (PostgreSQL)
+INSERT INTO "Employees" Values (DEFAULT,
+to_timestamp(CEIL(${Employees.EmploymentDate}/1000)),
+${Employees.FirstName},${Employees.LastName}, 
+${Employees.SSN}, ${Employees.RANDROW});
+${BEGIN.DELIMITER}
+DELETE FROM "Employees" WHERE "SSN" = ${Employees.SSN};
+
+# Unstaff employee x from project y (MySQL)
+INSERT INTO WorksOns Values (null,
+FROM_UNIXTIME(CEIL(${WorksOns.StartDate}/1000)),
+FROM_UNIXTIME(CEIL(${WorksOns.EndDate}/1000)),
+${Projects.Name},${Projects.Location},
+${Employees.RANDROW},${Projects.RANDROW});
+${BEGIN.DELIMITER}
+DELETE FROM WorksOns WHERE ProjectName=${Projects.Name} 
+AND ProjectLocation=${Projects.Location} 
+AND EmployeeId=${Employees.RANDROW};
+${END.DELIMITER}
+
+# Unstaff employee x from project y (PostgreSQL)
+INSERT INTO "WorksOns" Values (DEFAULT,
+to_timestamp(${WorksOns.StartDate}),
+to_timestamp(${WorksOns.EndDate}),
+${Projects.Name}, ${Projects.Location},
+${Employees.RANDROW}, ${Projects.RANDROW});
+${BEGIN.DELIMITER}
+DELETE FROM "WorksOns" WHERE "ProjectName"=${Projects.Name} 
+AND "ProjectLocation"=${Projects.Location} 
+AND "EmployeeId"=${Employees.RANDROW};
+${END.DELIMITER}
+
+
+# Unstaff all employees of project y (MySQL)
+DELETE FROM WorksOns 
+WHERE ProjectName=${Projects.Name} 
+AND ProjectLocation=${Projects.Location};
+
+
+# Unstaff all employees of project y (PostgreSQL)
+DELETE FROM "WorksOns" 
+WHERE "ProjectName"=${Projects.Name}  
+AND "ProjectLocation"=${Projects.Location};
 	
 	\end{minted}
 	

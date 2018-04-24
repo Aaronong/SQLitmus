@@ -1,0 +1,220 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Insert new employee (MySQL)}
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{n}{Employees} \PYG{k}{WHERE} \PYG{n}{SSN} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{SSN}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{BEGIN}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+\PYG{k}{INSERT} \PYG{k}{INTO} \PYG{n}{Employees} \PYG{k}{VALUES}
+\PYG{p}{(}\PYG{n+no}{null}\PYG{p}{,}\PYG{n+nf}{FROM\PYGZus{}UNIXTIME}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{EmploymentDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{)),}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{FirstName}\PYG{err}{\PYGZcb{}}\PYG{p}{,}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{LastName}\PYG{err}{\PYGZcb{}}\PYG{p}{,}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{SSN}\PYG{err}{\PYGZcb{}}\PYG{p}{,} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{);}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{END}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{n}{Employees} \PYG{k}{WHERE} \PYG{n}{SSN} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{SSN}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+
+\PYG{c+c1}{\PYGZsh{} Insert new employee (PostgreSQL)}
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{l+s+s2}{\PYGZdq{}Employees\PYGZdq{}} \PYG{k}{WHERE} \PYG{l+s+s2}{\PYGZdq{}SSN\PYGZdq{}} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{SSN}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{BEGIN}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+\PYG{k}{INSERT} \PYG{k}{INTO} \PYG{l+s+s2}{\PYGZdq{}Employees\PYGZdq{}}  \PYG{k}{VALUES}
+\PYG{p}{(}\PYG{k}{DEFAULT}\PYG{p}{,} \PYG{n+nf}{to\PYGZus{}timestamp}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{EmploymentDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{)),}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{FirstName}\PYG{err}{\PYGZcb{}}\PYG{p}{,}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{LastName}\PYG{err}{\PYGZcb{}}\PYG{p}{,} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{SSN}\PYG{err}{\PYGZcb{}}\PYG{p}{,}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{);}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{END}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{l+s+s2}{\PYGZdq{}Employees\PYGZdq{}} \PYG{k}{WHERE} \PYG{l+s+s2}{\PYGZdq{}SSN\PYGZdq{}} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{SSN}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+
+\PYG{c+c1}{\PYGZsh{} Insert new project and details (MySQL)}
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{n}{Projects} \PYG{k}{WHERE}
+\PYG{n}{Name} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}} \PYG{k}{AND} \PYG{n}{Location} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{n}{ProjectDetails} \PYG{k}{WHERE}
+\PYG{n}{ProjectName} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}} \PYG{k}{AND} \PYG{n}{ProjectLocation} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{BEGIN}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+\PYG{k}{INSERT} \PYG{k}{INTO} \PYG{n}{Projects} \PYG{k}{VALUES}
+\PYG{p}{(}\PYG{n+no}{null}\PYG{p}{,}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}\PYG{p}{,}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{,} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Priority}\PYG{err}{\PYGZcb{}}\PYG{p}{);}
+\PYG{k}{INSERT} \PYG{k}{INTO} \PYG{n}{ProjectDetails} \PYG{k}{Values} \PYG{p}{(}\PYG{n+no}{null}\PYG{p}{,}
+\PYG{n+nf}{FROM\PYGZus{}UNIXTIME}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{StartDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{)),}
+\PYG{n+nf}{FROM\PYGZus{}UNIXTIME}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{EndDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{)),}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{Price}\PYG{err}{\PYGZcb{}}\PYG{p}{,} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{ManHours}\PYG{err}{\PYGZcb{}}\PYG{p}{,}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}\PYG{p}{,} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{,}
+\PYG{p}{(}\PYG{k}{SELECT} \PYG{n+nf}{max}\PYG{p}{(}\PYG{n}{id}\PYG{p}{)} \PYG{n}{id} \PYG{k}{FROM} \PYG{n}{Projects}\PYG{p}{));}
+
+
+\PYG{c+c1}{\PYGZsh{} Insert new project and details (PostgreSQL)}
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{l+s+s2}{\PYGZdq{}Projects\PYGZdq{}} \PYG{k}{WHERE}
+\PYG{l+s+s2}{\PYGZdq{}Name\PYGZdq{}} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}} \PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}Location\PYGZdq{}} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{l+s+s2}{\PYGZdq{}ProjectDetails\PYGZdq{}} \PYG{k}{WHERE}
+\PYG{l+s+s2}{\PYGZdq{}ProjectName\PYGZdq{}} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}} \PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}ProjectLocation\PYGZdq{}} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{BEGIN}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+\PYG{k}{INSERT} \PYG{k}{INTO} \PYG{l+s+s2}{\PYGZdq{}Projects\PYGZdq{}} \PYG{k}{VALUES}
+\PYG{p}{(}\PYG{k}{default}\PYG{p}{,}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}\PYG{p}{,}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{,} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Priority}\PYG{err}{\PYGZcb{}}\PYG{p}{);}
+\PYG{k}{INSERT} \PYG{k}{INTO} \PYG{l+s+s2}{\PYGZdq{}ProjectDetails\PYGZdq{}} \PYG{k}{Values} \PYG{p}{(}\PYG{k}{DEFAULT}\PYG{p}{,}
+\PYG{n+nf}{to\PYGZus{}timestamp}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{StartDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{)),}
+\PYG{n+nf}{to\PYGZus{}timestamp}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{EndDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{)),}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{Price}\PYG{err}{\PYGZcb{}}\PYG{p}{,} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{ManHours}\PYG{err}{\PYGZcb{}}\PYG{p}{,}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}\PYG{p}{,}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{,}
+\PYG{p}{(}\PYG{k}{SELECT} \PYG{l+s+s2}{\PYGZdq{}id\PYGZdq{}} \PYG{k}{FROM} \PYG{l+s+s2}{\PYGZdq{}Projects\PYGZdq{}} \PYG{k}{ORDER} \PYG{k}{BY} \PYG{n}{id} \PYG{k}{DESC} \PYG{k}{LIMIT} \PYG{l+m+mi}{1}\PYG{p}{));}
+
+\PYG{c+c1}{\PYGZsh{}Staff an employee on a project (MySQL)}
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{n}{WorksOns} \PYG{k}{WHERE}
+\PYG{n}{ProjectName} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}} \PYG{k}{AND} \PYG{n}{ProjectLocation} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{BEGIN}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+\PYG{k}{INSERT} \PYG{k}{INTO} \PYG{n}{WorksOns} \PYG{k}{VALUES} \PYG{p}{(}\PYG{n+no}{null}\PYG{p}{,}
+\PYG{n+nf}{FROM\PYGZus{}UNIXTIME}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{WorksOns}\PYG{p}{.}\PYG{n}{StartDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{)),}
+\PYG{n+nf}{FROM\PYGZus{}UNIXTIME}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{WorksOns}\PYG{p}{.}\PYG{n}{EndDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{)),}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}\PYG{p}{,} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{,}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{,}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{);}
+
+\PYG{c+c1}{\PYGZsh{}Staff an employee on a project (PostgreSQL)}
+\PYG{k}{INSERT} \PYG{k}{INTO} \PYG{l+s+s2}{\PYGZdq{}WorksOns\PYGZdq{}} \PYG{k}{VALUES} \PYG{p}{(}\PYG{k}{DEFAULT}\PYG{p}{,}
+\PYG{n+nf}{to\PYGZus{}timestamp}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{WorksOns}\PYG{p}{.}\PYG{n}{StartDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{)),}
+\PYG{n+nf}{to\PYGZus{}timestamp}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{WorksOns}\PYG{p}{.}\PYG{n}{EndDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{)),}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}\PYG{p}{,} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{,}
+\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{n+nf}{random}\PYG{p}{()}\PYG{o}{*}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{numRows}\PYG{err}{\PYGZcb{}}\PYG{p}{),}
+\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{n+nf}{random}\PYG{p}{()}\PYG{o}{*}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{numRows}\PYG{err}{\PYGZcb{}}\PYG{p}{));}
+
+\PYG{c+c1}{\PYGZsh{}View all active projects at date (MySQL)}
+\PYG{k}{SELECT} \PYG{n}{Name}\PYG{p}{,} \PYG{n}{Location}\PYG{p}{,} \PYG{n}{StartDate}\PYG{p}{,} \PYG{n}{EndDate}\PYG{p}{,} \PYG{n}{Price}\PYG{p}{,} \PYG{n}{ManHours}
+\PYG{k}{FROM} \PYG{n}{ProjectDetails} \PYG{k}{JOIN} \PYG{n}{Projects}
+\PYG{k}{ON} \PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{o}{=}\PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{ProjectName}
+\PYG{k}{AND} \PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{o}{=}\PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{ProjectLocation}
+\PYG{k}{WHERE} \PYG{n}{StartDate} \PYG{o}{\PYGZlt{}} \PYG{n+nf}{FROM\PYGZus{}UNIXTIME}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{StartDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{))}
+\PYG{k}{AND} \PYG{n}{EndDate} \PYG{o}{\PYGZgt{}} \PYG{n+nf}{FROM\PYGZus{}UNIXTIME}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{StartDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{));}
+
+\PYG{c+c1}{\PYGZsh{}View all active projects at date (PostgreSQL)}
+\PYG{k}{SELECT} \PYG{l+s+s2}{\PYGZdq{}Name\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Location\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}StartDate\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}EndDate\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Price\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}ManHours\PYGZdq{}}
+\PYG{k}{FROM} \PYG{l+s+s2}{\PYGZdq{}ProjectDetails\PYGZdq{}} \PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Projects\PYGZdq{}}
+\PYG{k}{WHERE} \PYG{l+s+s2}{\PYGZdq{}ProjectName\PYGZdq{}} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}Name\PYGZdq{}}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}ProjectLocation\PYGZdq{}} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}Location\PYGZdq{}}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}StartDate\PYGZdq{}} \PYG{o}{\PYGZlt{}} \PYG{n+nf}{to\PYGZus{}timestamp}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{StartDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{))}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}EndDate\PYGZdq{}} \PYG{o}{\PYGZgt{}} \PYG{n+nf}{to\PYGZus{}timestamp}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{StartDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{));}
+
+\PYG{c+c1}{\PYGZsh{}All employees working on project X (MySQL)}
+\PYG{k}{SELECT} \PYG{n}{Employees}\PYG{p}{.}\PYG{n}{id}\PYG{p}{,} \PYG{n}{FirstName}\PYG{p}{,} \PYG{n}{LastName}\PYG{p}{,}
+\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{SSN}\PYG{p}{,} \PYG{n}{ProjectName}\PYG{p}{,} \PYG{n}{ProjectLocation}
+\PYG{k}{FROM} \PYG{n}{Employees}\PYG{p}{,} \PYG{n}{WorksOns}\PYG{p}{,} \PYG{n}{Projects}
+\PYG{k}{WHERE} \PYG{n}{WorksOns}\PYG{p}{.}\PYG{n}{EmployeeId} \PYG{o}{=} \PYG{n}{Employees}\PYG{p}{.}\PYG{n}{id}
+\PYG{k}{AND} \PYG{n}{WorksOns}\PYG{p}{.}\PYG{n}{ProjectName} \PYG{k}{LIKE} \PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}
+\PYG{k}{AND} \PYG{n}{WorksOns}\PYG{p}{.}\PYG{n}{ProjectLocation} \PYG{k}{LIKE} \PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}
+\PYG{k}{AND} \PYG{n}{Projects}\PYG{p}{.}\PYG{n}{id} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+
+\PYG{c+c1}{\PYGZsh{}All employees working on project X (PostgreSQL)}
+\PYG{k}{SELECT} \PYG{l+s+s2}{\PYGZdq{}Employees\PYGZdq{}}\PYG{p}{.}\PYG{n}{id}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}FirstName\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}LastName\PYGZdq{}}\PYG{p}{,}
+\PYG{l+s+s2}{\PYGZdq{}SSN\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}ProjectName\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}ProjectLocation\PYGZdq{}}
+\PYG{k}{FROM} \PYG{l+s+s2}{\PYGZdq{}Employees\PYGZdq{}} \PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}WorksOns\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Projects\PYGZdq{}}
+\PYG{k}{WHERE} \PYG{l+s+s2}{\PYGZdq{}Employees\PYGZdq{}}\PYG{p}{.}\PYG{n}{id} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}EmployeeId\PYGZdq{}}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}WorksOns\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}ProjectName\PYGZdq{}} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}Projects\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}Name\PYGZdq{}}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}WorksOns\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}ProjectLocation\PYGZdq{}} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}Projects\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}Location\PYGZdq{}}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}Projects\PYGZdq{}}\PYG{p}{.}\PYG{n}{id} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+
+\PYG{c+c1}{\PYGZsh{}All projects employee x works on (MySQL)}
+\PYG{k}{SELECT} \PYG{n}{Projects}\PYG{p}{.}\PYG{n}{id}\PYG{p}{,} \PYG{n}{Name}\PYG{p}{,} \PYG{n}{Location}\PYG{p}{,} \PYG{n}{EmployeeId}
+\PYG{k}{FROM} \PYG{n}{Projects} \PYG{k}{JOIN} \PYG{n}{WorksOns}
+\PYG{k}{ON} \PYG{n}{Name} \PYG{o}{=} \PYG{n}{ProjectName}
+\PYG{k}{AND} \PYG{n}{Location} \PYG{o}{=} \PYG{n}{ProjectLocation}
+\PYG{k}{WHERE} \PYG{n}{WorksOns}\PYG{p}{.}\PYG{n}{EmployeeId}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+
+\PYG{c+c1}{\PYGZsh{}All projects employee x works on (PostgreSQL)}
+\PYG{k}{SELECT} \PYG{l+s+s2}{\PYGZdq{}Projects\PYGZdq{}}\PYG{p}{.}\PYG{n}{id}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Name\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Location\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}EmployeeId\PYGZdq{}}
+\PYG{k}{FROM} \PYG{l+s+s2}{\PYGZdq{}Projects\PYGZdq{}} \PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}WorksOns\PYGZdq{}}
+\PYG{k}{WHERE} \PYG{l+s+s2}{\PYGZdq{}Name\PYGZdq{}} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}ProjectName\PYGZdq{}}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}Location\PYGZdq{}} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}ProjectLocation\PYGZdq{}}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}WorksOns\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}EmployeeId\PYGZdq{}} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+
+\PYG{c+c1}{\PYGZsh{} All subordinates of employee x (MySQL)}
+\PYG{k}{SELECT} \PYG{o}{*} \PYG{k}{FROM} \PYG{n}{Employees} \PYG{k}{WHERE} \PYG{n}{WorksFor}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+
+\PYG{c+c1}{\PYGZsh{} All subordinates of employee x (PostgreSQL)}
+\PYG{k}{SELECT} \PYG{o}{*} \PYG{k}{FROM} \PYG{l+s+s2}{\PYGZdq{}Employees\PYGZdq{}} \PYG{k}{WHERE} \PYG{l+s+s2}{\PYGZdq{}WorksFor\PYGZdq{}} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+
+\PYG{c+c1}{\PYGZsh{} Change project location (MySQL)}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{BEGIN}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+\PYG{k}{UPDATE} \PYG{n}{Projects} \PYG{k+kt}{SET} \PYG{n}{Location} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}NEW RANDOM LOCATION\PYGZsq{}}
+\PYG{k}{WHERE} \PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\PYG{k}{UPDATE} \PYG{n}{WorksOns} \PYG{k+kt}{SET} \PYG{n}{ProjectLocation} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}NEW RANDOM LOCATION\PYGZsq{}}
+\PYG{k}{WHERE} \PYG{n}{WorksOns}\PYG{p}{.}\PYG{n}{ProjectName}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{n}{WorksOns}\PYG{p}{.}\PYG{n}{ProjectLocation}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\PYG{k}{UPDATE} \PYG{n}{ProjectDetails} \PYG{k+kt}{SET} \PYG{n}{ProjectLocation} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}NEW RANDOM LOCATION\PYGZsq{}}
+\PYG{k}{WHERE} \PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{ProjectName}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{ProjectLocation}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{END}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+\PYG{k}{UPDATE} \PYG{n}{Projects} \PYG{k+kt}{SET} \PYG{n}{Location} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}
+\PYG{k}{WHERE} \PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}NEW RANDOM LOCATION\PYGZsq{}}\PYG{p}{;}
+\PYG{k}{UPDATE} \PYG{n}{WorksOns} \PYG{k+kt}{SET} \PYG{n}{ProjectLocation} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}
+\PYG{k}{WHERE} \PYG{n}{WorksOns}\PYG{p}{.}\PYG{n}{ProjectName}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{n}{WorksOns}\PYG{p}{.}\PYG{n}{ProjectLocation}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}NEW RANDOM LOCATION\PYGZsq{}}\PYG{p}{;}
+\PYG{k}{UPDATE} \PYG{n}{ProjectDetails} \PYG{k+kt}{SET} \PYG{n}{ProjectLocation} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}
+\PYG{k}{WHERE} \PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{ProjectName}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{n}{ProjectDetails}\PYG{p}{.}\PYG{n}{ProjectLocation}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}NEW RANDOM LOCATION\PYGZsq{}}\PYG{p}{;}
+
+\PYG{c+c1}{\PYGZsh{} Change project location (PostgreSQL)}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{BEGIN}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+\PYG{k}{UPDATE} \PYG{l+s+s2}{\PYGZdq{}Projects\PYGZdq{}} \PYG{k+kt}{SET} \PYG{l+s+s2}{\PYGZdq{}Location\PYGZdq{}} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}NEW RANDOM LOCATION\PYGZsq{}}
+\PYG{k}{WHERE} \PYG{l+s+s2}{\PYGZdq{}Projects\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}Name\PYGZdq{}}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}Projects\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}Location\PYGZdq{}}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\PYG{k}{UPDATE} \PYG{l+s+s2}{\PYGZdq{}WorksOns\PYGZdq{}} \PYG{k+kt}{SET} \PYG{l+s+s2}{\PYGZdq{}ProjectLocation\PYGZdq{}} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}NEW RANDOM LOCATION\PYGZsq{}}
+\PYG{k}{WHERE} \PYG{l+s+s2}{\PYGZdq{}WorksOns\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}ProjectName\PYGZdq{}}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}WorksOns\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}ProjectLocation\PYGZdq{}}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\PYG{k}{UPDATE} \PYG{l+s+s2}{\PYGZdq{}ProjectDetails\PYGZdq{}} \PYG{k+kt}{SET} \PYG{l+s+s2}{\PYGZdq{}ProjectLocation\PYGZdq{}} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}NEW RANDOM LOCATION\PYGZsq{}}
+\PYG{k}{WHERE} \PYG{l+s+s2}{\PYGZdq{}ProjectDetails\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}ProjectName\PYGZdq{}}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}ProjectDetails\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}ProjectLocation\PYGZdq{}}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{END}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+\PYG{k}{UPDATE} \PYG{l+s+s2}{\PYGZdq{}Projects\PYGZdq{}} \PYG{k+kt}{SET} \PYG{l+s+s2}{\PYGZdq{}Location\PYGZdq{}} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}
+\PYG{k}{WHERE} \PYG{l+s+s2}{\PYGZdq{}Projects\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}Name\PYGZdq{}}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}Projects\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}Location\PYGZdq{}}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}NEW RANDOM LOCATION\PYGZsq{}}\PYG{p}{;}
+\PYG{k}{UPDATE} \PYG{l+s+s2}{\PYGZdq{}WorksOns\PYGZdq{}} \PYG{k+kt}{SET} \PYG{l+s+s2}{\PYGZdq{}ProjectLocation\PYGZdq{}} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}
+\PYG{k}{WHERE} \PYG{l+s+s2}{\PYGZdq{}WorksOns\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}ProjectName\PYGZdq{}}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}WorksOns\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}ProjectLocation\PYGZdq{}}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}NEW RANDOM LOCATION\PYGZsq{}}\PYG{p}{;}
+\PYG{k}{UPDATE} \PYG{l+s+s2}{\PYGZdq{}ProjectDetails\PYGZdq{}} \PYG{k+kt}{SET} \PYG{l+s+s2}{\PYGZdq{}ProjectLocation\PYGZdq{}} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}
+\PYG{k}{WHERE} \PYG{l+s+s2}{\PYGZdq{}ProjectDetails\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}ProjectName\PYGZdq{}}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}ProjectDetails\PYGZdq{}}\PYG{p}{.}\PYG{l+s+s2}{\PYGZdq{}ProjectLocation\PYGZdq{}}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}NEW RANDOM LOCATION\PYGZsq{}}\PYG{p}{;}
+
+\PYG{c+c1}{\PYGZsh{} Delete employee (MySQL)}
+\PYG{k}{INSERT} \PYG{k}{INTO} \PYG{n}{Employees} \PYG{k}{Values} \PYG{p}{(}\PYG{n+no}{null}\PYG{p}{,}
+\PYG{n+nf}{FROM\PYGZus{}UNIXTIME}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{EmploymentDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{)),}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{FirstName}\PYG{err}{\PYGZcb{}}\PYG{p}{,}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{LastName}\PYG{err}{\PYGZcb{}}\PYG{p}{,}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{SSN}\PYG{err}{\PYGZcb{}}\PYG{p}{,} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{);}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{BEGIN}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{n}{Employees} \PYG{k}{WHERE} \PYG{n}{SSN} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{SSN}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+
+\PYG{c+c1}{\PYGZsh{} Delete employee (PostgreSQL)}
+\PYG{k}{INSERT} \PYG{k}{INTO} \PYG{l+s+s2}{\PYGZdq{}Employees\PYGZdq{}} \PYG{k}{Values} \PYG{p}{(}\PYG{k}{DEFAULT}\PYG{p}{,}
+\PYG{n+nf}{to\PYGZus{}timestamp}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{EmploymentDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{)),}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{FirstName}\PYG{err}{\PYGZcb{}}\PYG{p}{,}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{LastName}\PYG{err}{\PYGZcb{}}\PYG{p}{,}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{SSN}\PYG{err}{\PYGZcb{}}\PYG{p}{,} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{);}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{BEGIN}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{l+s+s2}{\PYGZdq{}Employees\PYGZdq{}} \PYG{k}{WHERE} \PYG{l+s+s2}{\PYGZdq{}SSN\PYGZdq{}} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{SSN}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+
+\PYG{c+c1}{\PYGZsh{} Unstaff employee x from project y (MySQL)}
+\PYG{k}{INSERT} \PYG{k}{INTO} \PYG{n}{WorksOns} \PYG{k}{Values} \PYG{p}{(}\PYG{n+no}{null}\PYG{p}{,}
+\PYG{n+nf}{FROM\PYGZus{}UNIXTIME}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{WorksOns}\PYG{p}{.}\PYG{n}{StartDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{)),}
+\PYG{n+nf}{FROM\PYGZus{}UNIXTIME}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{WorksOns}\PYG{p}{.}\PYG{n}{EndDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{)),}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}\PYG{p}{,}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{,}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{,}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{);}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{BEGIN}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{n}{WorksOns} \PYG{k}{WHERE} \PYG{n}{ProjectName}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{n}{ProjectLocation}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{n}{EmployeeId}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{END}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+
+\PYG{c+c1}{\PYGZsh{} Unstaff employee x from project y (PostgreSQL)}
+\PYG{k}{INSERT} \PYG{k}{INTO} \PYG{l+s+s2}{\PYGZdq{}WorksOns\PYGZdq{}} \PYG{k}{Values} \PYG{p}{(}\PYG{k}{DEFAULT}\PYG{p}{,}
+\PYG{n+nf}{to\PYGZus{}timestamp}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{WorksOns}\PYG{p}{.}\PYG{n}{StartDate}\PYG{err}{\PYGZcb{}}\PYG{p}{),}
+\PYG{n+nf}{to\PYGZus{}timestamp}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{WorksOns}\PYG{p}{.}\PYG{n}{EndDate}\PYG{err}{\PYGZcb{}}\PYG{p}{),}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}\PYG{p}{,} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{,}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{,} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{);}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{BEGIN}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{l+s+s2}{\PYGZdq{}WorksOns\PYGZdq{}} \PYG{k}{WHERE} \PYG{l+s+s2}{\PYGZdq{}ProjectName\PYGZdq{}}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}ProjectLocation\PYGZdq{}}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}EmployeeId\PYGZdq{}}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{END}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+
+
+\PYG{c+c1}{\PYGZsh{} Unstaff all employees of project y (MySQL)}
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{n}{WorksOns}
+\PYG{k}{WHERE} \PYG{n}{ProjectName}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{n}{ProjectLocation}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+
+
+\PYG{c+c1}{\PYGZsh{} Unstaff all employees of project y (PostgreSQL)}
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{l+s+s2}{\PYGZdq{}WorksOns\PYGZdq{}}
+\PYG{k}{WHERE} \PYG{l+s+s2}{\PYGZdq{}ProjectName\PYGZdq{}}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Name}\PYG{err}{\PYGZcb{}}
+\PYG{k}{AND} \PYG{l+s+s2}{\PYGZdq{}ProjectLocation\PYGZdq{}}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Projects}\PYG{p}{.}\PYG{n}{Location}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\end{Verbatim}

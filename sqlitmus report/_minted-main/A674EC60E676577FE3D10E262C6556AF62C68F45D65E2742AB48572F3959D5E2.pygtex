@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} WorksFor targets the index of another row in the Employees table and}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} specifies a supervisor\PYGZhy{}subordinate relationship}
+\PYG{k}{SELECT} \PYG{o}{*} \PYG{k}{FROM} \PYG{n}{Employees} \PYG{k}{WHERE} \PYG{n}{WorksFor}\PYG{o}{=}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\end{Verbatim}

@@ -1,0 +1,19 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} Insert new employee (MySQL)}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} Values are (id, EmploymentDate, FirstName, LastName, SSN, WorksFor)}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} SSN is the primary key}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} Only queries specified between the begin and end delimiters will}
+\PYG{c+c1}{\PYGZhy{}\PYGZhy{} have their response time measured.}
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{n}{Employees} \PYG{k}{WHERE} \PYG{n}{SSN} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{SSN}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{BEGIN}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+
+\PYG{k}{INSERT} \PYG{k}{INTO} \PYG{n}{Employees} \PYG{k}{VALUES}
+\PYG{p}{(}\PYG{n+no}{null}\PYG{p}{,}\PYG{n+nf}{FROM\PYGZus{}UNIXTIME}\PYG{p}{(}\PYG{n+nf}{CEIL}\PYG{p}{(}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{EmploymentDate}\PYG{err}{\PYGZcb{}}\PYG{o}{/}\PYG{l+m+mi}{1000}\PYG{p}{)),}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{FirstName}\PYG{err}{\PYGZcb{}}\PYG{p}{,}\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{LastName}\PYG{err}{\PYGZcb{}}\PYG{p}{,}
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{SSN}\PYG{err}{\PYGZcb{}}\PYG{p}{,} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{RANDROW}\PYG{err}{\PYGZcb{}}\PYG{p}{);}
+
+\PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{END}\PYG{p}{.}\PYG{n}{DELIMITER}\PYG{err}{\PYGZcb{}}
+
+\PYG{k}{DELETE} \PYG{k}{FROM} \PYG{n}{Employees} \PYG{k}{WHERE} \PYG{n}{SSN} \PYG{o}{=} \PYG{err}{\PYGZdl{}\PYGZob{}}\PYG{n}{Employees}\PYG{p}{.}\PYG{n}{SSN}\PYG{err}{\PYGZcb{}}\PYG{p}{;}
+\end{Verbatim}

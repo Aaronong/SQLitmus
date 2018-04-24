@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  23 APR 2018 00:41
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  24 APR 2018 15:46
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -966,14 +966,33 @@ Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
 Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
 )
 \docparskip=\skip69
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/pdfpages/pdfpages.sty
+Package: pdfpages 2017/01/14 v0.5h Insert pages of external PDF documents (AM)
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/eso-pic/eso-pic.sty
+Package: eso-pic 2015/07/21 v2.0g eso-pic (RN)
+)
+\AM@pagewidth=\dimen148
+\AM@pageheight=\dimen149
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/pdfpages/pppdftex.def
+File: pppdftex.def 2017/01/14 v0.5h Pdfpages driver for pdfTeX (AM)
+)
+\AM@pagebox=\box38
+\AM@global@opts=\toks29
+\AM@toc@title=\toks30
+\c@AM@survey=\count341
+\AM@templatesizebox=\box39
+)
 Package biblatex Info: Trying to load language 'english'...
 Package biblatex Info: ... file 'english.lbx' found.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/biblatex/lbx/english.lbx
 File: english.lbx 2016/12/05 v3.7 biblatex localization (PK/JW/AB)
 )
-\@quotelevel=\count341
-\@quotereset=\count342
+\@quotelevel=\count342
+\@quotereset=\count343
 runsystem(which pygmentize && touch main.aex)...executed.
 
 runsystem(rm main.aex)...executed.
@@ -982,20 +1001,20 @@ runsystem(rm main.aex)...executed.
 (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 41.
-LaTeX Font Info:    ... okay on input line 41.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 43.
+LaTeX Font Info:    ... okay on input line 43.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -1005,14 +1024,14 @@ LaTeX Font Info:    ... okay on input line 41.
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
 * modes: 
-* h-part:(L,W,R)=(85.35826pt, 426.79135pt, 85.35826pt)
+* h-part:(L,W,R)=(113.81102pt, 426.79135pt, 56.9055pt)
 * v-part:(T,H,B)=(85.35826pt, 674.33032pt, 85.35826pt)
 * \paperwidth=597.50787pt
 * \paperheight=845.04684pt
 * \textwidth=426.79135pt
 * \textheight=674.33032pt
-* \oddsidemargin=13.08827pt
-* \evensidemargin=13.08827pt
+* \oddsidemargin=41.54103pt
+* \evensidemargin=41.54103pt
 * \topmargin=-23.91173pt
 * \headheight=12.0pt
 * \headsep=25.0pt
@@ -1033,17 +1052,17 @@ LaTeX Font Info:    ... okay on input line 41.
 
 (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count343
-\scratchdimen=\dimen148
-\scratchbox=\box38
-\nofMPsegments=\count344
-\nofMParguments=\count345
-\everyMPshowfont=\toks29
-\MPscratchCnt=\count346
-\MPscratchDim=\dimen149
-\MPnumerator=\count347
-\makeMPintoPDFobject=\count348
-\everyMPtoPDFconversion=\toks30
+\scratchcounter=\count344
+\scratchdimen=\dimen150
+\scratchbox=\box40
+\nofMPsegments=\count345
+\nofMParguments=\count346
+\everyMPshowfont=\toks31
+\MPscratchCnt=\count347
+\MPscratchDim=\dimen151
+\MPnumerator=\count348
+\makeMPintoPDFobject=\count349
+\everyMPtoPDFconversion=\toks32
 ) (/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -1061,8 +1080,8 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\AtBeginShipoutBox=\box39
-Package hyperref Info: Link coloring OFF on input line 41.
+\AtBeginShipoutBox=\box41
+Package hyperref Info: Link coloring OFF on input line 43.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -1070,11 +1089,11 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count349
+\c@section@level=\count350
 )
-LaTeX Info: Redefining \ref on input line 41.
-LaTeX Info: Redefining \pageref on input line 41.
-LaTeX Info: Redefining \nameref on input line 41.
+LaTeX Info: Redefining \ref on input line 43.
+LaTeX Info: Redefining \pageref on input line 43.
+LaTeX Info: Redefining \nameref on input line 43.
 
 (./main.out) (./main.out)
 \@outlinefile=\write7
@@ -1091,156 +1110,227 @@ Package biblatex Info: Data encoding 'utf8' specified.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'main.bbl' found.
  (./main.bbl)
-Package biblatex Info: Reference section=0 on input line 41.
-Package biblatex Info: Reference segment=0 on input line 41.
+Package biblatex Info: Reference section=0 on input line 43.
+Package biblatex Info: Reference segment=0 on input line 43.
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/pdflscape.sty
+Package: pdflscape 2016/05/14 v0.11 Display of landscape pages in PDF (HO)
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/lscape.sty
+Package: lscape 2000/10/22 v3.01 Landscape Pages (DPC)
+)
+Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
+)
+<titlePage.pdf, id=168, 614.295pt x 794.97pt>
+File: titlePage.pdf Graphic file (type pdf)
+ <use titlePage.pdf>
+Package pdftex.def Info: titlePage.pdf used on input line 46.
+(pdftex.def)             Requested size: 614.29349pt x 794.96806pt.
+File: titlePage.pdf Graphic file (type pdf)
+
+<use titlePage.pdf>
+Package pdftex.def Info: titlePage.pdf used on input line 46.
+(pdftex.def)             Requested size: 614.29349pt x 794.96806pt.
+ <titlePage.pdf, id=171, page=1, 614.295pt x 794.97pt>
+File: titlePage.pdf Graphic file (type pdf)
+
+<use titlePage.pdf, page 1>
+Package pdftex.def Info: titlePage.pdf, page1 used on input line 46.
+(pdftex.def)             Requested size: 614.29349pt x 794.96806pt.
+File: titlePage.pdf Graphic file (type pdf)
+ <use titlePage.pdf, page 1>
+Package pdftex.def Info: titlePage.pdf, page1 used on input line 46.
+(pdftex.def)             Requested size: 597.78697pt x 773.60669pt.
+File: titlePage.pdf Graphic file (type pdf)
+
+<use titlePage.pdf, page 1>
+Package pdftex.def Info: titlePage.pdf, page1 used on input line 46.
+(pdftex.def)             Requested size: 597.78697pt x 773.60669pt.
+File: titlePage.pdf Graphic file (type pdf)
+ <use titlePage.pdf, page 1>
+Package pdftex.def Info: titlePage.pdf, page1 used on input line 46.
+(pdftex.def)             Requested size: 597.78697pt x 773.60669pt.
+File: titlePage.pdf Graphic file (type pdf)
+
+<use titlePage.pdf, page 1>
+Package pdftex.def Info: titlePage.pdf, page1 used on input line 46.
+(pdftex.def)             Requested size: 597.78697pt x 773.60669pt.
  [1
 
-{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 59.
+ <./titlePage.pdf>]
+<consent.pdf, id=206, 597.6729pt x 845.19763pt>
+File: consent.pdf Graphic file (type pdf)
+ <use consent.pdf>
+Package pdftex.def Info: consent.pdf used on input line 47.
+(pdftex.def)             Requested size: 597.67143pt x 845.19557pt.
+File: consent.pdf Graphic file (type pdf)
+
+<use consent.pdf>
+Package pdftex.def Info: consent.pdf used on input line 47.
+(pdftex.def)             Requested size: 597.67143pt x 845.19557pt.
+ <consent.pdf, id=209, page=1, 597.6729pt x 845.19763pt>
+File: consent.pdf Graphic file (type pdf)
+
+<use consent.pdf, page 1>
+Package pdftex.def Info: consent.pdf, page1 used on input line 47.
+(pdftex.def)             Requested size: 597.67143pt x 845.19557pt.
+File: consent.pdf Graphic file (type pdf)
+ <use consent.pdf, page 1>
+Package pdftex.def Info: consent.pdf, page1 used on input line 47.
+(pdftex.def)             Requested size: 597.69879pt x 845.23425pt.
+File: consent.pdf Graphic file (type pdf)
+ <use consent.pdf, page 1>
+Package pdftex.def Info: consent.pdf, page1 used on input line 47.
+(pdftex.def)             Requested size: 597.69879pt x 845.23425pt.
+File: consent.pdf Graphic file (type pdf)
+
+<use consent.pdf, page 1>
+Package pdftex.def Info: consent.pdf, page1 used on input line 47.
+(pdftex.def)             Requested size: 597.69879pt x 845.23425pt.
+File: consent.pdf Graphic file (type pdf)
+ <use consent.pdf, page 1>
+Package pdftex.def Info: consent.pdf, page1 used on input line 47.
+(pdftex.def)             Requested size: 597.69879pt x 845.23425pt.
+ [2 <./consent.pdf, page is rotated 90 degrees>]
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 60.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 59.
-pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has 
-been already used, duplicate ignored
-<to be read again> 
-                   \relax 
-l.70 		\clearpage
-                  [1
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 60.
+ [3
 
-
-]
-Overfull \hbox (4.48613pt too wide) in paragraph at lines 77--78
+{/usr/local/texlive/2017/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (4.48613pt too wide) in paragraph at lines 78--79
 []\OT1/cmr/m/n/12 The pi-lot study was con-ducted to test SQL-it-mus against th
 ree databases: MySQL,
  []
 
-[2
+[4
 
 
-] [3] (./main.toc [4
+] [5] (./main.toc [6
 
 
-] [5])
+] [7])
 \tf@toc=\write8
 \openout8 = `main.toc'.
 
- [6] (./main.lof [7
+ [8] (./main.lof [9
 
 
-] [8])
+] [10])
 \tf@lof=\write9
 \openout9 = `main.lof'.
 
- [9]
+ [11]
 Chapter 1.
 
-Overfull \hbox (11.54437pt too wide) in paragraph at lines 101--102
+Overfull \hbox (11.54437pt too wide) in paragraph at lines 102--103
 []\OT1/cmr/m/n/12 Test data gen-er-a-tion tools: al-lows de-vel-op-ers to pop-u
 -late a de-vel-op-ment database
  []
 
-[10
+[12
 
 
-] [11] [12] [13]
+] [13] [14] [15]
 Chapter 2.
-[14
+[16
 
-] [15] [16] [17] [18] [19] <2-3-1.png, id=431, 1768.6075pt x 676.5275pt>
+] [17] [18] [19] [20] [21] <2-3-1.png, id=475, 1768.6075pt x 676.5275pt>
 File: 2-3-1.png Graphic file (type png)
 
 <use 2-3-1.png>
-Package pdftex.def Info: 2-3-1.png used on input line 223.
+Package pdftex.def Info: 2-3-1.png used on input line 224.
 (pdftex.def)             Requested size: 426.79135pt x 163.24736pt.
- [20 <./2-3-1.png>]
-Overfull \hbox (4.95836pt too wide) in paragraph at lines 237--238
+ [22 <./2-3-1.png>]
+Overfull \hbox (4.95836pt too wide) in paragraph at lines 238--239
 \OT1/cmr/m/n/12 On the query gen-er-a-tion front, SQL-it-mus em-ploys a sim-i-l
 ar method-ol-ogy as QGEN[[][]9[]].
  []
 
-[21] [22] <2-3-4.png, id=459, 904.1278pt x 493.845pt>
+[23] [24] <2-3-4.png, id=502, 904.1278pt x 493.845pt>
 File: 2-3-4.png Graphic file (type png)
  <use 2-3-4.png>
-Package pdftex.def Info: 2-3-4.png used on input line 262.
+Package pdftex.def Info: 2-3-4.png used on input line 263.
 (pdftex.def)             Requested size: 426.79135pt x 233.11693pt.
- [23]
-[24 <./2-3-4.png>] [25]
+ [25]
+[26 <./2-3-4.png>] [27]
 Chapter 3.
-[26
+[28
 
-] [27] <3-1.png, id=485, 2890.8pt x 833.1125pt>
+] [29] <3-1.png, id=528, 2890.8pt x 833.1125pt>
 File: 3-1.png Graphic file (type png)
  <use 3-1.png>
-Package pdftex.def Info: 3-1.png used on input line 316.
+Package pdftex.def Info: 3-1.png used on input line 317.
 (pdftex.def)             Requested size: 426.79135pt x 122.99107pt.
- [28 <./3-1.png>] <3-2.png, id=491, 2890.8pt x 1806.75pt>
+ [30 <./3-1.png>] <3-2.png, id=534, 2890.8pt x 1806.75pt>
 File: 3-2.png Graphic file (type png)
  <use 3-2.png>
-Package pdftex.def Info: 3-2.png used on input line 330.
+Package pdftex.def Info: 3-2.png used on input line 331.
 (pdftex.def)             Requested size: 426.79135pt x 266.72765pt.
 
-Overfull \hbox (0.84044pt too wide) in paragraph at lines 337--338
+Overfull \hbox (0.84044pt too wide) in paragraph at lines 338--339
 []\OT1/cmr/m/n/12 Figure 4 dis-plays how the SQL-it-mus GUI looks like upon con
 -nect-ing to a database
  []
 
-[29 <./3-2.png>] <3-2-1.png, id=497, 2890.8pt x 1806.75pt>
+[31 <./3-2.png>] <3-2-1.png, id=541, 2890.8pt x 1806.75pt>
 File: 3-2-1.png Graphic file (type png)
  <use 3-2-1.png>
-Package pdftex.def Info: 3-2-1.png used on input line 344.
+Package pdftex.def Info: 3-2-1.png used on input line 345.
 (pdftex.def)             Requested size: 426.79135pt x 266.72765pt.
 
-[30 <./3-2-1.png>] <3-2-1b.png, id=518, 2890.8pt x 1806.75pt>
+[32 <./3-2-1.png>] <3-2-1b.png, id=561, 2890.8pt x 1806.75pt>
 File: 3-2-1b.png Graphic file (type png)
  <use 3-2-1b.png>
-Package pdftex.def Info: 3-2-1b.png used on input line 360.
+Package pdftex.def Info: 3-2-1b.png used on input line 361.
 (pdftex.def)             Requested size: 426.79135pt x 266.72765pt.
 
-[31 <./3-2-1b.png>] <3-2-1c.png, id=524, 2890.8pt x 1806.75pt>
+[33 <./3-2-1b.png>] <3-2-1c.png, id=567, 2890.8pt x 1806.75pt>
 File: 3-2-1c.png Graphic file (type png)
 
 <use 3-2-1c.png>
-Package pdftex.def Info: 3-2-1c.png used on input line 374.
+Package pdftex.def Info: 3-2-1c.png used on input line 375.
 (pdftex.def)             Requested size: 426.79135pt x 266.72765pt.
- <3-2-1d.png, id=525, 2890.8pt x 1806.75pt>
+ <3-2-1d.png, id=568, 2890.8pt x 1806.75pt>
 File: 3-2-1d.png Graphic file (type png)
  <use 3-2-1d.png>
-Package pdftex.def Info: 3-2-1d.png used on input line 386.
+Package pdftex.def Info: 3-2-1d.png used on input line 387.
 (pdftex.def)             Requested size: 426.79135pt x 266.72765pt.
 
-[32 <./3-2-1c.png>] <3-2-2.png, id=531, 2890.8pt x 1806.75pt>
+[34 <./3-2-1c.png>] <3-2-2.png, id=574, 2890.8pt x 1806.75pt>
 File: 3-2-2.png Graphic file (type png)
  <use 3-2-2.png>
-Package pdftex.def Info: 3-2-2.png used on input line 400.
+Package pdftex.def Info: 3-2-2.png used on input line 401.
 (pdftex.def)             Requested size: 426.79135pt x 266.72765pt.
 
-[33 <./3-2-1d.png>] <3-2-2b.png, id=537, 2890.8pt x 1806.75pt>
+[35 <./3-2-1d.png>] <3-2-2b.png, id=580, 2890.8pt x 1806.75pt>
 File: 3-2-2b.png Graphic file (type png)
 
 <use 3-2-2b.png>
-Package pdftex.def Info: 3-2-2b.png used on input line 410.
+Package pdftex.def Info: 3-2-2b.png used on input line 411.
 (pdftex.def)             Requested size: 426.79135pt x 266.72765pt.
- [34 <./3-2-2.png>] <3-2-2c.png, id=543, 2890.8pt x 1806.75pt>
+ [36 <./3-2-2.png>] <3-2-2c.png, id=586, 2890.8pt x 1806.75pt>
 File: 3-2-2c.png Graphic file (type png)
 
 <use 3-2-2c.png>
-Package pdftex.def Info: 3-2-2c.png used on input line 420.
+Package pdftex.def Info: 3-2-2c.png used on input line 421.
 (pdftex.def)             Requested size: 426.79135pt x 266.72765pt.
- [35 <./3-2-2b.png>]
-<3-2-2d.png, id=552, 2890.8pt x 1806.75pt>
+ [37 <./3-2-2b.png>]
+<3-2-2d.png, id=596, 2890.8pt x 1806.75pt>
 File: 3-2-2d.png Graphic file (type png)
  <use 3-2-2d.png>
-Package pdftex.def Info: 3-2-2d.png used on input line 430.
+Package pdftex.def Info: 3-2-2d.png used on input line 431.
 (pdftex.def)             Requested size: 426.79135pt x 266.72765pt.
- [36 <./3-2-2c.png>] [37 <./3-2-2d.png>] [38]
+ [38 <./3-2-2c.png>] [39 <./3-2-2d.png>] [40]
 \openout5 = `main.pyg'.
 
  (./_minted-main/default-pyg-prefix.pygstyle)
 (./_minted-main/default.pygstyle)
-(./_minted-main/82DE894566BC5A55FE313A52BB51C37162C68F45D65E2742AB48572F3959D5E
+(./_minted-main/A674EC60E676577FE3D10E262C6556AF62C68F45D65E2742AB48572F3959D5E
 2.pygtex
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
 (Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 4.
@@ -1248,21 +1338,21 @@ LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
 \openout5 = `main.pyg'.
 
 
-(./_minted-main/E8A3EEF3FF0762F7A4376F0740F97F159C34F1CD4B59D0BCA2816C553899236
+(./_minted-main/E6AA6C007D67725803C37A10ECAF8C769C34F1CD4B59D0BCA2816C553899236
 E.pygtex)
 \openout6 = `main.pyg'.
 
 
 (./_minted-main/C0F6A99D25B12322EB305B03F1E0CAF9B8F8650A7870186E9844BDD4466224F
-F.pygtex) [39]
+F.pygtex) [41]
 \openout5 = `main.pyg'.
 
 
-(./_minted-main/0EF7D3863230E15627F2B3F8836B546E9C34F1CD4B59D0BCA2816C553899236
-E.pygtex) [40] <3-3-1.png, id=583, 1770.615pt x 614.295pt>
+(./_minted-main/0AD5DD98D9C69C897FB0C98F12214E2B9C34F1CD4B59D0BCA2816C553899236
+E.pygtex) [42] <3-3-1.png, id=627, 1770.615pt x 614.295pt>
 File: 3-3-1.png Graphic file (type png)
  <use 3-3-1.png>
-Package pdftex.def Info: 3-3-1.png used on input line 512.
+Package pdftex.def Info: 3-3-1.png used on input line 513.
 (pdftex.def)             Requested size: 426.79135pt x 148.0712pt.
 \openout6 = `main.pyg'.
 
@@ -1283,11 +1373,11 @@ F.pygtex)
 
 
 (./_minted-main/330C4BA5C329045E5375BEA65D79CD0FB8F8650A7870186E9844BDD4466224F
-F.pygtex) [41 <./3-3-1.png>]
+F.pygtex) [43 <./3-3-1.png>]
 \openout5 = `main.pyg'.
 
 
-(./_minted-main/26FAFDEA87F51DDF4C0882570FCA25EF9C34F1CD4B59D0BCA2816C553899236
+(./_minted-main/3C459B007EBF73DBA557A1E18E9498479C34F1CD4B59D0BCA2816C553899236
 E.pygtex)
 \openout6 = `main.pyg'.
 
@@ -1299,7 +1389,7 @@ F.pygtex)
 
 (./_minted-main/6104E31105D9E4B36EE475761229B4C3B8F8650A7870186E9844BDD4466224F
 F.pygtex)
-Overfull \hbox (23.81235pt too wide) in paragraph at lines 542--543
+Overfull \hbox (23.81235pt too wide) in paragraph at lines 543--544
 []\OT1/cmr/m/n/12 StartDate and End-Date has di-rectly ac-ces-si-ble gen-er-a-t
 ors []
  []
@@ -1314,7 +1404,7 @@ F.pygtex)
 
 (./_minted-main/B5496DF668EB49A7AF92D89838F884DEB8F8650A7870186E9844BDD4466224F
 F.pygtex)
-Overfull \hbox (29.06607pt too wide) in paragraph at lines 543--544
+Overfull \hbox (29.06607pt too wide) in paragraph at lines 544--545
 \OT1/cmr/m/n/12 and Projects.Location so we sup-ply [] and []
  []
 
@@ -1328,213 +1418,213 @@ F.pygtex)
 
 (./_minted-main/AA3D5796164A6FA0E2028C6A1453445EB8F8650A7870186E9844BDD4466224F
 F.pygtex)
-Overfull \hbox (1.34451pt too wide) in paragraph at lines 544--545
+Overfull \hbox (1.34451pt too wide) in paragraph at lines 545--546
 []\OT1/cmr/m/n/12 EmployeeId and Pro-jec-tId ref-er-ences the in-dexes of the E
 m-ploy-ees and Projects
  []
 
-[42] <3-3-2.png, id=597, 2890.8pt x 1806.75pt>
+[44] <3-3-2.png, id=640, 2890.8pt x 1806.75pt>
 File: 3-3-2.png Graphic file (type png)
  <use 3-3-2.png>
-Package pdftex.def Info: 3-3-2.png used on input line 560.
+Package pdftex.def Info: 3-3-2.png used on input line 561.
 (pdftex.def)             Requested size: 426.79135pt x 266.72765pt.
- [43 <./3-3-2.png>] <3-4-1.png, id=603, 2890.8pt x 794.97pt>
+ [45 <./3-3-2.png>] <3-4-1.png, id=646, 2890.8pt x 794.97pt>
 File: 3-4-1.png Graphic file (type png)
  <use 3-4-1.png>
-Package pdftex.def Info: 3-4-1.png used on input line 585.
+Package pdftex.def Info: 3-4-1.png used on input line 586.
 (pdftex.def)             Requested size: 426.79135pt x 117.36017pt.
- [44]
-<3-4-1b.png, id=608, 2890.8pt x 1194.4625pt>
+ [46]
+<3-4-1b.png, id=651, 2890.8pt x 1194.4625pt>
 File: 3-4-1b.png Graphic file (type png)
  <use 3-4-1b.png>
-Package pdftex.def Info: 3-4-1b.png used on input line 596.
+Package pdftex.def Info: 3-4-1b.png used on input line 597.
 (pdftex.def)             Requested size: 426.79135pt x 176.33661pt.
- [45 <./3-4-1.png> <./3-4-1b.png>] <3-4-2.png, id=615, 2890.8pt x 792.9625pt>
+ [47 <./3-4-1.png> <./3-4-1b.png>] <3-4-2.png, id=658, 2890.8pt x 792.9625pt>
 File: 3-4-2.png Graphic file (type png)
  <use 3-4-2.png>
-Package pdftex.def Info: 3-4-2.png used on input line 611.
+Package pdftex.def Info: 3-4-2.png used on input line 612.
 (pdftex.def)             Requested size: 426.79135pt x 117.0638pt.
 
-[46 <./3-4-2.png>] <3-5.png, id=621, 2890.8pt x 1806.75pt>
+[48 <./3-4-2.png>] <3-5.png, id=664, 2890.8pt x 1806.75pt>
 File: 3-5.png Graphic file (type png)
  <use 3-5.png>
-Package pdftex.def Info: 3-5.png used on input line 622.
+Package pdftex.def Info: 3-5.png used on input line 623.
 (pdftex.def)             Requested size: 426.79135pt x 266.72765pt.
 
-[47 <./3-5.png>] <3-6-1.png, id=627, 2890.8pt x 869.2475pt>
+[49 <./3-5.png>] <3-6-1.png, id=671, 2890.8pt x 869.2475pt>
 File: 3-6-1.png Graphic file (type png)
  <use 3-6-1.png>
-Package pdftex.def Info: 3-6-1.png used on input line 639.
+Package pdftex.def Info: 3-6-1.png used on input line 640.
 (pdftex.def)             Requested size: 426.79135pt x 128.32564pt.
 
-[48 <./3-6-1.png>] <3-6-2.png, id=634, 2890.8pt x 1806.75pt>
+[50 <./3-6-1.png>] <3-6-2.png, id=677, 2890.8pt x 1806.75pt>
 File: 3-6-2.png Graphic file (type png)
  <use 3-6-2.png>
-Package pdftex.def Info: 3-6-2.png used on input line 650.
+Package pdftex.def Info: 3-6-2.png used on input line 651.
 (pdftex.def)             Requested size: 426.79135pt x 266.72765pt.
 
-Overfull \hbox (17.81097pt too wide) in paragraph at lines 655--656
+Overfull \hbox (17.81097pt too wide) in paragraph at lines 656--657
 \OT1/cmr/m/n/12 The data vi-su-al-iza-tion com-po-nent al-lows de-vel-op-ers to
  iden-tify trends of their database's
  []
 
-[49 <./3-6-2.png>]
-Underfull \hbox (badness 10000) in paragraph at lines 661--661
+[51 <./3-6-2.png>]
+Underfull \hbox (badness 10000) in paragraph at lines 662--662
 [][][]\OT1/cmr/m/n/10 https://stackoverflow.com/questions/10014271/generate-ran
 dom-color-distinguishable-to-
  []
 
-<3-6-3.png, id=641, 2890.8pt x 1806.75pt>
+<3-6-3.png, id=684, 2890.8pt x 1806.75pt>
 File: 3-6-3.png Graphic file (type png)
  <use 3-6-3.png>
-Package pdftex.def Info: 3-6-3.png used on input line 667.
+Package pdftex.def Info: 3-6-3.png used on input line 668.
 (pdftex.def)             Requested size: 426.79135pt x 266.72765pt.
- [50 <./3-6-3.png>]
-[51]
+ [52 <./3-6-3.png>]
+[53]
 Chapter 4.
-<4-1.png, id=654, 1283.79625pt x 708.6475pt>
+<4-1.png, id=697, 1283.79625pt x 708.6475pt>
 File: 4-1.png Graphic file (type png)
  <use 4-1.png>
-Package pdftex.def Info: 4-1.png used on input line 690.
+Package pdftex.def Info: 4-1.png used on input line 691.
 (pdftex.def)             Requested size: 426.79135pt x 235.58449pt.
- [52
+ [54
 
-] [53 <./4-1.png>] <4-1b.png, id=665, 1772.6225pt x 829.0975pt>
+] [55 <./4-1.png>] <4-1b.png, id=709, 1772.6225pt x 829.0975pt>
 File: 4-1b.png Graphic file (type png)
  <use 4-1b.png>
-Package pdftex.def Info: 4-1b.png used on input line 714.
+Package pdftex.def Info: 4-1b.png used on input line 715.
 (pdftex.def)             Requested size: 426.79135pt x 199.62001pt.
- [54 <./4-1b.png>] [55] <4-3.png, id=676, 2890.8pt x 794.97pt>
+ [56 <./4-1b.png>] [57] <4-3.png, id=719, 2890.8pt x 794.97pt>
 File: 4-3.png Graphic file (type png)
  <use 4-3.png>
-Package pdftex.def Info: 4-3.png used on input line 751.
+Package pdftex.def Info: 4-3.png used on input line 752.
 (pdftex.def)             Requested size: 426.79135pt x 117.36017pt.
 
-<4-3b.png, id=677, 2890.8pt x 917.4275pt>
+<4-3b.png, id=720, 2890.8pt x 917.4275pt>
 File: 4-3b.png Graphic file (type png)
  <use 4-3b.png>
-Package pdftex.def Info: 4-3b.png used on input line 760.
+Package pdftex.def Info: 4-3b.png used on input line 761.
 (pdftex.def)             Requested size: 426.79135pt x 135.43837pt.
- [56 <./4-3.png>]
-[57 <./4-3b.png>]
+ [58 <./4-3.png>]
+[59 <./4-3b.png>]
 Chapter 5.
-[58
+[60
 
-] <MySQL.png, id=694, 1776.6375pt x 1471.4975pt>
+] <MySQL.png, id=738, 1776.6375pt x 1471.4975pt>
 File: MySQL.png Graphic file (type png)
  <use MySQL.png>
-Package pdftex.def Info: MySQL.png used on input line 778.
+Package pdftex.def Info: MySQL.png used on input line 779.
 (pdftex.def)             Requested size: 426.79135pt x 353.48096pt.
 
-<PgSQL.png, id=695, 1782.66pt x 1471.4975pt>
+<PgSQL.png, id=739, 1782.66pt x 1471.4975pt>
 File: PgSQL.png Graphic file (type png)
  <use PgSQL.png>
-Package pdftex.def Info: PgSQL.png used on input line 785.
+Package pdftex.def Info: PgSQL.png used on input line 786.
 (pdftex.def)             Requested size: 426.79135pt x 352.29094pt.
- [59
+ [61
 
- <./MySQL.png>] <MARIA.png, id=701, 1778.645pt x 1481.535pt>
+ <./MySQL.png>] <MARIA.png, id=746, 1778.645pt x 1481.535pt>
 File: MARIA.png Graphic file (type png)
  <use MARIA.png>
-Package pdftex.def Info: MARIA.png used on input line 792.
+Package pdftex.def Info: MARIA.png used on input line 793.
 (pdftex.def)             Requested size: 426.79135pt x 355.48524pt.
- [60 <./PgSQL.png>] [61 <./MARIA.png>] [62
+ [62 <./PgSQL.png>] [63 <./MARIA.png>] [64
 
-] <MCP.png, id=722, 1798.72pt x 977.6525pt>
+] <MCP.png, id=765, 1798.72pt x 977.6525pt>
 File: MCP.png Graphic file (type png)
 
 <use MCP.png>
-Package pdftex.def Info: MCP.png used on input line 817.
+Package pdftex.def Info: MCP.png used on input line 818.
 (pdftex.def)             Requested size: 426.79135pt x 231.97112pt.
- [63 <./MCP.png>]
+ [65 <./MCP.png>]
 Chapter 6.
 \openout5 = `main.pyg'.
 
 
-(./_minted-main/5E899E69BAB68ED934E355144EDBD1CC9C34F1CD4B59D0BCA2816C553899236
-E.pygtex) [64
+(./_minted-main/0748DED7D7D5F5C6A1497EDBDFF26E599C34F1CD4B59D0BCA2816C553899236
+E.pygtex) [66
 
 
-] [65] [66] [67]
-Overfull \hbox (4.34659pt too wide) in paragraph at lines 870--870
+] [67] [68] [69]
+Overfull \hbox (4.34659pt too wide) in paragraph at lines 871--871
 \OT1/cmr/m/it/12 Large Data Bases\OT1/cmr/m/n/12 . VLDB '06. Seoul, Ko-rea: VLD
 B En-dow-ment, 2006, pp. 1243{
  []
 
-[68
+[70
 
-] [69] [70]
+] [71] [72]
 Appendix A.
 \openout5 = `main.pyg'.
 
 
-(./_minted-main/0076414D5BF184C81784226B0AAFCCB39C34F1CD4B59D0BCA2816C553899236
+(./_minted-main/1DCE3AA26B2A1D63388997A5AFA3021B9C34F1CD4B59D0BCA2816C553899236
 E.pygtex)
-Overfull \vbox (4.13216pt too high) detected at line 1096
+Overfull \vbox (4.13216pt too high) detected at line 1097
  []
 
-[71
+[73
 
 ]
-Underfull \vbox (badness 10000) detected at line 1096
+Underfull \vbox (badness 10000) detected at line 1097
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1096
- []
-
-[72]
-Underfull \vbox (badness 10000) detected at line 1096
- []
-
-
-Underfull \vbox (badness 10000) detected at line 1096
- []
-
-[73]
-Underfull \vbox (badness 10000) detected at line 1096
- []
-
-
-Underfull \vbox (badness 10000) detected at line 1096
+Underfull \vbox (badness 10000) detected at line 1097
  []
 
 [74]
-Underfull \vbox (badness 10000) detected at line 1096
+Underfull \vbox (badness 10000) detected at line 1097
  []
 
 
-Underfull \vbox (badness 10000) detected at line 1096
+Underfull \vbox (badness 10000) detected at line 1097
  []
 
-[75] [76]
+[75]
+Underfull \vbox (badness 10000) detected at line 1097
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1097
+ []
+
+[76]
+Underfull \vbox (badness 10000) detected at line 1097
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1097
+ []
+
+[77] [78]
 Appendix B.
-<maria2-temp.png, id=841, 1688.3075pt x 873.2625pt>
+<maria2-temp.png, id=884, 1688.3075pt x 873.2625pt>
 File: maria2-temp.png Graphic file (type png)
  <use maria2-temp.png>
-Package pdftex.def Info: maria2-temp.png used on input line 1101.
+Package pdftex.def Info: maria2-temp.png used on input line 1102.
 (pdftex.def)             Requested size: 426.79135pt x 220.75354pt.
 
-<maria2-conn.png, id=842, 1461.46pt x 877.2775pt>
+<maria2-conn.png, id=885, 1461.46pt x 877.2775pt>
 File: maria2-conn.png Graphic file (type png)
  <use maria2-conn.png>
-Package pdftex.def Info: maria2-conn.png used on input line 1107.
+Package pdftex.def Info: maria2-conn.png used on input line 1108.
 (pdftex.def)             Requested size: 426.79135pt x 256.18431pt.
 
-<maria2-mcp.png, id=843, 1698.345pt x 863.225pt>
+<maria2-mcp.png, id=886, 1698.345pt x 863.225pt>
 File: maria2-mcp.png Graphic file (type png)
  <use maria2-mcp.png>
-Package pdftex.def Info: maria2-mcp.png used on input line 1113.
+Package pdftex.def Info: maria2-mcp.png used on input line 1114.
 (pdftex.def)             Requested size: 426.79135pt x 216.92531pt.
- [77
+ [79
 
  <./maria2-temp.png>]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1120.
- [78 <./maria2-conn.png> <./maria2-mcp.png>]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1120.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1121.
+ [80 <./maria2-conn.png> <./maria2-mcp.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1121.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1120.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1120.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1121.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1121.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 8F725A8BE1D602F05E00E755D13A8105;2692.
@@ -1543,16 +1633,16 @@ runsystem(rm main.pyg)...executed.
 Package logreq Info: Writing requests to 'main.run.xml'.
 \openout1 = `main.run.xml'.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1120.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1121.
  ) 
 Here is how much of TeX's memory you used:
- 16915 strings out of 492995
- 287658 string characters out of 6132704
- 709262 words of memory out of 5000000
- 19953 multiletter control sequences out of 15000+600000
- 12578 words of font info for 46 fonts, out of 8000000 for 9000
+ 17544 strings out of 492995
+ 297970 string characters out of 6132704
+ 719937 words of memory out of 5000000
+ 20558 multiletter control sequences out of 15000+600000
+ 11133 words of font info for 41 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 45i,12n,45p,1250b,1616s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 45i,18n,45p,1250b,1604s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb
 ></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb
 ></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb
@@ -1568,10 +1658,10 @@ ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texli
 ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texliv
 e/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive
 /2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb>
-Output written on main.pdf (79 pages, 6744525 bytes).
+Output written on main.pdf (80 pages, 7000945 bytes).
 PDF statistics:
- 957 PDF objects out of 1000 (max. 8388607)
- 789 compressed objects within 8 object streams
- 217 named destinations out of 1000 (max. 500000)
- 489 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1001 PDF objects out of 1200 (max. 8388607)
+ 815 compressed objects within 9 object streams
+ 219 named destinations out of 1000 (max. 500000)
+ 529 words of extra memory for PDF output out of 10000 (max. 10000000)
 
