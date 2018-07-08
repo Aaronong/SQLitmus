@@ -1,14 +1,14 @@
 # SQLitmus: A Simple and Practical Tool for SQL Database Performance Testing
 
-[TOC]
+
 
 ## Author's note
 
-I worked on SQLitmus as part of my senior thesis at Yale-NUS College. This markdown hosts an older version of the SQLitmus project. For the full report written in latex, see the PDF file [here](https://github.com/Aaronong/SQLitmus/blob/master/sqlitmus%20report/main.pdf).
+I worked on SQLitmus as part of my senior thesis at Yale-NUS College. This README hosts an older version of the SQLitmus project, and consists only of the abstract and feature introduction.
 
-If you want to know how this software looks like and what it is about, look at section 3.
+ For the updated full report written in latex, see the PDF file [here](https://github.com/Aaronong/SQLitmus/blob/master/sqlitmus%20report/main.pdf).
 
-To install the application:
+## Installation
 
 ```{bash}
 git clone https://github.com/Aaronong/SQLitmus
@@ -24,204 +24,17 @@ This paper presents SQLitmus, a simple and practical tool for SQL database per- 
 
 SQLitmus is compatible with Windows, MacOSX, and Linux machines and sup- ports MySQL, PostgreSQL, and MariaDB databases. 
 
-The pilot study was conducted to test SQLitmus against three databases: MySQL, PostgreSQL, and MariaDB. All of these databases are systems provisioned by Ama- zon Web Service’s Relational Database Service (AWS RDS). 
+The pilot study was conducted to test SQLitmus against three databases: MySQL, PostgreSQL, and MariaDB. All of these databases are systems provisioned by Amazon Web Service’s Relational Database Service (AWS RDS). 
 
 The results demonstrates that SQLitmus is capable of generating repeatable and reliable performance analyses of SQL databases. The software recorded clear trends of SQL databases slowing down as their size (amount of data stored) and workload (number of concurrent connections) increased. 
 
 Results also revealed performance discrepancies across databases running on identical hardware, data-set, and queries. This shows that SQLitmus can provide developers with intelligence to decide between replaceable databases, queries, and data storage options (e.g., time-stamp vs. date object). 
 
-## 1. Introduction
 
-With the ever-growing volume of internet traffic, and the lasting popularity of SQL databases[foot][A class of databases that is only allowed to store structured data, and provides a structured mechanism by which developers retrieve data], SQL database performance testing tools are increasingly neccessary.
-
-SQL database performance analysis tools usually falls under one of the three categories:
-
-- Database benchmarking tools: uses stock schemas [foot][specifies the types of structured data a SQL databases allowed to store], data, and queries [foot][The mechanism by which SQL databases receives read or write requests] to test for a particular development database's[foot][a database used for testing purposes] performance.
-
-- Test data generation tools: allows developers to populate a development database with test data[FOOT][FOOTNOTE: meaningful data with statistical properties that approximate a production environment] that complies with the database's schema. The test data is used to simulate the large load of data that production databases[foot][a database that serves its intended end-users.] face.
-- Live performance monitoring tools: connects to a database in production and monitors all of the transactions carried out by the database.
-
-
-
-### 1.1 A Case for using test data generation tools
-
-While Test data generation tools are the least used in industry today, this sub-section makes a case for developers and database administrators (henceforth represented by the term: developers) alike to include test data generation tools into their SQL database testing workflow.
-
-Database benchmarks while robust, fast, and easy to use, are tested using stock schemas  and data. Such benchmarks provide developers with a good estimate of their database system's general performance. However, developers are not allowed to configure benchmarking software to use their custom schema, test data, or queries.
-
-Live performance monitoring tools, on the other hand, does not simulate a database's performance, rather it pulls performance data from the actual database in production and displays it on a dashboard for database administrators to monitor their database system's actual performance. While they generally provide the most accurate measure of a database system's performance by monitoring actual workloads, they have several shortcomings.
-
-Live performance monitoring tools are only able to spot performance issues after they have occured in a production environment when fixing performance issues are expensive. When fixing performance issues in production, developers are required to backup their data consistently to ensure that the newly deployed fixes do not cause them to lose important data. As such developers are only able to make conservative fixes after the database is deployed into production.
-
-Test data generation tools are a less reliable, less rigourous, and more cumbersome form of testing. As such, they are often excluded from SQL database testing workflows. They do, however, allow developers to test for their database system's approximate performance in production by generating a large enough set of test data to simulate a production database's workload. They also allow developers to spot obvious performance issues in advance of deploying the database system into production. This affords developers the flexibility of making drastic changes to their database's overall design during the development phase where the costs of deploying fixes are low. 
-
-That being said, there are significant drawbacks to using test data generation tools. They are cumbersome to configure, and require a seperate tool to run, measure, and visualize their database's performance. It is usually the case that developers require multiple rounds of test data generation, and performance measurements to be conducted before they are able to gain a sense of their development database's performance. Also, it is generally an understood fact that generated data, no matter how well configured, are only an approximation of actual data. Thus, while performance analyses conduct by test data generators are much more reliable that database benchmarks, they still do not compare to actual performance monitoring.
-
-The above discussion points towards the need for a test data generation tool that is simple to use and reliable, such that developers will be convinced of the value of including such tools into their SQL database testing workflow.
-
-
-
-### 1.2 Claims & Contributions
-
-This paper introduces SQLitmus, a simple and practical tool for SQL database performance testing. It is the first open-source software platform that integrates test data generation and population, test query generation and execution, and database performance visualization within a single tool. (Section 3)
-
-The paper also introduces a new method of query templating that advances upon the query templating technique used in QGEN (Sub-sections 2.2 and 3.3)
-
-### 1.3 Report Outline
-
-This paper first discusses related work in (Section 2), then articulates the features offered by SQLitmus in (Section 3).
-
-With those features articulated, the paper then performs a walkthrough of how SQLitmus can be used to test the performance of SQL databases in (Section 4), discusses some useful performance analysis results yielded from SQLitmus in (Section 5), and finally summarizes the paper in (Section 6).
-
-## 2. Related Work
-
-SQLitmus is in essence both a test data generation, and test query generation tool. This section will discuss related works in academia and industry pertaining to test data and query generation.
-
-### 2.1 Test Data Generation
-
-Since the development of DBGEN [FOOTNOTE - the first data generator developed by the Transaction Processing Performance Council (TPC)] in 1992, frameworks and techniques for generating data have been explored substantially across academia and industry.
-
-Significant research have been conducted on improving the speed of data generation. [Grey et al, 1994] presented a technique that allows for fast, parallel generation of data in linear time. The limitation with Grey's model is that the number of processors participating in the parallel data generation process is fixed from the start. [Rabl et at, 2010] solved this limitation by proposing a technique that allows for the participation of an arbitrary number of processors while not incurring an increased communication overhead.
-
-Techniques for improving the expressiveness of data generators have also been expored. [Bruno & Chaudhari, 2005] presented a flexible and easy to use framework for data generation. Their research introduced a graph-based evaluation model which is capable of modelling data distributions with rich intra-row and inter-table correlations. [Houkjaer et al, 2006] also presented a similar graph-based model but diverges from Bruno & Chaudhari's model by achieving intra-column dependencies at the cost of enforcing sequential data generation. 
-
-Notable academic works implemented in industry include DBGEN for TPC-H benchmarking [Poess & Floyd, 2000] and MUDD for TPC-DS benchmarking [Stephens & Poess, 2004]. Both of which are data generators used for benchmarking purposes and cannot be configured to support custom schemas. 
-
-While academia have advanced many techniques for generating test data more quickly and expressively, few commercially available data generators developed to this date have implemented these advanced techniques.
-
-Where there are many factors that may have contribute to such an outcome, the author believes that it is simply due to a lack of economic incentive. Test data generation tools are not a part of most SQL database performance analysis workflows, and the economic pressure on companies developing such software can be seen from the price of test data generation tools as opposed to other database monitoring tools. [Red Gate products, which are marketed, average price, comparing solarwind]
-
-An additional factor may also be the fact that most test data generation tools generate data using a client-side computer, and the large datasets they are tasked to generate warrants that the datasets are stored on-disk as opposed to in-memory. As such, test data generation tools in practice hardly benefit from generating data in parallel, and developers are disincentivized to use test data generation tools due to the long time it takes to run a single test.
-
-Notable commercially-available test data generation tools that support custom schemas and referential integrity includes DTM, Red Gate, and GEDIS Studio. All of the above-mentioned software feature a rich set of configurations and data generation logic that allows developers to generate relatively expressive datasets. They all also feature seeded random data generation, which affords developers the ability to generate identical sets of data across multiple databases. This allows for a fair benchmarking test to be conducted across databases.
-
-Red Gate provides developers with the additional functionality of importing data from existing sources. This allows the test data generation tool to generate its test data from the most reliable source of data - the actual data retrieved from the production database.
-
-DTM, on the other hand, offers developers with the widest range of test data generation functions and expression processors. Developers are able to define complex dependencies across rows and down columns using DTM - the most expressive test data generation tool available in the market. 
-
-GEDIS Studio while relatively more modest in its offerings, is a free web-based data generator.
-
-DTM (Standard edition) and Red Gate retail for \$149 and \$369 respectively. 
-
-None of the above-mentioned generators offer parallel data generation or the ability to define data dependencies across relations or tables. They also require a substantial amount of effort to configure, and require developers to spend a fair amount of time to familiarize themselves with it. 
-
-### 2.2 Test Query Generation
-
-Test Query Generation in comparison is a much less researched field. [Poess & Ross] presented QGEN, a query generation technique that couples the use of a query template and a query pre-processor. QGEN's preprocessor parses a query template for values marked for subtitution and substitues them using one of the the supported substitution rules:
-
-- Random substitution: returns a normally or uniformly distributed integer within a supplied range.
-- Distribution substitution: returns a random element picked from a list of values generated by the MUDD data generator. 
-- Text substitution: returns a random element picked from a list of custom values and weights.
-
-When QGEN is used to generate queries against a dataset generated from MUDD, the queries yield more accurate benchmarking results - This is due to the fact that the substituted values belong to the same domain as the values generated in the database. 
-
-Regardless of the high likelihood of generating queries that target data that actually resides on the database, QGEN still faces two critical flaws:
-
-- It has no way of ensuring that the generated queries are targeting available data.
-- It has no way of ensuring that the impacts of write queries such as INSERT and DELETE do not modify the cardinality of the dataset.
-
-That being said, QGEN presents a noticable improvement upon the query generators used in notable datawarehouse benchmarks such as TPC-D, TPC-H, and TPC-R which uses simple substitution mechanisms that are not aware of the data present in the dataset.
-
-### 2.3 Implications on SQLitmus
-
-SQLitmus began as a project to develop a test data generator which allows developers to specify complex intra-row[FOOTNOTE: data dependencies across a single row], intra-column[FOOTNOTE: data dependencies down a single column], and inter-table[FOOTNOTE: data dependencies across a foreign-key relation] data dependencies. It was originally a project to develop a test data generator with more expressive capability than any of the commercially available options discussed in (Section 2.1). 
-
-However, the author of SQLitmus was compelled by the following reasons to direct the vision of SQLitmus elsewhere:
-
-1. There is already a large pool of expressive test data generation tools to choose from.
-2. Test data, no matter how expressive, still relies on the developer to research and approximate production data in their test database. The incremental benefit of devloping a more expressive test data generation tool provides marginal improvements to the reliability of its derived performance analysis.
-3. A more expressive test data generator will be even more cumbersome to use.
-4. There is currently no test data generation tool available that developers of small to medium sized projects feel compelled to use. 
-5. Developers of small to medium sized projects are priced out from expensive database monitoring tools. Hence, a case could be made that they will benefit more from test data generation tools.
-
-Owing to the above-mentioned reasons, SQLitmus pivoted into a project to make database performance testing accessible to developers of small to medium sized projects.
-
-#### 2.3.1 Data generation implications
-
-Regardless of SQLitmus's new direction, SQLitmus is still expected to be a respectable test data generation tool that implements advanced techniques researched by notable academics. 
-
-To support referential integrity, SQLitmus determines the priority of data generation through a graph model. SQLitmus's graph model is adapted from the graph models proposed by [Bruno & Chaudhari, 2005] and [Houkjaer et al, 2006]. Table 5a details where the three models converge and diverge.
-
-
-
-<u>Table 5a</u>
-
-|               | [Houkjaer et al, 2006]                                       | [Bruno & Chaudhari, 2005]                                    | SQLitmus                                                     |
-| ------------- | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| **Priority**  | Determines data generation priority between tables           | Determines data generation priority between tables and columns | Determines data generation priority between tables and columns. |
-| **Nodes**     | Nodes carry table data                                       | Nodes carry table data                                       | Nodes carry table data and field data. Nodes carry information on foreign keys. |
-| **Edges**     | Three types of directed edges                                | One type of directed edge                                    | Three types of directed edge                                 |
-| **Edge data** | Edges carry information on foreign keys and cardinality distributions | Edges carry no information                                   | Edges carry no information. A seperate data model supplies cardinality distributions. |
-
-
-
-**Priority:** Like Bruno & Chaudhari's model, SQLitmus's graph model is capable of detemining the order of data generation between tables and columns. While SQLitmus's graph model is capable of supporting intra-row data dependencies, the feature has been de-prioritized to be implemented at a later date - since offering intra-row dependencies neccessarily clutters the GUI and forces developers to make additional configurations. The graph model is currently used to specify the order between tables, and to delay the generation of self-referential foreign keys. Self-referential foreign keys must neccessarily be generated after the column of the same table that it references.
-
-**Nodes:** Nodes in SQLitmus stores referential constraints on a field level which are then parsed to generate referential constraints on a table level. Storing referential constraints on a field level allows SQLitmus to generate self-referential foreign keys and composite foreign keys with more ease.
-
-**Edges:** Like Houkjaer's model, SQLitmus's graph model supports Normal, Forward, and Backward edges. Simple and composite primary and foreign keys are supported. Only simple self-referential foreign keys are supported.
-
-#### 2.3.2 Query Generation implications
-
-On the query generation front, SQLitmus employs a similar methodology as QGEN. It also uses a combination of query templates and query pre-processors to generate random queries of high quality. In fact, SQLitmus's query generator arguably generates random queries of higher quality as compared to the query templating function employed by QGEN. It requires no additional configurations as it simply uses the exact same set of data generators already configured for use by the test data generator. SQLitmus's templating options are also much more robust and flexible as compared to those available in QGEN. It provides functionalities that addresses the two critical flaws of QGEN's query generation technique discussed in (Subsection 2.2). It is able to guarantee that every SELECT, INSERT, UPDATE, and DELETE query affects at least one row of available data when used correctly. It is also able to reverse the impact of INSERT and DELETE statements and ensures that the cardinality of the dataset does not drift off too much as test queries are being executed. Its only critical flaw is that it is currently unable to reverse the impact of bulk delete statements.
-
-Techniques to ensure zero drift in the cardinality of the test dataset while not implemented, have been devised, and will be presented in (Subsection 6.2). 
-
-#### 2.3.3 Random Number Generation (RNG)
-
-To generated deteministically random sets of data across multiple test sessions and databases, SQLitmus relies on the `PCG-XSH-RR` RNG introduced by [O'Neill, 2014]. The above-mentioned RNG belongs to the permuted congruential generator (PCG) family of random number generators. The RNG was selected for the following properties:
-
-- Seeded - Allows for identical RNG sequences to be generated across different runs.
-- Fast - Generates the next state at a very low constant cost
-- Logarithmic random access - Able to jump ahead to the nth number in the RNG sequence in log(n) time.
-- High periodicity - A period of 2^n where n is the number of bits used to store the state.
-- High uniformity - At any point of the random number generation process, generated numbers occur at highly uniform frequencies across the range.
-
-SQLitmus employs a 64-bit implementation of the RNG which is has a period of 2^64, much higher than the current data size generation limit that SQLitmus supports. The fast logarithmic random access times when used in conjunction with the PDGF seeding strategy proposed by [Rabl et al, 2010] will enable SQLitmus to generate data with intra-row, inter-column, and inter-table dependencies without performing expensive disk reads. This feature while impressive, is currently not part of SQLitmus's key focus, and thus has been deprioritized.
-
-SQLitmus also utilizes a good multiplier constant proposed by [L'ecuyer, 1999] to ensure a high uniformity in randomly generated numbers.
-
-#### 2.3.4 Trade Offs
-
-![https://queue.acm.org/detail.cfm?id=1563874](./sqlitmus%20report/2-3-4.png)
-
-For each test, SQLitmus is only able to generate data up to the the amount of RAM available on the client side computer. This is because SQLitmus stores the entire dataset in memory. This trade-off is made for the following reasons:
-
-- While SQLitmus generates and is capable of storing data sequentially, the database currently used to manage the data generation process, NeDB, only allows random access updates. 
-- Data generation will be approximately 1,000,000 times faster on RAM vs HDD
-- Data generation will be approximately 200,000 times faster on RAM vs SSD
-- There is no need to persist the data generated by SQLitmus (It is already on a database)
-- Developers of small and medium sized applications rarely store more than 10gb of data
-- Large binary objects such as flat files and pictures are usually stored in the server.
-
-To reiterate, the key goal of SQLitmus is to assist developers of small to medium sized applications in performing quick litmus scans of their database's performance. Trading-off speed and convenience in return for generating large datasets that such databases are unlikely to support is thus undesirable.
-
-Nonetheless, SQLitmus is intending to rework its data generation process to off-load most of the in-memory data storage to disk (Since transfering a random access load in-memory to a sequential load on-disk actually provides a performance benefit). If this effort is successful, SQLitmus will be able to generate data at an almost constant speed while requiring that only the dataset currently being generated resides in memory. This future work will be discussed in (Section 6.2).
 
 ## 3. SQLitmus Features
 
-Every good software begins by serving the needs of its target users well. This section begins by enunciating the user stories that developers of small to medium sized applications want from SQL database performance analysis tools. 
 
-As a user, I want...
-
-- A performance test that is reliable, so that I am sure that the performance testing is accurate.
-- A performance test that is repeatable, so that I am able to test for the impacts of the new configurations I made.
-- A performance test that is repeatable, so that I am able to select the most suitable database system to use.
-- A way to save my configurations, so that I do not have to waste time reconfiguring my tests.
-- An easy and convenient way of testing my SQL databases, so that I can focus my efforts on developing my software.
-- A good way of visualizing my performance testing data, so that I do not have to waste time exporting them into another software.
-- A way to test my database's performance under multiple configurations, so that I can identify performance bottlenecks and trends more effectively. 
-- A way to test my database under different data loads, so that I have a sense of how well my database scales with an increasing data load.
-- A way to test my database under different numbers of concurrent connections, so that I have a sense of how well my database scales with an increasing number of concurrent users.
-- A way to test my database with multiple types of queries, so that I have a more complete understanding of my database's performance.
-- A way to specify the types of data I wish to generate, so that I can ensure that they are compliant with my database schema.
-- A way to specify the types of queries I wish to test, so that the test results are more representative of my software's actual performance.
-- A software that guides me through the configuration process, so that I do not have to spend time figuring it out.
-- A way to test my database quickly, so that I do not have to wait too long to see the results of my test.
-
-With the user stories enunciated, the remainder of this section demonstrates how SQLitmus's feature set provides a solution for all of the above-mentioned user stories.
-
-Note that the feature set in this section is often explained through the use of the test scenario presented in (Section 4). While this section is designed to be self-sufficient, readers may opt to refer to the test design in (Section 4) to gain a clearer understanding of the specific scenario used. For readers who are unfamiliar with how SQL databases operate, the author recommends reading (Section 4) first.
 
 ### 3.1 Database Connection Management
 
@@ -471,142 +284,6 @@ It allows developers to filter the graphed dataset using a combination of filter
 The word filtering mechanism allows developers to search the string datasets using intuitive search values. It does not require developers to use complex regex expressions but provides an almost identical level of expressive capability for this intended purpose. It was developed using the help of the `match-sorter` library.
 
 The number filtering mechanism allows developers to use a combination of intuitive search rules to find their data. The operators supported are: `>=`, `<=`, `>`, `<`, `=`, `&&`, `||`.
-
-## 4. Designing a robust test for SQLitmus
-
-To demonstrate the capabilities of SQLitmus, the following test was devised.
-
-### 4.1 Test Schema
-
-![4.1](./sqlitmus%20report/4-1.png)
-
-The selected test schema was adapted from a similar study conducted by [Houkjaer et al].
-
-The schema proposed by [Houkjaer et al] tests SQLitmus for the following capabilities:
-
-- Generating simple primary keys (Employees.id)
-- Generating composite primary keys (Projects.Name & Projects.Location)
-- Generating self-referential foreign keys (Employees.WorksFor -> Employees.id)
-- Generating simple many-to-one foreign keys (WorksOns.EmployeeId -> Employees.id)
-- Generating composite one-to-one foreign keys (ProjectDetails -> Projects)
-- Generating composite many-to-one foreign keys (WorksOns -> Projects)
-- Generating many-to-many relationships (Employees & Projects through WorksOns)
-
-The following modifications were made to the schema proposed by [Houkjaer] for the following reasons:
-
-| Modification                                                 | Rationale                                                    |
-| ------------------------------------------------------------ | ------------------------------------------------------------ |
-| Employees.SSN is specified as the primary key of the Employees table. | Tests for SQLitmus's ability to generate primary keys of integer type that respects a configured data generator. |
-| ProjectDetail.Price is configured as a numeric type with a precision of 10 and scale of 2. | Tests for SQLitmus's ability to generate numerical data of a specific precision and scale. |
-| ProjectDetail.EndDate and WorksOn.EndDate are configured to be nullable field. | Tests for SQLitmus's ability to generate null fields of a specified null rate. |
-| ProjectDetail.ProjectId and WorksOn.ProjectId are added to their respective tables. | The javascript library used to generate the test schema, Sequelize, is unable to generate composite foreign keys that do not contain integer fields. This workaround was employed to satisfy that constraint. |
-
-
-
-### 4.2 Test Queries
-
-Based on the test schema, a list of query templates were tested for their performance. The list was selected based on transactional workloads that the test schema was likely to face in a production environment.
-
-The following list of workloads were tested for:
-
-- Hire a new Employee (Insert new Employee record)
-- Starting a new Project (Insert new Project record and associated ProjectDetails record)
-- Staff an employee on a project (Insert WorksOn record)
-- View all active projects at a specified date
-- View all employees working on a specific project
-- View all projects a specific employee is working on
-- View all direct subordinates of a specific employee
-- Changing a specified Project record's location (Update a Project record and all associated ProjectDetail and WorksOn records)
-- Firing an Employee (Delete Employee record)
-- Unstaff an Employee from a project (Delete WorksOn record)
-- Ending a project (Delete multiple WorksOn records)
-
-The respective query templates for PostgreSQL and MySQL databases can be found in appendix 1. Despite the differences in the SQL dialects used by both databases, attempts have been made to test both dialects with nearly identical queries.
-
-### 4.3 Test Configurations
-
-The screenshots below specify the row and connection configurations for the test.
-
-![4.1](./sqlitmus%20report/4-3.png)
-
-The rows selected for the test does not reflect the size of typical company records. Rather, they were selected for to test a typical test data generation workload that the target users of SQLitmus are likely to generate. The above specifications generates a total of 518,600 rows and 3,527,200 fields of data.
-
-![4.3b](./sqlitmus%20report/4-3b.png)
-
-Similar to the row configurations, the max connection pool configurations were also selected to represent a typical connection pool workload that an average SQLitmus user is likely to test.
-
-## 5. Pilot Study
-
-The pilot study ran SQLitmus against three databases: MySQL, PostgreSQL, and MariaDB. All of which were db.t2.micro [foot][Each db.t2.micro instance comes with one virtual cpu, 1GB of RAM, and 20GB of storage.] instances provisioned by Amazon Web Service's Relational Database Service (AWS RDS) . 
-
-Each of the three databases were tested over three trials to test for the reliability of performance analyses conducted by SQLitmus.
-
-
-
-### 5.1 Results
-
-![2](./sqlitmus%20report/MySQL.png)
-
-![2](./sqlitmus%20report/pgsql.png)
-
-
-
-![2](./sqlitmus%20report/Maria.png)
-
-### 5.2 Discussion
-
-
-
-## 6. Summary
-
-In this paper we presented SQLitmus, a SQL database performance analysis tool. While it is less sophisticated than other advanced data generators (e.g. [21, 7, 13, 14]), it is far easier to configure, and features a full-blown GUI for managing all aspects of performance analysis - from data generation, and query generation, to environment configuration, and data management. SQLitmus also offers a query templating engine that is more expressive and easier to configure than QGEN - one of the most advanced query generators available. 
-
-The pilot study of SQLitmus also demonstrated that the tool is capable of generating repeatable and reliable performance analyses of SQL databases. The software recorded clear trends of SQL databases slowing down as their size (amount of data stored) and workload (number of concurrent connections) increased.
-
-It also revealed performance discrepancies across databases installed on the same identical hardware.
-
-### 6.1 limitations
-
-SQLitmus used many open-sourced libraries to speed up its development. While this is usually not a large concern, SQLitmus is a performance-critical application. As it currently stands, SQLitmus is hardly well-tuned and optimized. 
-
-While SQLitmus is able to minimize the impact of network instability by providing median values, a long enough duration of network instability invalidates any form of  Network instability is a confounding variable that SQLitmus has been unable to account for. Developers using SQLitmus 
-
-box plots
-
-network, db used
-
-In this paper we presented a framework for parallel data generation for benchmarking
-purposes. It uses XML files for the data definition and the configuration
-file. Like other advanced data generators (e.g. [21, 7, 13, 14]) it features
-dependencies between relations and advanced distributions. However, it uses a
-new computational model, which is based on the fact that pseudo random numbers
-can be recomputed deterministically. Using parallel pseudo random number
-generators, dependencies in data can be efficiently solved by recomputing referenced
-data values. Our experiments show, that this model allows our generic,
-Java implemented data generator to compete with C implemented, specialized
-data generators.
-For future work we are intending to further expand our set of generators and
-distributions. Furthermore, we will implement a GUI to allow a more convenient
-configuration. We also want to include other features, as for example schema
-and distribution retrieval from existing databases. To further increase the performance,
-we will include new schedulers that reduce wait times for slower nodes,
-as well as caching strategies to reduce re-computation of repeatedly used values.
-To complete our benchmarking suite, we will use the data generator to implement
-a query generator. For this we will introduce time series generators.
-This will enable the generation of varying query streams as we presented in [19].
-Furthermore, it will enable realistic time related data generation.
-
-### 6.2 future work
-
-
-
-Techniques to ensure zero drift in the cardinality of the test dataset while not implemented, have been devised, and will be presented in (Subsection 6.2). 
-
-The rate of data generation is currently limited by the nedb library. While SQLitmus's algorithm ensures that only sequential reads and writes are executed, NEDB does not allow sequential inserts or updates. 
-
-Nonetheless, SQLitmus is intending to rework its data generation process to off-load most of the in-memory data storage to disk (Since transfering a random access load in-memory to a sequential load on-disk actually provides a performance benefit). If this effort is successful, SQLitmus will be able to generate data at an almost constant speed while requiring that only the dataset currently being generated resides in memory. This future work will be discussed in (Section 6.2).
-
-### 6.3 conclusion
 
 
 
