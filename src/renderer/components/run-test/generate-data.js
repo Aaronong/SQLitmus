@@ -1,7 +1,7 @@
-import Random from 'rng.js';
-import shuffle from 'shuffle-array';
-import { generateNumVals } from '../generic/test-generator.js';
-import { getMemoryStore } from './persistant-storage.js';
+import Random from "rng.js";
+import shuffle from "shuffle-array";
+import { generateNumVals } from "../generic/test-generator.js";
+import { getMemoryStore } from "./persistant-storage.js";
 let START_TIME = new Date().getTime();
 let END_TIME = new Date().getTime();
 
@@ -16,7 +16,8 @@ function unique(arr) {
 
 function cartesianProduct(arr) {
   return arr.reduce(
-    (a, b) => a.map(x => b.map(y => x.concat(y))).reduce((c, d) => c.concat(d), []),
+    (a, b) =>
+      a.map(x => b.map(y => x.concat(y))).reduce((c, d) => c.concat(d), []),
     [[]]
   );
 }
@@ -45,8 +46,11 @@ async function generateIndexes(tableName, indexFields, numRows) {
       setObj[field.name] = i + 1;
     });
     await new Promise((resolve, reject) => {
-      db[tableName].update({ _id: i + 1 }, { $set: setObj }, {}, (err, numReplaced) =>
-        resolve(numReplaced)
+      db[tableName].update(
+        { _id: i + 1 },
+        { $set: setObj },
+        {},
+        (err, numReplaced) => resolve(numReplaced)
       );
     });
   }
@@ -57,7 +61,10 @@ function groupFKs(fkFields) {
   const groups = {};
   fkFields.forEach(field => {
     if (groups[field.foreignTarget[0]]) {
-      groups[field.foreignTarget[0]] = [...groups[field.foreignTarget[0]], field];
+      groups[field.foreignTarget[0]] = [
+        ...groups[field.foreignTarget[0]],
+        field
+      ];
     } else {
       groups[field.foreignTarget[0]] = [field];
     }
@@ -92,10 +99,16 @@ async function generateSingularFK(field, numRows, fieldRNG, tableName) {
       } is a one-to-one and non-nullable foreign key. Thus, there must be more ${targetTable} rows as compared to ${tableName} rows.`;
       throw errorMsg;
     }
-    if (field.nullable && field.nullRate && fieldRNG.nextNumber() < field.nullRate) {
+    if (
+      field.nullable &&
+      field.nullRate &&
+      fieldRNG.nextNumber() < field.nullRate
+    ) {
       results.push(null);
     } else {
-      const selectedIndex = Math.floor(fieldRNG.nextNumber() * retrievedRecords.length);
+      const selectedIndex = Math.floor(
+        fieldRNG.nextNumber() * retrievedRecords.length
+      );
       results.push(retrievedRecords[selectedIndex][targetField]);
 
       if (!field.manyToOne) {
@@ -164,7 +177,8 @@ async function generateCompositeFK(fields, numRows, fieldRNG, tableName) {
       results.push(setObj);
     } else {
       const selectedIndex =
-        Math.floor(fieldRNG.nextNumber() * Number.MAX_SAFE_INTEGER) % retrievedRecords.length;
+        Math.floor(fieldRNG.nextNumber() * Number.MAX_SAFE_INTEGER) %
+        retrievedRecords.length;
       const selectedRecord = retrievedRecords[selectedIndex];
       const setObj = {};
       for (let j = 0; j < fields.length; j++) {
@@ -201,8 +215,11 @@ async function generateFKs(tableName, fkFields, numRows, fieldRNG) {
           const setObj = {};
           setObj[field.name] = results[i];
           await new Promise((resolve, reject) => {
-            db[tableName].update({ _id: i + 1 }, { $set: setObj }, {}, (err, numReplaced) =>
-              resolve(numReplaced)
+            db[tableName].update(
+              { _id: i + 1 },
+              { $set: setObj },
+              {},
+              (err, numReplaced) => resolve(numReplaced)
             );
           });
         }
@@ -212,8 +229,11 @@ async function generateFKs(tableName, fkFields, numRows, fieldRNG) {
         );
         for (let i = 0; i < numRows; i++) {
           await new Promise((resolve, reject) => {
-            db[tableName].update({ _id: i + 1 }, { $set: results[i] }, {}, (err, numReplaced) =>
-              resolve(numReplaced)
+            db[tableName].update(
+              { _id: i + 1 },
+              { $set: results[i] },
+              {},
+              (err, numReplaced) => resolve(numReplaced)
             );
           });
         }
@@ -221,13 +241,18 @@ async function generateFKs(tableName, fkFields, numRows, fieldRNG) {
     }
   } else {
     const field = fkFields[0];
-    const results = await Promise.resolve(generateSingularFK(field, numRows, fieldRNG, tableName));
+    const results = await Promise.resolve(
+      generateSingularFK(field, numRows, fieldRNG, tableName)
+    );
     for (let i = 0; i < numRows; i++) {
       const setObj = {};
       setObj[field.name] = results[i];
       await new Promise((resolve, reject) => {
-        db[tableName].update({ _id: i + 1 }, { $set: setObj }, {}, (err, numReplaced) =>
-          resolve(numReplaced)
+        db[tableName].update(
+          { _id: i + 1 },
+          { $set: setObj },
+          {},
+          (err, numReplaced) => resolve(numReplaced)
         );
       });
     }
@@ -243,7 +268,9 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
     console.log(`${tableName} has a composite PK`);
     let startTime = new Date().getTime();
     const fkFields = pkFields.filter(field => field.fk && field.foreignTarget);
-    const pkRemainder = pkFields.filter(field => !(field.fk && field.foreignTarget));
+    const pkRemainder = pkFields.filter(
+      field => !(field.fk && field.foreignTarget)
+    );
     // Group foreign keys by the table they reference
     let groups = groupFKs(fkFields);
     // if groups.length is 1, we have a composite PK comprised of one composite FK
@@ -254,8 +281,11 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
       );
       for (let i = 0; i < numRows; i++) {
         await new Promise((resolve, reject) => {
-          db[tableName].update({ _id: i + 1 }, { $set: results[i] }, {}, (err, numReplaced) =>
-            resolve(numReplaced)
+          db[tableName].update(
+            { _id: i + 1 },
+            { $set: results[i] },
+            {},
+            (err, numReplaced) => resolve(numReplaced)
           );
         });
       }
@@ -277,7 +307,9 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
           generateSingularFK(field, genRows, fieldRNG, tableName)
         );
         const results = unique(dupResults);
-        console.log(`${tableName} has a composite PK with singular FK ${field.name}`);
+        console.log(
+          `${tableName} has a composite PK with singular FK ${field.name}`
+        );
         const tmp = [];
         for (let i = 0; i < results.length; i++) {
           const setObj = {};
@@ -291,9 +323,9 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
         );
         const results = unique(dupResults);
         console.log(
-          `${tableName} has a composite PK with composite FK ${fkGroup[0].name} and ${
-            fkGroup[1].name
-          }`
+          `${tableName} has a composite PK with composite FK ${
+            fkGroup[0].name
+          } and ${fkGroup[1].name}`
         );
         // save results under the name of the first field in the group
         sortedResults.push([fkGroup[0].name, results]);
@@ -312,7 +344,10 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
     });
     let endTime = new Date().getTime();
     console.log(sortedResults);
-    console.log(`Composite Key part 1: Generate genRows took ${endTime - startTime} miliseconds`);
+    console.log(
+      `Composite Key part 1: Generate genRows took ${endTime -
+        startTime} miliseconds`
+    );
 
     startTime = new Date().getTime();
 
@@ -327,19 +362,28 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
       if (tryNum === sortedResults.length) {
         sortedResults.sort((a, b) => a[1].length - b[1].length);
       }
-      const combinations = sortedResults.reduce((sum, num) => num[1].length * sum, 1);
+      const combinations = sortedResults.reduce(
+        (sum, num) => num[1].length * sum,
+        1
+      );
       console.log(`Num combinations = ${combinations}`);
       if (combinations >= numRows) {
         break;
       }
-      let fieldToRegen = pkRemainder.find(field => field.name === sortedResults[genNum][0]);
+      let fieldToRegen = pkRemainder.find(
+        field => field.name === sortedResults[genNum][0]
+      );
       if (fieldToRegen) {
         let rowsToGen = numRows;
         if (tryNum >= sortedResults.length) {
-          rowsToGen = Math.ceil(numRows / (combinations / sortedResults[1].length));
+          rowsToGen = Math.ceil(
+            numRows / (combinations / sortedResults[1].length)
+          );
         }
         const uniqueness = tryNum >= sortedResults.length;
-        const results = unique(generateNumVals(fieldToRegen, rowsToGen, fieldRNG, uniqueness));
+        const results = unique(
+          generateNumVals(fieldToRegen, rowsToGen, fieldRNG, uniqueness)
+        );
         console.log(`Trial ${genNum} =  ${results}`);
         const tmp = [];
         for (let i = 0; i < results.length; i++) {
@@ -349,7 +393,9 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
         }
         sortedResults[genNum][1] = tmp;
       } else {
-        fieldToRegen = groups.find(fkGroup => fkGroup[0].name === sortedResults[genNum][0]);
+        fieldToRegen = groups.find(
+          fkGroup => fkGroup[0].name === sortedResults[genNum][0]
+        );
         // Split groups up into composites or non-composites
         if (fieldToRegen.length === 1) {
           const field = fieldToRegen[0];
@@ -382,10 +428,13 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
 
     startTime = new Date().getTime();
     // Here we have gotten the max amounts of combinations. Just generate cartesian products
-    const combinations = flattenCartesianProduct(sortedResults.map(([k, v]) => v));
+    const combinations = flattenCartesianProduct(
+      sortedResults.map(([k, v]) => v)
+    );
     endTime = new Date().getTime();
     console.log(
-      `Composite Key part 3: Generating combinations took ${endTime - startTime} miliseconds`
+      `Composite Key part 3: Generating combinations took ${endTime -
+        startTime} miliseconds`
     );
 
     startTime = new Date().getTime();
@@ -397,13 +446,19 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
     }
     for (let i = 0; i < numRows; i++) {
       await new Promise((resolve, reject) => {
-        db[tableName].update({ _id: i + 1 }, { $set: combinations[i] }, {}, (err, numReplaced) =>
-          resolve(numReplaced)
+        db[tableName].update(
+          { _id: i + 1 },
+          { $set: combinations[i] },
+          {},
+          (err, numReplaced) => resolve(numReplaced)
         );
       });
     }
     endTime = new Date().getTime();
-    console.log(`Composite Key part 4: Shuffle and pick took ${endTime - startTime} miliseconds`);
+    console.log(
+      `Composite Key part 4: Shuffle and pick took ${endTime -
+        startTime} miliseconds`
+    );
   } else {
     const field = pkFields[0];
     if (field.fk) {
@@ -412,8 +467,11 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
         const setObj = {};
         setObj[field.name] = results[i];
         await new Promise((resolve, reject) => {
-          db[tableName].update({ _id: i + 1 }, { $set: setObj }, {}, (err, numReplaced) =>
-            resolve(numReplaced)
+          db[tableName].update(
+            { _id: i + 1 },
+            { $set: setObj },
+            {},
+            (err, numReplaced) => resolve(numReplaced)
           );
         });
       }
@@ -424,8 +482,11 @@ async function generatePKs(tableName, pkFields, numRows, fieldRNG) {
         const setObj = {};
         setObj[field.name] = results[i];
         await new Promise((resolve, reject) => {
-          db[tableName].update({ _id: i + 1 }, { $set: setObj }, {}, (err, numReplaced) =>
-            resolve(numReplaced)
+          db[tableName].update(
+            { _id: i + 1 },
+            { $set: setObj },
+            {},
+            (err, numReplaced) => resolve(numReplaced)
           );
         });
       }
@@ -453,12 +514,19 @@ async function generateSelfReference(fields, numRows, fieldRNG, tableName) {
       });
     });
     for (let i = 0; i < numRows; i++) {
-      if (field.nullable && field.nullRate && fieldRNG.nextNumber() < field.nullRate) {
+      if (
+        field.nullable &&
+        field.nullRate &&
+        fieldRNG.nextNumber() < field.nullRate
+      ) {
         const setObj = {};
         setObj[sourceField] = null;
         await new Promise((resolve, reject) => {
-          db[tableName].update({ _id: i + 1 }, { $set: { setObj } }, {}, (err, numReplaced) =>
-            resolve(numReplaced)
+          db[tableName].update(
+            { _id: i + 1 },
+            { $set: { setObj } },
+            {},
+            (err, numReplaced) => resolve(numReplaced)
           );
         });
       } else {
@@ -467,8 +535,11 @@ async function generateSelfReference(fields, numRows, fieldRNG, tableName) {
         const setObj = {};
         setObj[sourceField] = selectedRecord[targetField];
         await new Promise((resolve, reject) => {
-          db[tableName].update({ _id: i + 1 }, { $set: setObj }, {}, (err, numReplaced) =>
-            resolve(numReplaced)
+          db[tableName].update(
+            { _id: i + 1 },
+            { $set: setObj },
+            {},
+            (err, numReplaced) => resolve(numReplaced)
           );
         });
       }
@@ -500,15 +571,20 @@ async function generateTable(
   const selfReferenceFields = fields.filter(
     field => field.fk && field.foreignTarget[0] === tableName
   );
-  let filteredFields = fields.filter(field => !(field.fk && field.foreignTarget[0] === tableName));
+  let filteredFields = fields.filter(
+    field => !(field.fk && field.foreignTarget[0] === tableName)
+  );
   // Generate indexes
   const indexFields = filteredFields.filter(field => field.index);
   filteredFields = filteredFields.filter(field => !field.index);
   START_TIME = new Date().getTime();
   await generateIndexes(tableName, indexFields, numRows);
   END_TIME = new Date().getTime();
-  setMessage(`Generating index rows for ${tableName} took ${END_TIME - START_TIME} miliseconds`);
-  currTasks += numRows * generateWeight * indexFields.length / totalFields;
+  setMessage(
+    `Generating index rows for ${tableName} took ${END_TIME -
+      START_TIME} miliseconds`
+  );
+  currTasks += (numRows * generateWeight * indexFields.length) / totalFields;
   setPercentage(currTasks / totalTasks);
   // if a PK element is found in index, we can skip processing PKs
   const skipPK = indexFields.findIndex(field => field.pk) !== -1;
@@ -520,25 +596,38 @@ async function generateTable(
     await generatePKs(tableName, pkFields, numRows, spawnRNG(tableRNG));
     END_TIME = new Date().getTime();
     setMessage(
-      `Generating Primary keys for ${tableName} took ${END_TIME - START_TIME} miliseconds`
+      `Generating Primary keys for ${tableName} took ${END_TIME -
+        START_TIME} miliseconds`
     );
-    currTasks += numRows * generateWeight * pkFields.length / totalFields;
+    currTasks += (numRows * generateWeight * pkFields.length) / totalFields;
     setPercentage(currTasks / totalTasks);
   }
   // Generate Foreign keys
-  const fkFields = filteredFields.filter(field => field.fk && field.foreignTarget);
-  filteredFields = filteredFields.filter(field => !(field.fk && field.foreignTarget));
+  const fkFields = filteredFields.filter(
+    field => field.fk && field.foreignTarget
+  );
+  filteredFields = filteredFields.filter(
+    field => !(field.fk && field.foreignTarget)
+  );
   START_TIME = new Date().getTime();
   await generateFKs(tableName, fkFields, numRows, spawnRNG(tableRNG));
   END_TIME = new Date().getTime();
-  setMessage(`Generating Foreign keys for ${tableName} took ${END_TIME - START_TIME} miliseconds`);
-  currTasks += numRows * generateWeight * fkFields.length / totalFields;
+  setMessage(
+    `Generating Foreign keys for ${tableName} took ${END_TIME -
+      START_TIME} miliseconds`
+  );
+  currTasks += (numRows * generateWeight * fkFields.length) / totalFields;
   setPercentage(currTasks / totalTasks);
   // Generate remaining fields
   for (let j = 0; j < filteredFields.length; j++) {
     const field = filteredFields[j];
     START_TIME = new Date().getTime();
-    let results = generateNumVals(field, numRows, spawnRNG(tableRNG), field.unique);
+    let results = generateNumVals(
+      field,
+      numRows,
+      spawnRNG(tableRNG),
+      field.unique
+    );
     if (field.unique === true && field.sorted === false) {
       results = shuffle(results, { rng: tableRNG.nextNumber });
     }
@@ -549,25 +638,36 @@ async function generateTable(
       const setObj = {};
       setObj[field.name] = results[i];
       await new Promise((resolve, reject) => {
-        db[tableName].update({ _id: i + 1 }, { $set: setObj }, {}, (err, numReplaced) =>
-          resolve(numReplaced)
+        db[tableName].update(
+          { _id: i + 1 },
+          { $set: setObj },
+          {},
+          (err, numReplaced) => resolve(numReplaced)
         );
       });
     }
     END_TIME = new Date().getTime();
     setMessage(
-      `Generating ${field.name} for ${tableName} took ${END_TIME - START_TIME} miliseconds`
+      `Generating ${field.name} for ${tableName} took ${END_TIME -
+        START_TIME} miliseconds`
     );
-    currTasks += numRows * generateWeight / totalFields;
+    currTasks += (numRows * generateWeight) / totalFields;
     setPercentage(currTasks / totalTasks);
   }
   // Generate self referencing fields
   if (selfReferenceFields.length > 0) {
-    await generateSelfReference(selfReferenceFields, numRows, spawnRNG(tableRNG), tableName);
-    setMessage(
-      `Generating self-reference fields for ${tableName} took ${END_TIME - START_TIME} miliseconds`
+    await generateSelfReference(
+      selfReferenceFields,
+      numRows,
+      spawnRNG(tableRNG),
+      tableName
     );
-    currTasks += numRows * generateWeight * selfReferenceFields.length / totalFields;
+    setMessage(
+      `Generating self-reference fields for ${tableName} took ${END_TIME -
+        START_TIME} miliseconds`
+    );
+    currTasks +=
+      (numRows * generateWeight * selfReferenceFields.length) / totalFields;
     setPercentage(currTasks / totalTasks);
   }
 }
@@ -582,6 +682,7 @@ async function generateData(
   setMessage,
   setPercentage
 ) {
+  console.log(schemaInfo);
   const rootRNG = new Random(-23920393, dataSeed);
   let currTasks = currentTasks;
   for (let i = 0; i < schemaInfo.length; i++) {

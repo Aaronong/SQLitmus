@@ -1,4 +1,4 @@
-import bs from 'binarysearch';
+import bs from "binarysearch";
 
 function testGenerator(generator, nullable, nullRate) {
   const results = [];
@@ -10,7 +10,7 @@ function testGenerator(generator, nullable, nullRate) {
 
 function testOnce(generator, nullable, nullRate) {
   const output = generator.func(Math.random(), generator.inputs);
-  if (nullable) {
+  if (nullable === true) {
     return Math.random() < nullRate ? null : output;
   }
   return output;
@@ -18,7 +18,7 @@ function testOnce(generator, nullable, nullRate) {
 
 function testOnceRNG(generator, nullable, nullRate, RNG) {
   const output = generator.func(RNG.nextNumber(), generator.inputs);
-  if (nullable) {
+  if (nullable === true) {
     return RNG.nextNumber() < nullRate ? null : output;
   }
   return output;
@@ -28,9 +28,9 @@ function generateNumVals(field, numToGen, RNG, uniq) {
   const results = [];
   let unique = uniq;
   if (
-    field.mappedType.includes('bool') ||
-    field.mappedType.includes('tiny') ||
-    field.mappedType.includes('time')
+    field.mappedType.includes("bool") ||
+    field.mappedType.includes("tiny") ||
+    field.mappedType.includes("time")
   ) {
     unique = false;
   }
@@ -43,8 +43,13 @@ function generateNumVals(field, numToGen, RNG, uniq) {
     while (results.length < numToGen) {
       if (reachedThreshold) {
         // Character type
-        if (field.mappedType.includes('char')) {
-          const output = testOnceRNG(field.generator, nullable, field.nullRate, RNG);
+        if (field.mappedType.includes("char")) {
+          const output = testOnceRNG(
+            field.generator,
+            nullable,
+            field.nullRate,
+            RNG
+          );
           let charCount = charDict[output];
           if (charCount) {
             charDict[output] = charCount + 1;
@@ -57,13 +62,13 @@ function generateNumVals(field, numToGen, RNG, uniq) {
         }
         // Numeric type
         if (
-          field.mappedType.includes('int') ||
-          field.mappedType.includes('numeric') ||
-          field.mappedType.includes('decimal')
+          field.mappedType.includes("int") ||
+          field.mappedType.includes("numeric") ||
+          field.mappedType.includes("decimal")
         ) {
           // We use RNG to generate numeric instead
           let output = RNG.nextNumber() * Number.MAX_SAFE_INTEGER;
-          if (field.mappedType.includes('int')) {
+          if (field.mappedType.includes("int")) {
             output = Math.round(output);
           }
           if (bs(results, output) === -1) {
@@ -71,7 +76,12 @@ function generateNumVals(field, numToGen, RNG, uniq) {
           }
         }
       } else {
-        const output = testOnceRNG(field.generator, nullable, field.nullRate, RNG);
+        const output = testOnceRNG(
+          field.generator,
+          nullable,
+          field.nullRate,
+          RNG
+        );
         if (output === null) {
           nullable = false;
         }
@@ -91,7 +101,9 @@ function generateNumVals(field, numToGen, RNG, uniq) {
   } else {
     for (let i = 0; i < numToGen; i++) {
       // Not unique, no need for sorted array
-      results.push(testOnceRNG(field.generator, field.nullable, field.nullRate, RNG));
+      results.push(
+        testOnceRNG(field.generator, field.nullable, field.nullRate, RNG)
+      );
     }
   }
   return results;

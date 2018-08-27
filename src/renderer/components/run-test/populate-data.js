@@ -1,21 +1,21 @@
 function fieldVal(val, fIndex, length, type, dialect) {
   let value = val;
 
-  if (typeof val === 'string') {
+  if (typeof val === "string") {
     value = `'${val}'`;
-  } else if (type.includes('time')) {
-    if (dialect === 'mysql') {
+  } else if (type.includes("time")) {
+    if (dialect === "mysql") {
       if (val) {
         value = `FROM_UNIXTIME(${Math.round(val / 1000)})`;
       }
-    } else if (dialect === 'postgres') {
+    } else if (dialect === "postgres") {
       if (val) {
         value = `to_timestamp(${Math.round(val / 1000)})`;
       }
     }
   }
-  if (!val && dialect === 'mysql') {
-    value = 'null';
+  if (val == null && dialect === "mysql") {
+    value = "null";
   }
   if (fIndex < length - 1) {
     return `${value},`;
@@ -24,26 +24,38 @@ function fieldVal(val, fIndex, length, type, dialect) {
 }
 
 function tableInDialect(tableName, dialect) {
-  if (dialect === 'postgres') {
+  if (dialect === "postgres") {
     return `"${tableName}"`;
   }
   return tableName;
 }
 
-async function resetTableStr(sequelize, tableStr, dialect, tableName, tableNum) {
-  if (dialect === 'postgres') {
-    await sequelize.query(`DELETE FROM ${tableStr}`).spread((results, metadata) => {
-      console.log(metadata);
-    });
+async function resetTableStr(
+  sequelize,
+  tableStr,
+  dialect,
+  tableName,
+  tableNum
+) {
+  if (dialect === "postgres") {
     await sequelize
-      .query(`ALTER SEQUENCE "${tableName}_id_seq" RESTART WITH ${tableNum + 1};`)
+      .query(`DELETE FROM ${tableStr}`)
+      .spread((results, metadata) => {
+        console.log(metadata);
+      });
+    await sequelize
+      .query(
+        `ALTER SEQUENCE "${tableName}_id_seq" RESTART WITH ${tableNum + 1};`
+      )
       .spread((results, metadata) => {
         console.log(metadata);
       });
   } else {
-    await sequelize.query(`DELETE FROM ${tableStr}`).spread((results, metadata) => {
-      console.log(metadata);
-    });
+    await sequelize
+      .query(`DELETE FROM ${tableStr}`)
+      .spread((results, metadata) => {
+        console.log(metadata);
+      });
     await sequelize
       .query(`ALTER TABLE ${tableStr} AUTO_INCREMENT = 0`)
       .spread((results, metadata) => {
@@ -103,13 +115,17 @@ async function populateData(
         resolve(docs);
       });
     });
-    setMessage(`Populating ${retrievedRecords.length} rows of data into ${tableName} table`);
+    setMessage(
+      `Populating ${
+        retrievedRecords.length
+      } rows of data into ${tableName} table`
+    );
     const recordBatches = recordIntoBatches(retrievedRecords);
     for (let j = 0; j < recordBatches.length; j++) {
       const currBatch = recordBatches[j];
       let insertStr = `INSERT INTO ${tableStr} VALUES `;
       currBatch.forEach((record, rIndex) => {
-        insertStr += '(';
+        insertStr += "(";
         fieldNames.forEach(
           (name, fIndex) =>
             (insertStr += fieldVal(
@@ -121,9 +137,9 @@ async function populateData(
             ))
         );
         if (rIndex < currBatch.length - 1) {
-          insertStr += '),';
+          insertStr += "),";
         } else {
-          insertStr += ');';
+          insertStr += ");";
         }
       });
       await sequelize.query(insertStr).spread((results, metadata) => {
