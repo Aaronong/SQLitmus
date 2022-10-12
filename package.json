@@ -121,7 +121,7 @@
     "del": "^2.2.0",
     "denodeify": "^1.2.1",
     "electron": "^1.7.9",
-    "electron-builder": "^11.7.0",
+    "electron-builder": "^23.6.0",
     "eslint": "^2.13.1",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-config-airbnb-base": "^3.0.1",
