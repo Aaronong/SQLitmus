@@ -120,7 +120,7 @@
     "csv-stringify": "0.0.8",
     "del": "^2.2.0",
     "denodeify": "^1.2.1",
-    "electron": "^1.7.9",
+    "electron": "^15.5.5",
     "electron-builder": "^11.7.0",
     "eslint": "^2.13.1",
     "eslint-config-airbnb": "^9.0.1",
